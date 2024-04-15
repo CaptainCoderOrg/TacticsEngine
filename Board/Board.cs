@@ -11,7 +11,13 @@ public class Board
 
     public void AddFigure(int x, int y, Figure toAdd)
     {
-        if (_tiles[new Position(x, y)].HasFigure()) { throw new InvalidOperationException(); }
-        _tiles[new Position(x, y)] = new Tile() { Figure = toAdd };
+        foreach (Position position in new Position(x, y).PositionRect(toAdd.Width, toAdd.Height))
+        {
+            if (_tiles[position].HasFigure()) { throw new InvalidOperationException(); }
+        }
+        foreach (Position position in new Position(x, y).PositionRect(toAdd.Width, toAdd.Height))
+        {
+            _tiles[position] = new Tile() { Figure = toAdd };
+        }
     }
 }

@@ -10,7 +10,7 @@ public sealed record NoTile : TileInfo
 {
     public override bool HasFigure() => false;
 }
-public record Tile : TileInfo
+public sealed record Tile : TileInfo
 {
     public FigureInfo Figure { get; init; } = FigureInfo.None;
     public PropInfo Prop { get; init; } = PropInfo.None;
