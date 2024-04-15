@@ -16,8 +16,8 @@ public class Board_should
 
         // Adds an empty tile
         underTest.HasTile(x, y).ShouldBeTrue();
-        Tile actual = underTest.GetTile(x, y);
-        actual.ShouldBe(new TileInfo() { Figure = Figure.None, Prop = Prop.None } );
+        TileInfo actual = underTest.GetTile(x, y);
+        actual.ShouldBe(new Tile() { Figure = FigureInfo.None, Prop = PropInfo.None } );
     }
 
     [Theory]
@@ -28,9 +28,25 @@ public class Board_should
     {
         Board underTest = new();
 
-        Tile actual = underTest.GetTile(x, y);
+        TileInfo actual = underTest.GetTile(x, y);
 
-        actual.ShouldBe(Tile.None);
+        actual.ShouldBe(TileInfo.None);
     }
+
+    [Theory]
+    [InlineData(1, 2)]
+    [InlineData(-2, 3)]
+    public void add_1x1_figure(int x, int y)
+    {
+        Board underTest = new();
+        underTest.AddTile(x, y);
+        Figure toAdd = new () { Width = 1, Height = 1 };
+
+        underTest.AddFigure(x, y, toAdd);
+
+        Tile actual = (Tile)underTest.GetTile(x, y);
+        actual.Figure.ShouldBe(toAdd);
+    }
+
 
 }
