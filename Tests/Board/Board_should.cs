@@ -48,5 +48,23 @@ public class Board_should
         actual.Figure.ShouldBe(toAdd);
     }
 
+    [Theory]
+    [InlineData(1, 2)]
+    [InlineData(-2, 3)]
+    public void not_allow_2_figures_in_same_position(int x, int y)
+    {
+        Board underTest = new();
+        underTest.AddTile(x, y);
+        Figure added = new () { Width = 1, Height = 1 };
+        underTest.AddFigure(x, y, added);
+
+        Figure toAdd = new () { Width = 1, Height = 1 };
+        
+        Should.Throw<InvalidOperationException>(() =>
+        {
+            underTest.AddFigure(x, y, toAdd);
+        });
+    }
+
 
 }

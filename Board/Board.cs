@@ -11,6 +11,7 @@ public class Board
 
     public void AddFigure(int x, int y, Figure toAdd)
     {
+        if (_tiles[new Position(x, y)].HasFigure()) { throw new InvalidOperationException(); }
         _tiles[new Position(x, y)] = new Tile() { Figure = toAdd };
     }
 }
