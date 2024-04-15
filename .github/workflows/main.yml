@@ -1,0 +1,67 @@
+# This workflow will build a .NET project, check styling, 
+# run tests, and generate code coverage. By default, the report is added
+# to a PR into the main branch
+
+name: Build and Test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout Repo
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Check styling
+      run: dotnet format style --verify-no-changes --verbosity diagnostic
+
+    - name: Build
+      run: dotnet build --no-restore
+
+    - name: Test
+      run: dotnet test -p:CollectCoverage=true -p:CoverletOutputFormat=cobertura --no-build --verbosity normal
+
+    - name: Generate coverage report
+      uses: danielpalme/ReportGenerator-GitHub-Action@5.2.2
+      with:
+        reports: Tests/coverage.cobertura.xml
+        targetdir: docs/coverage
+        reporttypes: MarkdownSummaryGithub;Html
+
+    - name: Save coverage artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: docs/coverage
+
+  comment-report:
+    if: ${{ github.event_name == 'pull_request' }}
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Download report
+      uses: actions/download-artifact@v4
+      with:
+          name: coverage-report
+
+    - name: Add Report to PR
+      uses: mshick/add-pr-comment@v2
+      if: always()
+      with:
+        message-path: |
+          SummaryGithub.md
