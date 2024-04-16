@@ -1,6 +1,6 @@
 namespace CaptainCoder.TacticsEngine.Board;
 
-public class Board
+public sealed class Board
 {
     private readonly Dictionary<Position, TileInfo> _tiles = [];
     public void CreateEmptyTile(int x, int y) => _tiles.Add(new Position(x, y), TileInfo.Empty);

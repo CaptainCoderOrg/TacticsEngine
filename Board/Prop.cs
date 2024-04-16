@@ -4,4 +4,4 @@ public abstract record PropInfo
 {
     public static NoProp None { get; } = new NoProp();
 }
-public record NoProp : PropInfo;
+public sealed record NoProp : PropInfo;
