@@ -60,7 +60,7 @@ public class Board_should
 
         Figure toAdd = new() { Width = 1, Height = 1 };
 
-        Should.Throw<InvalidOperationException>(() =>
+        _ = Should.Throw<InvalidOperationException>(() =>
         {
             underTest.AddFigure(x, y, toAdd);
         });
@@ -74,7 +74,7 @@ public class Board_should
     public void add_large_figure(int x, int y, int w, int h)
     {
         Board underTest = new();
-        Position[] positions = [.. new Position(x, y).PositionRect(w, h)];
+        Position[] positions = [.. new BoundingBox(new Position(x, y), w, h).Positions()];
         foreach (Position position in positions)
         {
             underTest.AddTile(position.X, position.Y);
@@ -91,6 +91,24 @@ public class Board_should
 
     }
 
-    // should_not_add_figure_to_no_tile
+    [Fact]
+    public void not_allow_add_figure_to_no_tile()
+    {
+        Board underTest = new();
+        _ = Should.Throw<ArgumentOutOfRangeException>(() => underTest.AddFigure(0, 0, new Figure()));
+    }
+
+    [Fact]
+    public void not_allow_partial_add_figure()
+    {
+        Board underTest = new();
+        underTest.AddTile(0, 0);
+        underTest.AddTile(1, 0);
+        underTest.AddTile(0, 1);
+        Figure tooLarge = new () { Width = 2, Height = 2 };
+        _ = Should.Throw<ArgumentOutOfRangeException>(() => underTest.AddFigure(0, 0, tooLarge));
+    }
+
+    // should_not_allow_large_figure_in_same_positions
 
 }

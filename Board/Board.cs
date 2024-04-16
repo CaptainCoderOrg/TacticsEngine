@@ -1,5 +1,3 @@
-
-
 namespace CaptainCoder.TacticsEngine.Board;
 
 public class Board
@@ -11,11 +9,13 @@ public class Board
 
     public void AddFigure(int x, int y, Figure toAdd)
     {
-        foreach (Position position in new Position(x, y).PositionRect(toAdd.Width, toAdd.Height))
+        BoundingBox bbox = new(new Position(x, y), toAdd.Width, toAdd.Height);
+        foreach (Position position in bbox.Positions())
         {
-            if (_tiles[position].HasFigure()) { throw new InvalidOperationException(); }
+            if (!_tiles.TryGetValue(position, out TileInfo tileInfo)) { throw new ArgumentOutOfRangeException($"Board does not contain a tile at position {x}, {y}"); }
+            if (tileInfo is Tile tile && tile.Figure is not NoFigure) { throw new InvalidOperationException($"Cannot place figure at position {x}, {y}. Tile at {position} is already occupied by {tile.Figure} "); }
         }
-        foreach (Position position in new Position(x, y).PositionRect(toAdd.Width, toAdd.Height))
+        foreach (Position position in bbox.Positions())
         {
             _tiles[position] = new Tile() { Figure = toAdd };
         }
