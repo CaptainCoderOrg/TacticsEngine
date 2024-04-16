@@ -41,6 +41,7 @@ jobs:
         reports: Tests/coverage.cobertura.xml
         targetdir: docs/coverage
         reporttypes: MarkdownSummaryGithub;Html
+        license: "${{ secrets.ReportGeneratorLicense }}"
 
     - name: Save coverage artifact
       uses: actions/upload-artifact@v4

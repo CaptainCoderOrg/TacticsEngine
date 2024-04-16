@@ -367,3 +367,4 @@ FodyWeavers.xsd
 
 # Ignore Code Coverage Report Directory
 html-coverage-report/
+.env/

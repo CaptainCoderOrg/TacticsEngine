@@ -28,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Console\Console.csproj" />
     <ProjectReference Include="..\Board\CaptainCoder.Tactics.Board.csproj" />
   </ItemGroup>
 
