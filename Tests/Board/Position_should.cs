@@ -10,7 +10,7 @@ public class Position_should
         Position position = new(1, 2);
 
         HashSet<Position> actual = [.. new BoundingBox(position, 2, 1).Positions()];
-        
+
         actual.Count.ShouldBe(2);
         actual.ShouldContain(new Position(1, 2));
         actual.ShouldContain(new Position(2, 2));
@@ -22,12 +22,12 @@ public class Position_should
         Position position = new(-1, -7);
 
         HashSet<Position> actual = [.. new BoundingBox(position, 3, 2).Positions()];
-        
+
         actual.Count.ShouldBe(6);
         actual.ShouldContain(new Position(-1, -7));
         actual.ShouldContain(new Position(0, -7));
         actual.ShouldContain(new Position(1, -7));
-        
+
         actual.ShouldContain(new Position(-1, -6));
         actual.ShouldContain(new Position(0, -6));
         actual.ShouldContain(new Position(1, -6));

@@ -3,7 +3,14 @@ namespace CaptainCoder.TacticsEngine.Board;
 public class Board
 {
     private readonly Dictionary<Position, TileInfo> _tiles = [];
-    public void AddTile(int x, int y) => _tiles.Add(new Position(x, y), TileInfo.Empty);
+    public void CreateEmptyTile(int x, int y) => _tiles.Add(new Position(x, y), TileInfo.Empty);
+    public void CreateEmptyTiles(IEnumerable<Position> positions)
+    {
+        foreach (Position p in positions)
+        {
+            CreateEmptyTile(p.X, p.Y);
+        }
+    }
     public bool HasTile(int x, int y) => _tiles.ContainsKey(new Position(x, y));
     public TileInfo GetTile(int x, int y) => _tiles.GetValueOrDefault(new Position(x, y), TileInfo.None);
 

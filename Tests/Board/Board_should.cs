@@ -12,7 +12,7 @@ public class Board_should
     {
         Board underTest = new();
 
-        underTest.AddTile(x, y);
+        underTest.CreateEmptyTile(x, y);
 
         // Adds an empty tile
         underTest.HasTile(x, y).ShouldBeTrue();
@@ -39,7 +39,7 @@ public class Board_should
     public void add_1x1_figure(int x, int y)
     {
         Board underTest = new();
-        underTest.AddTile(x, y);
+        underTest.CreateEmptyTile(x, y);
         Figure toAdd = new() { Width = 1, Height = 1 };
 
         underTest.AddFigure(x, y, toAdd);
@@ -54,7 +54,7 @@ public class Board_should
     public void not_allow_2_figures_in_same_position(int x, int y)
     {
         Board underTest = new();
-        underTest.AddTile(x, y);
+        underTest.CreateEmptyTile(x, y);
         Figure added = new() { Width = 1, Height = 1 };
         underTest.AddFigure(x, y, added);
 
@@ -77,7 +77,7 @@ public class Board_should
         Position[] positions = [.. new BoundingBox(new Position(x, y), w, h).Positions()];
         foreach (Position position in positions)
         {
-            underTest.AddTile(position.X, position.Y);
+            underTest.CreateEmptyTile(position.X, position.Y);
         }
         Figure toAdd = new() { Width = w, Height = h };
 
@@ -102,13 +102,25 @@ public class Board_should
     public void not_allow_partial_add_figure()
     {
         Board underTest = new();
-        underTest.AddTile(0, 0);
-        underTest.AddTile(1, 0);
-        underTest.AddTile(0, 1);
-        Figure tooLarge = new () { Width = 2, Height = 2 };
+        underTest.CreateEmptyTile(0, 0);
+        underTest.CreateEmptyTile(1, 0);
+        underTest.CreateEmptyTile(0, 1);
+        Figure tooLarge = new() { Width = 2, Height = 2 };
+
         _ = Should.Throw<ArgumentOutOfRangeException>(() => underTest.AddFigure(0, 0, tooLarge));
     }
 
-    // should_not_allow_large_figure_in_same_positions
+    [Fact]
+    public void should_not_allow_overlapping_figures()
+    {
+        Board underTest = new();
+        BoundingBox box = new(new Position(0, 0), 3, 3);
+        underTest.CreateEmptyTiles(box.Positions());
+        Figure first = new() { Width = 2, Height = 2 };
+        underTest.AddFigure(0, 0, first);
+        Figure second = new() { Width = 2, Height = 2 };
+
+        _ = Should.Throw<InvalidOperationException>(() => underTest.AddFigure(1, 1, second));
+    }
 
 }
