@@ -1,13 +1,13 @@
 namespace CaptainCoder.TacticsEngine.Board;
 
-public abstract record Tile
+public abstract record TileInfo
 {
     public static NoTile None { get; } = new NoTile();
-    public static TileInfo Empty { get; } = new();
+    public static Tile Empty { get; } = new();
 }
-public record NoTile : Tile;
-public record TileInfo : Tile
+public sealed record NoTile : TileInfo;
+public sealed record Tile : TileInfo
 {
-    public Figure Figure { get; init; } = Figure.None;
-    public Prop Prop { get; init; } = Prop.None;
+    public FigureInfo Figure { get; init; } = FigureInfo.None;
+    public PropInfo Prop { get; init; } = PropInfo.None;
 }

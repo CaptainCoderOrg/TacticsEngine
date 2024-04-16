@@ -1,7 +1,7 @@
 namespace CaptainCoder.TacticsEngine.Board;
 
-public abstract record Prop
+public abstract record PropInfo
 {
     public static NoProp None { get; } = new NoProp();
 }
-public record NoProp : Prop;
+public sealed record NoProp : PropInfo;
