@@ -1,14 +1,18 @@
 @using CaptainCoder.TacticsEngine.Board
-<div class="board-container">
+<div class="board-container" 
+    style="--cell-size: @(CellSize)px;
+           --board-width: @Width;
+           --board-height: @Height;"
+    @onclick="ClickBoardContainer">
     @foreach (Position position in _board.Tiles.Keys)
     {
         <div 
             class="tile"
-            data-pos-x=@position.X;
             style="
                 --pos-x: @(position.X); 
                 --pos-y: @(position.Y);"
             @onclick="() => SelectTile(position)"
+            @onclick:stopPropagation="true"
             >
             (@position.X, @position.Y)
         </div>
@@ -17,6 +21,7 @@
 
 @code
 {
+    public int CellSize { get; set; } = 50;
     public int Width { get; set; } = 10;
     public int Height { get; set; } = 10;
     private Board _board = new();
@@ -30,6 +35,13 @@
 
     private void SelectTile(Position selected)
     {
-        
+        _board.RemoveTile(selected.X, selected.Y);
+    }
+    private void ClickBoardContainer(MouseEventArgs e)
+    {
+        int x = (int)(e.OffsetX / CellSize);
+        int y = (int)(e.OffsetY / CellSize);
+        if(_board.HasTile(x, y)) { return; }
+        _board.CreateEmptyTile(x, y);
     }
 }
