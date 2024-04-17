@@ -1,8 +1,12 @@
+using System.Collections.ObjectModel;
+
 namespace CaptainCoder.TacticsEngine.Board;
 
 public sealed class Board
 {
     private readonly Dictionary<Position, TileInfo> _tiles = [];
+    public IReadOnlyDictionary<Position, TileInfo> Tiles => new ReadOnlyDictionary<Position, TileInfo>(_tiles);
+
     public void CreateEmptyTile(int x, int y) => _tiles.Add(new Position(x, y), TileInfo.Empty);
     public void CreateEmptyTiles(IEnumerable<Position> positions)
     {

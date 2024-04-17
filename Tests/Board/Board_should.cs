@@ -123,4 +123,28 @@ public class Board_should
         _ = Should.Throw<InvalidOperationException>(() => underTest.AddFigure(1, 1, second));
     }
 
+    [Fact]
+    public void should_have_position_to_tile_mapping()
+    {
+        Board underTest = new();
+        Position[] positions = [
+            new Position(0, 0),
+            new Position(0, 1),
+            new Position(0, 2),
+            new Position(1, 0),
+            new Position(1, 1),
+            new Position(1, 2),
+            new Position(2, 0),
+            new Position(2, 1),
+            new Position(2, 2),
+        ];
+        underTest.CreateEmptyTiles(positions);
+
+        IReadOnlyDictionary<Position, TileInfo> actual = underTest.Tiles;
+
+        actual.Count.ShouldBe(9);
+        actual.Keys.ShouldBeSubsetOf(positions);
+
+    }
+
 }
