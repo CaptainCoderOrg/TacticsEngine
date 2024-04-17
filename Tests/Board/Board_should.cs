@@ -144,7 +144,20 @@ public class Board_should
 
         actual.Count.ShouldBe(9);
         actual.Keys.ShouldBeSubsetOf(positions);
+    }
 
+    [Theory]
+    [InlineData(2, 1)]
+    [InlineData(1, 2)]
+    public void should_remove_tile_at_position(int x, int y)
+    {
+        Board underTest = new();
+        underTest.CreateEmptyTiles(new BoundingBox(new Position(0, 0), 3, 3).Positions());
+
+        underTest.RemoveTile(x, y);
+
+        underTest.Tiles.Count.ShouldBe(8);
+        underTest.Tiles.Keys.ShouldNotContain(new Position(x, y));
     }
 
 }
