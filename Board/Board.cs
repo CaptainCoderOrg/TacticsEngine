@@ -31,4 +31,6 @@ public sealed class Board
             _tiles[position] = new Tile() { Figure = toAdd };
         }
     }
+
+    public void RemoveTile(int x, int y) => _tiles.Remove(new Position(x, y));
 }
