@@ -1,10 +1,17 @@
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
+
+using CaptainCoder.Dungeoneering.DungeonMap.IO;
+
+using Newtonsoft.Json;
 
 namespace CaptainCoder.TacticsEngine.Board;
 
 public sealed class Board : IEquatable<Board>
 {
+    [JsonRequired]
     private readonly Dictionary<Position, TileInfo> _tiles = [];
+    [JsonIgnore]
     public IReadOnlyDictionary<Position, TileInfo> Tiles => new ReadOnlyDictionary<Position, TileInfo>(_tiles);
 
     public void CreateEmptyTile(int x, int y) => _tiles.Add(new Position(x, y), TileInfo.Empty);
@@ -37,4 +44,24 @@ public sealed class Board : IEquatable<Board>
     public bool Equals(Board other) =>
         _tiles.Count == other._tiles.Count &&
         _tiles.All(kvp => other._tiles.TryGetValue(kvp.Key, out TileInfo otherTile) && kvp.Value.Equals(otherTile));
+}
+
+public static class BoardExtensions
+{
+    public static string ToJson(this Board board)
+    {
+        JsonSerializerSettings settings = new();
+        settings.Converters = [new DictionaryJsonConverter<Position, TileInfo>()];
+        settings.TypeNameHandling = TypeNameHandling.Auto;
+        return JsonConvert.SerializeObject(board, settings);
+    }
+
+    public static bool TryFromJson(string json, [NotNullWhen(true)] out Board board)
+    {
+        JsonSerializerSettings settings = new();
+        settings.Converters = [new DictionaryJsonConverter<Position, TileInfo>()];
+        settings.TypeNameHandling = TypeNameHandling.Auto;
+        board = JsonConvert.DeserializeObject<Board>(json, settings)!;
+        return board is not null;
+    }
 }

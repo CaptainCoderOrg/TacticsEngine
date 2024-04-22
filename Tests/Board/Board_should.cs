@@ -199,4 +199,24 @@ public class Board_should
         board0.ShouldNotBe(board1);
     }
 
+    [Fact]
+    public void should_be_jsonable()
+    {
+        Board board0 = CreateBoard();
+        string json = board0.ToJson();
+        bool wasSuccess = BoardExtensions.TryFromJson(json, out Board deserialized);
+        wasSuccess.ShouldBeTrue();
+        board0.ShouldBe(deserialized);
+
+        static Board CreateBoard()
+        {
+            Board board = new();
+            board.CreateEmptyTiles(
+                new BoundingBox(new Position(0, 0), 7, 5).Positions()
+            );
+            board.AddFigure(0, 0, new Figure());
+            board.AddFigure(3, 3, new Figure() { Width = 2, Height = 2 });
+            return board;
+        }
+    }
 }
