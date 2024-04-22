@@ -160,4 +160,63 @@ public class Board_should
         underTest.Tiles.Keys.ShouldNotContain(new Position(x, y));
     }
 
+    [Fact]
+    public void should_be_equals()
+    {
+        Board board0 = CreateBoard();
+        Board board1 = CreateBoard();
+        board0.ShouldBe(board1);
+
+        static Board CreateBoard()
+        {
+            Board board = new();
+            board.CreateEmptyTiles(
+                new BoundingBox(new Position(0, 0), 7, 5).Positions()
+            );
+            board.AddFigure(0, 0, new Figure());
+            board.AddFigure(3, 3, new Figure() { Width = 2, Height = 2 });
+            return board;
+        }
+    }
+
+    [Fact]
+    public void should_not_be_equals()
+    {
+        Board board0 = new();
+        board0.CreateEmptyTiles(
+            new BoundingBox(new Position(0, 0), 7, 5).Positions()
+        );
+        board0.AddFigure(0, 0, new Figure());
+        board0.AddFigure(3, 3, new Figure() { Width = 2, Height = 2 });
+
+        Board board1 = new();
+        board1.CreateEmptyTiles(
+            new BoundingBox(new Position(0, 0), 7, 5).Positions()
+        );
+        board1.AddFigure(3, 3, new Figure());
+        board1.AddFigure(0, 0, new Figure() { Width = 2, Height = 2 });
+
+        board0.ShouldNotBe(board1);
+    }
+
+    [Fact]
+    public void should_be_jsonable()
+    {
+        Board board0 = CreateBoard();
+        string json = board0.ToJson();
+        bool wasSuccess = BoardExtensions.TryFromJson(json, out Board? deserialized);
+        wasSuccess.ShouldBeTrue();
+        board0.ShouldBe(deserialized);
+
+        static Board CreateBoard()
+        {
+            Board board = new();
+            board.CreateEmptyTiles(
+                new BoundingBox(new Position(0, 0), 7, 5).Positions()
+            );
+            board.AddFigure(0, 0, new Figure());
+            board.AddFigure(3, 3, new Figure() { Width = 2, Height = 2 });
+            return board;
+        }
+    }
 }

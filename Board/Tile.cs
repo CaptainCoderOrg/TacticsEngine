@@ -1,5 +1,9 @@
+using System.Text.Json.Serialization;
+
 namespace CaptainCoder.TacticsEngine.Board;
 
+[JsonDerivedType(typeof(NoTile), typeDiscriminator: "NoTile")]
+[JsonDerivedType(typeof(Tile), typeDiscriminator: "Tile")]
 public abstract record TileInfo
 {
     public static NoTile None { get; } = new NoTile();
