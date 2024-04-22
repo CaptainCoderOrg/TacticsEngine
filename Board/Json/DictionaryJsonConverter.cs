@@ -14,15 +14,7 @@ public class DictionaryJsonConverter<TKey, TValue> : JsonConverter<Dictionary<TK
     public override void Write(Utf8JsonWriter writer, Dictionary<TKey, TValue> value, JsonSerializerOptions options)
     {
         JsonSerializerOptions extended = new(options) { IncludeFields = true, };
-        JsonSerializer.Serialize(writer, value.ToSerializableArray(), extended);
+        (TKey, TValue)[] serializableArray = [.. value.Select(kvp => (kvp.Key, kvp.Value))];
+        JsonSerializer.Serialize(writer, serializableArray, extended);
     }
-}
-
-public static class DictionaryExtensions
-{
-    public static (TKey, TValue)[] ToSerializableArray<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> toSerialize) =>
-        [.. toSerialize.Select(kvp => (kvp.Key, kvp.Value))];
-
-    public static IEnumerable<KeyValuePair<TKey, TValue>> ToKevValuePairs<TKey, TValue>(this (TKey, TValue)[] toDeserialize) =>
-        toDeserialize.Select(pair => new KeyValuePair<TKey, TValue>(pair.Item1, pair.Item2));
 }
