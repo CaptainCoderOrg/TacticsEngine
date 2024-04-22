@@ -51,7 +51,7 @@ public static class BoardExtensions
     public static string ToJson(this Board board)
     {
         JsonSerializerSettings settings = new();
-        settings.Converters = [new DictionaryJsonConverter<Position, TileInfo>()];
+        settings.Converters = [new DictionaryJsonConverter<Position, TileInfo>(), FigureInfoConverter.Shared];
         settings.TypeNameHandling = TypeNameHandling.Auto;
         return JsonConvert.SerializeObject(board, settings);
     }
@@ -59,7 +59,7 @@ public static class BoardExtensions
     public static bool TryFromJson(string json, [NotNullWhen(true)] out Board board)
     {
         JsonSerializerSettings settings = new();
-        settings.Converters = [new DictionaryJsonConverter<Position, TileInfo>()];
+        settings.Converters = [new DictionaryJsonConverter<Position, TileInfo>(), FigureInfoConverter.Shared];
         settings.TypeNameHandling = TypeNameHandling.Auto;
         board = JsonConvert.DeserializeObject<Board>(json, settings)!;
         return board is not null;
