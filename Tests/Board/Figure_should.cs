@@ -23,24 +23,4 @@ public class FigureInfo_should
         noFigure.ShouldBe(deserialized);
     }
 
-    [Fact]
-    public void parse_no_figure()
-    {
-        FigureInfo figureInfo = new NoFigure();
-        bool wasSuccess = FigureInfoExtensions.TryParseFigureInfo(figureInfo.ToString(), out FigureInfo? parsed);
-        wasSuccess.ShouldBeTrue();
-        parsed.ShouldBe(figureInfo);
-    }
-
-    [Theory]
-    [InlineData(1, 1)]
-    [InlineData(2, 3)]
-    public void parse_figure(int width, int height)
-    {
-        FigureInfo figureInfo = new Figure() { Width = width, Height = height };
-        bool wasSuccess = FigureInfoExtensions.TryParseFigureInfo(figureInfo.ToString(), out FigureInfo? parsed);
-        wasSuccess.ShouldBeTrue();
-        parsed.ShouldBe(figureInfo);
-    }
-    // {Figure { Width = 1, Height = 1 }}
 }

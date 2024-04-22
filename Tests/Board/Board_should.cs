@@ -204,7 +204,7 @@ public class Board_should
     {
         Board board0 = CreateBoard();
         string json = board0.ToJson();
-        bool wasSuccess = BoardExtensions.TryFromJson(json, out Board deserialized);
+        bool wasSuccess = BoardExtensions.TryFromJson(json, out Board? deserialized);
         wasSuccess.ShouldBeTrue();
         board0.ShouldBe(deserialized);
 
