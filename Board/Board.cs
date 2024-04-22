@@ -2,7 +2,7 @@ using System.Collections.ObjectModel;
 
 namespace CaptainCoder.TacticsEngine.Board;
 
-public sealed class Board
+public sealed class Board : IEquatable<Board>
 {
     private readonly Dictionary<Position, TileInfo> _tiles = [];
     public IReadOnlyDictionary<Position, TileInfo> Tiles => new ReadOnlyDictionary<Position, TileInfo>(_tiles);
@@ -33,4 +33,8 @@ public sealed class Board
     }
 
     public void RemoveTile(int x, int y) => _tiles.Remove(new Position(x, y));
+
+    public bool Equals(Board other) =>
+        _tiles.Count == other._tiles.Count &&
+        _tiles.All(kvp => other._tiles.TryGetValue(kvp.Key, out TileInfo otherTile) && kvp.Value.Equals(otherTile));
 }
