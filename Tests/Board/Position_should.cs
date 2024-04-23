@@ -32,4 +32,5 @@ public class Position_should
         actual.ShouldContain(new Position(0, -6));
         actual.ShouldContain(new Position(1, -6));
     }
+
 }

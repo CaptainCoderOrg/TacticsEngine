@@ -1,0 +1,1 @@
+dotnet stryker -f stryker-config.json -o
