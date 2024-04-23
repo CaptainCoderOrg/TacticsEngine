@@ -12,7 +12,6 @@ public abstract record FigureInfo
 }
 public sealed record NoFigure : FigureInfo;
 
-// Figure { Width = int, Height = int }
 public sealed record Figure : FigureInfo
 {
     public int Width { get; init; } = 1;

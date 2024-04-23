@@ -180,11 +180,18 @@ public class Board_should
     }
 
     [Fact]
+    public void should_not_equal_null()
+    {
+        Board board0 = new();
+        board0.Equals(null).ShouldBeFalse();
+    }
+
+    [Fact]
     public void should_not_be_equals()
     {
         Board board0 = new();
         board0.CreateEmptyTiles(
-            new BoundingBox(new Position(0, 0), 7, 5).Positions()
+            new BoundingBox(new Position(0, 0), 5, 7).Positions()
         );
         board0.AddFigure(0, 0, new Figure());
         board0.AddFigure(3, 3, new Figure() { Width = 2, Height = 2 });
@@ -219,4 +226,5 @@ public class Board_should
             return board;
         }
     }
+
 }
