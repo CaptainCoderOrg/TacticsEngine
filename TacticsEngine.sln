@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaptainCoder.Tactics.Board"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebEditor", "WebEditor\WebEditor.csproj", "{27554764-F251-4007-9B45-C7DA43344525}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{6EBC3C46-868E-490F-97F2-FDD910BFB098}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{27554764-F251-4007-9B45-C7DA43344525}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27554764-F251-4007-9B45-C7DA43344525}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27554764-F251-4007-9B45-C7DA43344525}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EBC3C46-868E-490F-97F2-FDD910BFB098}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EBC3C46-868E-490F-97F2-FDD910BFB098}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EBC3C46-868E-490F-97F2-FDD910BFB098}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EBC3C46-868E-490F-97F2-FDD910BFB098}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

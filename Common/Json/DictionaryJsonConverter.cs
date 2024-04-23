@@ -7,7 +7,7 @@ public class DictionaryJsonConverter<TKey, TValue> : JsonConverter<Dictionary<TK
     public override Dictionary<TKey, TValue>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         JsonSerializerOptions extended = new(options) { IncludeFields = true, };
-        (TKey, TValue)[] result = JsonSerializer.Deserialize<(TKey, TValue)[]>(ref reader, extended) ?? throw new JsonException($"Could not parse {typeof(Dictionary<TKey, TValue>)}.");
+        (TKey, TValue)[] result = JsonSerializer.Deserialize<(TKey, TValue)[]>(ref reader, extended) ?? throw new JsonException();
         return result.ToDictionary();
     }
 
