@@ -1,0 +1,9 @@
+.figure-info
+{
+    position: absolute;
+    width: var(--cell-size * --figure-width);
+    height: var(--cell-size * --figure-height);
+    left: calc(var(--pos-x) * var(--cell-size));
+    top: calc(var(--pos-y) * var(--cell-size));
+    color: green;
+}

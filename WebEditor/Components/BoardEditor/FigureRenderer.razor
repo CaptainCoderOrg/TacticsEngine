@@ -1,0 +1,30 @@
+@using CaptainCoder.TacticsEngine.Board
+@using System.Diagnostics.CodeAnalysis
+@inject ToolManager ToolManager
+<div 
+    class="figure-info"
+    style="
+        --pos-x: @(Position.X); 
+        --pos-y: @(Position.Y);
+        --figure-width: @(Figure.Width);
+        --figure-height: @(Figure.Height)"
+    >
+    @if(Board.GetTile(Position.X, Position.Y) is Tile tile)
+    {
+        @if (tile.Figure is Figure)
+        {
+            <span class="figure"></span>
+        }
+    }
+    
+</div>
+
+@code
+{
+    [Parameter, EditorRequired, AllowNull]
+    public Figure Figure { get; set; }
+    [Parameter, EditorRequired]
+    public Position Position { get; set; }
+    [Parameter, EditorRequired, AllowNull]
+    public Board Board { get; set; }
+}
