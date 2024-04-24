@@ -1,47 +1,52 @@
+@using System.Text.Json
+@using Blazor.DownloadFileFast.Interfaces
 @using CaptainCoder.TacticsEngine.Board
-<div class="board-container" 
-    style="--cell-size: @(CellSize)px;
-           --board-width: @Width;
-           --board-height: @Height;"
-    @onclick="ClickBoardContainer">
-    @foreach (Position position in _board.Tiles.Keys)
-    {
-        <div 
-            class="tile"
-            style="
-                --pos-x: @(position.X); 
-                --pos-y: @(position.Y);"
-            @onclick="() => SelectTile(position)"
-            @onclick:stopPropagation="true"
-            >
-            (@position.X, @position.Y)
-        </div>
-    }
+@using System.Diagnostics.CodeAnalysis
+@using System.Text
+@inject IJSRuntime JSRuntime;
+@inject IBlazorDownloadFileService BlazorDownloadFileService;
+<div class="editor-content">
+    <div class="editor-menu">
+        <h1>Board Editor</h1>
+        <button @onclick="@(() => LoadBoard())">Load File</button>
+        <InputFile @ref="@_inputFile" OnChange="@OnFileSelected" hidden />
+        <button @onclick="@(() => SaveBoard())">Save File</button>
+    </div>
+    <div class="editor-content">
+        <BoardEditorView @ref="@_boardEditorView" />
+    </div>
 </div>
 
 @code
 {
-    public int CellSize { get; set; } = 50;
-    public int Width { get; set; } = 10;
-    public int Height { get; set; } = 10;
-    private Board _board = new();
 
-    protected override void OnInitialized()
+    [AllowNull]
+    private BoardEditorView _boardEditorView;
+    [AllowNull]
+    private InputFile _inputFile;
+    public async Task OnFileSelected(InputFileChangeEventArgs e)
     {
-        BoundingBox box = new (new Position(2, 2), 3, 3);
-        _board.CreateEmptyTiles(box.Positions());
-        _board.CreateEmptyTile(1, 1);
+        const int MaxSize = 100 * 1024 * 1024; // 100 MB
+        // TODO: This reads the entire string then parses it. probably a better way?
+        string? reader = 
+            await new StreamReader(e.File.OpenReadStream(MaxSize)).ReadToEndAsync();
+        if (!BoardExtensions.TryFromJson(reader, out Board? result))
+        {
+            // TODO: Error handling
+            Console.WriteLine("Error");
+            return;
+        }
+        await _boardEditorView.LoadBoard(result);
     }
 
-    private void SelectTile(Position selected)
+    private async Task LoadBoard()
     {
-        _board.RemoveTile(selected.X, selected.Y);
+        await JSRuntime.InvokeVoidAsync("HTMLElement.prototype.click.call", _inputFile.Element);
     }
-    private void ClickBoardContainer(MouseEventArgs e)
+
+    private async Task SaveBoard()
     {
-        int x = (int)(e.OffsetX / CellSize);
-        int y = (int)(e.OffsetY / CellSize);
-        if(_board.HasTile(x, y)) { return; }
-        _board.CreateEmptyTile(x, y);
+        var bytes = Encoding.UTF8.GetBytes(_boardEditorView.Board.ToJson());
+        await BlazorDownloadFileService.DownloadFileAsync("Board.json", bytes, "application/json");
     }
 }
