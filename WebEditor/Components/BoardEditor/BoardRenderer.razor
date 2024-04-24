@@ -1,4 +1,6 @@
 @using CaptainCoder.TacticsEngine.Board
+@using System.Diagnostics.CodeAnalysis;
+@inject ToolManager ToolManager;
 <div class="board-container" 
     style="--cell-size: @(CellSize)px;
            --board-width: @Width;
@@ -11,10 +13,11 @@
 
 @code
 {
-    public int CellSize { get; set; } = 50;
-    public int Width { get; set; } = 10;
-    public int Height { get; set; } = 10;
-    public Board Board { get; private set; } = new();
+    public int CellSize { get; set; } = 25;
+    public int Width { get; set; } = 20;
+    public int Height { get; set; } = 20;
+    [Parameter, EditorRequired, AllowNull]
+    public Board Board { get; set; }
     public IEnumerable<Position> Positions
     {
         get
@@ -29,23 +32,17 @@
         }
     }
 
-    public async Task LoadBoard(Board board)
-    {
-        Board = board;
-        StateHasChanged();
-        await Task.CompletedTask;
-    }
-
     protected override void OnInitialized()
     {
-        BoundingBox box = new (new Position(2, 2), 3, 3);
-        Board.CreateEmptyTiles(box.Positions());
-        Board.CreateEmptyTile(1, 1);
+        ToolManager.OnClick += (_, _) => 
+        {
+            Console.WriteLine("Redraw board?");
+            StateHasChanged();
+        };
     }
 
-    public void AddFigure(int x, int y, Figure toAdd)
+    protected override void OnAfterRender(bool firstRender)
     {
-        Board.AddFigure(x, y, toAdd);
-        StateHasChanged();
+        Console.WriteLine("Rendered board");
     }
 }

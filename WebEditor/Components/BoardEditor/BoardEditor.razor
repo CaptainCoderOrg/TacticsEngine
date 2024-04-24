@@ -3,26 +3,28 @@
 @using CaptainCoder.TacticsEngine.Board
 @using System.Diagnostics.CodeAnalysis
 @using System.Text
-@inject IJSRuntime JSRuntime;
-@inject IBlazorDownloadFileService BlazorDownloadFileService;
+@inject IJSRuntime JSRuntime
+@inject IBlazorDownloadFileService BlazorDownloadFileService
+@inject ToolManager ToolManager
 <div class="editor-content">
     <div class="editor-menu">
         <h1>Board Editor</h1>
         <button @onclick="@(() => LoadBoard())">Load File</button>
         <InputFile @ref="@_inputFile" OnChange="@OnFileSelected" hidden />
         <button @onclick="@(() => SaveBoard())">Save File</button>
-        <button @onclick="@(() => AddFigure())">Add Figure</button>
+        <button @onclick="@(() => ToolManager.Tool = EraseTool.Shared)">Erase</button>
+        <button @onclick="@(() => ToolManager.Tool = TileTool.Shared)">Add Tiles</button>
+        <button @onclick="@(() => ToolManager.Tool = FigureTool.Shared)">Add Figure</button>
     </div>
     <div class="editor-content">
-        <BoardEditorView @ref="@_boardEditorView" />
+        <BoardRenderer Board="@_board" />
     </div>
 </div>
 
 @code
 {
-
     [AllowNull]
-    private BoardEditorView _boardEditorView;
+    private Board _board = new();
     [AllowNull]
     private InputFile _inputFile;
     public async Task OnFileSelected(InputFileChangeEventArgs e)
@@ -37,7 +39,7 @@
             Console.WriteLine("Error");
             return;
         }
-        await _boardEditorView.LoadBoard(result);
+        _board = result;
     }
 
     private async Task LoadBoard()
@@ -47,12 +49,12 @@
 
     private async Task SaveBoard()
     {
-        var bytes = Encoding.UTF8.GetBytes(_boardEditorView.Board.ToJson());
+        var bytes = Encoding.UTF8.GetBytes(_board.ToJson());
         await BlazorDownloadFileService.DownloadFileAsync("Board.json", bytes, "application/json");
     }
 
-    private void AddFigure()
+    protected override void OnInitialized()
     {
-        _boardEditorView.AddFigure(3, 3, new Figure() { Width = 1, Height = 2} );
+        
     }
 }

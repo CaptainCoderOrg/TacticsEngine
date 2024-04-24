@@ -5,17 +5,17 @@
     height: var(--cell-size);
     left: calc(var(--pos-x) * var(--cell-size));
     top: calc(var(--pos-y) * var(--cell-size));
+    border: 1px solid black;
 }
 
 .tile
 {
-    border: 1px solid black;
-    display: inline-block;
+    background-color: grey;
 }
 
 .no-tile
 {
-    background-color: antiquewhite;
+    background-color: black;
 }
 
 .figure

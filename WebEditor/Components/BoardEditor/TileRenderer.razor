@@ -1,5 +1,6 @@
 @using CaptainCoder.TacticsEngine.Board
 @using System.Diagnostics.CodeAnalysis
+@inject ToolManager ToolManager
 <div 
     class="tile-info @TileType"
     style="
@@ -14,7 +15,6 @@
         {
             <span class="figure"></span>
         }
-    <span>(@Position.X, @Position.Y)</span>
     }
     
 </div>
@@ -32,15 +32,5 @@
         var other => throw new NotImplementedException($"Unknown Tile type {other}"),
     };
 
-    public void SelectTile()
-    {
-        if (Board.HasTile(Position.X, Position.Y))
-        {
-            Board.RemoveTile(Position.X, Position.Y);
-        }
-        else
-        {
-            Board.CreateEmptyTile(Position.X, Position.Y);
-        }        
-    }
+    public void SelectTile() => ToolManager.Click(Board, Position);
 }
