@@ -1,0 +1,54 @@
+@using CaptainCoder.TacticsEngine.Board
+<div class="board-container" 
+    style="--cell-size: @(CellSize)px;
+           --board-width: @Width;
+           --board-height: @Height;"
+    @onclick="ClickBoardContainer">
+    @foreach (Position position in Board.Tiles.Keys)
+    {
+        <div 
+            class="tile"
+            style="
+                --pos-x: @(position.X); 
+                --pos-y: @(position.Y);"
+            @onclick="() => SelectTile(position)"
+            @onclick:stopPropagation="true"
+            >
+            (@position.X, @position.Y)
+        </div>
+    }
+</div>
+
+@code
+{
+    public int CellSize { get; set; } = 50;
+    public int Width { get; set; } = 10;
+    public int Height { get; set; } = 10;
+    public Board Board { get; private set; } = new();
+
+    public async Task LoadBoard(Board board)
+    {
+        Board = board;
+        StateHasChanged();
+        await Task.CompletedTask;
+    }
+
+    protected override void OnInitialized()
+    {
+        BoundingBox box = new (new Position(2, 2), 3, 3);
+        Board.CreateEmptyTiles(box.Positions());
+        Board.CreateEmptyTile(1, 1);
+    }
+
+    private void SelectTile(Position selected)
+    {
+        Board.RemoveTile(selected.X, selected.Y);
+    }
+    private void ClickBoardContainer(MouseEventArgs e)
+    {
+        int x = (int)(e.OffsetX / CellSize);
+        int y = (int)(e.OffsetY / CellSize);
+        if(Board.HasTile(x, y)) { return; }
+        Board.CreateEmptyTile(x, y);
+    }
+}

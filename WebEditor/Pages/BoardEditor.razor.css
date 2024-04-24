@@ -1,0 +1,17 @@
+.editor-content
+{
+    display: flex;
+    flex-direction: row;
+}
+
+.editor-menu
+{
+    display: flex;
+    flex-direction: column;
+    flex: none;
+}
+
+.editor-content
+{
+    flex: grow;
+}
