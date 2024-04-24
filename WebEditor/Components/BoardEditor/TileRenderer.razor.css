@@ -1,0 +1,27 @@
+.tile-info
+{
+    position: absolute;
+    width: var(--cell-size);
+    height: var(--cell-size);
+    left: calc(var(--pos-x) * var(--cell-size));
+    top: calc(var(--pos-y) * var(--cell-size));
+    border: 1px solid black;
+}
+
+.tile
+{
+    background-color: grey;
+}
+
+.no-tile
+{
+    background-color: black;
+}
+
+.figure
+{
+    width: 100%;
+    height: 100%;
+    background-color: green;
+    position: absolute;
+}

@@ -1,0 +1,48 @@
+@using CaptainCoder.TacticsEngine.Board
+@using System.Diagnostics.CodeAnalysis;
+@inject ToolManager ToolManager;
+<div class="board-container" 
+    style="--cell-size: @(CellSize)px;
+           --board-width: @Width;
+           --board-height: @Height;">
+    @foreach (Position position in Positions)
+    {
+        <TileRenderer @key="@position" Position="@position" Board="@Board"/>
+    }
+</div>
+
+@code
+{
+    public int CellSize { get; set; } = 25;
+    public int Width { get; set; } = 20;
+    public int Height { get; set; } = 20;
+    [Parameter, EditorRequired, AllowNull]
+    public Board Board { get; set; }
+    public IEnumerable<Position> Positions
+    {
+        get
+        {
+            for (int y = 0; y < Height; y++)
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    yield return new Position(x, y);
+                }
+            }
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        ToolManager.OnClick += (_, _) => 
+        {
+            Console.WriteLine("Redraw board?");
+            StateHasChanged();
+        };
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        Console.WriteLine("Rendered board");
+    }
+}

@@ -1,0 +1,36 @@
+@using CaptainCoder.TacticsEngine.Board
+@using System.Diagnostics.CodeAnalysis
+@inject ToolManager ToolManager
+<div 
+    class="tile-info @TileType"
+    style="
+        --pos-x: @(Position.X); 
+        --pos-y: @(Position.Y);"
+    @onclick="() => SelectTile()"
+    @onclick:stopPropagation="true"
+    >
+    @if(Board.GetTile(Position.X, Position.Y) is Tile tile)
+    {
+        @if (tile.Figure is Figure)
+        {
+            <span class="figure"></span>
+        }
+    }
+    
+</div>
+
+@code
+{
+    [Parameter, EditorRequired]
+    public Position Position { get; set; }
+    [Parameter, EditorRequired, AllowNull]
+    public Board Board { get; set; }
+    private string TileType => Board.GetTile(Position.X, Position.Y) switch
+    {
+        NoTile => "no-tile",
+        Tile => "tile",
+        var other => throw new NotImplementedException($"Unknown Tile type {other}"),
+    };
+
+    public void SelectTile() => ToolManager.Click(Board, Position);
+}
