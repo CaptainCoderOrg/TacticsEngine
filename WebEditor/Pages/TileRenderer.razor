@@ -1,0 +1,30 @@
+@using CaptainCoder.TacticsEngine.Board
+<div 
+    class="tile"
+    style="
+        --pos-x: @(Position.X); 
+        --pos-y: @(Position.Y);"
+    @onclick="() => SelectTile()"
+    @onclick:stopPropagation="true"
+    >
+    @if (Tile?.Figure is Figure figure)
+    {
+        <span class="figure"></span>
+    }
+    (@Position.X, @Position.Y)
+</div>
+
+@code
+{
+    [Parameter, EditorRequired]
+    public Position Position { get; set; }
+    [Parameter, EditorRequired]
+    public Tile? Tile { get; set; }
+    [Parameter] 
+    public EventCallback<Position> OnClick { get; set; }
+
+    public void SelectTile()
+    {
+        OnClick.InvokeAsync(Position);
+    }
+}

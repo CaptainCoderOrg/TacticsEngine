@@ -4,18 +4,9 @@
            --board-width: @Width;
            --board-height: @Height;"
     @onclick="ClickBoardContainer">
-    @foreach (Position position in Board.Tiles.Keys)
+    @foreach ((Position position, TileInfo info) in Board.Tiles)
     {
-        <div 
-            class="tile"
-            style="
-                --pos-x: @(position.X); 
-                --pos-y: @(position.Y);"
-            @onclick="() => SelectTile(position)"
-            @onclick:stopPropagation="true"
-            >
-            (@position.X, @position.Y)
-        </div>
+        <TileRenderer @key="@position" Position="@position" Tile="@(info as Tile)" OnClick="@SelectTile"/>
     }
 </div>
 
@@ -37,6 +28,7 @@
     {
         BoundingBox box = new (new Position(2, 2), 3, 3);
         Board.CreateEmptyTiles(box.Positions());
+        @* Board.AddFigure(3, 3, new Figure(){ Width = 1, Height = 2 }); *@
         Board.CreateEmptyTile(1, 1);
     }
 
@@ -50,5 +42,11 @@
         int y = (int)(e.OffsetY / CellSize);
         if(Board.HasTile(x, y)) { return; }
         Board.CreateEmptyTile(x, y);
+    }
+
+    public void AddFigure(int x, int y, Figure toAdd)
+    {
+        Board.AddFigure(x, y, toAdd);
+        StateHasChanged();
     }
 }

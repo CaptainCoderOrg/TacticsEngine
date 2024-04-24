@@ -11,6 +11,7 @@
         <button @onclick="@(() => LoadBoard())">Load File</button>
         <InputFile @ref="@_inputFile" OnChange="@OnFileSelected" hidden />
         <button @onclick="@(() => SaveBoard())">Save File</button>
+        <button @onclick="@(() => AddFigure())">Add Figure</button>
     </div>
     <div class="editor-content">
         <BoardEditorView @ref="@_boardEditorView" />
@@ -48,5 +49,10 @@
     {
         var bytes = Encoding.UTF8.GetBytes(_boardEditorView.Board.ToJson());
         await BlazorDownloadFileService.DownloadFileAsync("Board.json", bytes, "application/json");
+    }
+
+    private void AddFigure()
+    {
+        _boardEditorView.AddFigure(3, 3, new Figure() { Width = 1, Height = 2} );
     }
 }
