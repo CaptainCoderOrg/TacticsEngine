@@ -1,30 +1,46 @@
 @using CaptainCoder.TacticsEngine.Board
+@using System.Diagnostics.CodeAnalysis
 <div 
-    class="tile"
+    class="tile-info @TileType"
     style="
         --pos-x: @(Position.X); 
         --pos-y: @(Position.Y);"
     @onclick="() => SelectTile()"
     @onclick:stopPropagation="true"
     >
-    @if (Tile?.Figure is Figure figure)
+    @if(Board.GetTile(Position.X, Position.Y) is Tile tile)
     {
-        <span class="figure"></span>
+        @if (tile.Figure is Figure)
+        {
+            <span class="figure"></span>
+        }
+    <span>(@Position.X, @Position.Y)</span>
     }
-    (@Position.X, @Position.Y)
+    
 </div>
 
 @code
 {
     [Parameter, EditorRequired]
     public Position Position { get; set; }
-    [Parameter, EditorRequired]
-    public Tile? Tile { get; set; }
-    [Parameter] 
-    public EventCallback<Position> OnClick { get; set; }
+    [Parameter, EditorRequired, AllowNull]
+    public Board Board { get; set; }
+    private string TileType => Board.GetTile(Position.X, Position.Y) switch
+    {
+        NoTile => "no-tile",
+        Tile => "tile",
+        var other => throw new NotImplementedException($"Unknown Tile type {other}"),
+    };
 
     public void SelectTile()
     {
-        OnClick.InvokeAsync(Position);
+        if (Board.HasTile(Position.X, Position.Y))
+        {
+            Board.RemoveTile(Position.X, Position.Y);
+        }
+        else
+        {
+            Board.CreateEmptyTile(Position.X, Position.Y);
+        }        
     }
 }

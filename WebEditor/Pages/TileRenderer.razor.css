@@ -1,12 +1,21 @@
-.tile
+.tile-info
 {
-    border: 1px solid black;
-    display: inline-block;
     position: absolute;
     width: var(--cell-size);
     height: var(--cell-size);
     left: calc(var(--pos-x) * var(--cell-size));
     top: calc(var(--pos-y) * var(--cell-size));
+}
+
+.tile
+{
+    border: 1px solid black;
+    display: inline-block;
+}
+
+.no-tile
+{
+    background-color: antiquewhite;
 }
 
 .figure
