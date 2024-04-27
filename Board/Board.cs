@@ -1,24 +1,14 @@
-using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-
-using CaptainCoder.Json;
-
 
 namespace CaptainCoder.TacticsEngine.Board;
 
 public sealed class Board : IEquatable<Board>
 {
+    public HashSet<Position> TileSet { get; set; } = [];
+    public HashSet<Positioned<Figure>> Figures { get; set; } = [];
 
-#pragma warning disable IDE0044 // Add readonly modifier
-    [JsonInclude]
-    private Dictionary<Position, TileInfo> _tiles = [];
-#pragma warning restore IDE0044 // Add readonly modifier
-    [JsonIgnore]
-    public IReadOnlyDictionary<Position, TileInfo> Tiles => new ReadOnlyDictionary<Position, TileInfo>(_tiles);
-
-    public void CreateEmptyTile(int x, int y) => _tiles.Add(new Position(x, y), TileInfo.Empty);
+    public void CreateEmptyTile(int x, int y) => TileSet.Add(new Position(x, y));
     public void CreateEmptyTiles(IEnumerable<Position> positions)
     {
         foreach (Position p in positions)
@@ -26,45 +16,49 @@ public sealed class Board : IEquatable<Board>
             CreateEmptyTile(p.X, p.Y);
         }
     }
-    public bool HasTile(int x, int y) => _tiles.ContainsKey(new Position(x, y));
-    public TileInfo GetTile(int x, int y) => _tiles.GetValueOrDefault(new Position(x, y), TileInfo.None);
+    public bool HasTile(int x, int y) => TileSet.Contains(new Position(x, y));
+    public TileInfo GetTile(int x, int y)
+    {
+        if (!TileSet.Contains(new Position(x, y))) { return TileInfo.None; }
+        FigureInfo? info = Figures
+            .Where(f => new BoundingBox(f.Position, f.Element.Width, f.Element.Height).Positions().Contains(new Position(x, y)))
+            .Select(f => f.Element)
+            .FirstOrDefault();
+        Tile tile = new() { Figure = info ?? FigureInfo.None };
+        return tile;
+    }
 
     public void AddFigure(int x, int y, Figure toAdd)
     {
-        BoundingBox bbox = new(new Position(x, y), toAdd.Width, toAdd.Height);
-        foreach (Position position in bbox.Positions())
-        {
-            if (!_tiles.TryGetValue(position, out TileInfo? tileInfo)) { throw new ArgumentOutOfRangeException($"Board does not contain a tile at position {x}, {y}"); }
-            if (tileInfo is Tile tile && tile.Figure is not NoFigure) { throw new InvalidOperationException($"Cannot place figure at position {x}, {y}. Tile at {position} is already occupied by {tile.Figure} "); }
-        }
-        foreach (Position position in bbox.Positions())
-        {
-            _tiles[position] = new Tile() { Figure = toAdd };
-        }
+        Position position = new(x, y);
+        BoundingBox bbox = new(position, toAdd.Width, toAdd.Height);
+        if (!bbox.Positions().All(TileSet.Contains)) { throw new ArgumentOutOfRangeException($"Board does not contain a tile at position {x}, {y}"); }
+        if (bbox.Positions().Any(IsOccupied)) { throw new InvalidOperationException($"Cannot place figure at position {x}, {y} because it overlaps with another figure."); }
+        Figures.Add(new Positioned<Figure>(toAdd, position));
+        bool IsOccupied(Position pos) => Figures.Any(f => new BoundingBox(f.Position, f.Element.Width, f.Element.Height).Positions().Contains(pos));
     }
 
-    public void RemoveTile(int x, int y) => _tiles.Remove(new Position(x, y));
+    public void RemoveTile(int x, int y)
+    {
+        TileSet.Remove(new Position(x, y));
+        //_tiles.Remove(new Position(x, y));  
+    }
 
-    public bool Equals(Board? other) =>
-        other is not null &&
-        _tiles.Count == other._tiles.Count &&
-        _tiles.All(kvp => other._tiles.TryGetValue(kvp.Key, out TileInfo? otherTile) && kvp.Value.Equals(otherTile));
+    public bool Equals(Board? other)
+    {
+        return other is not null &&
+        TileSet.SetEquals(other.TileSet) &&
+        Figures.SetEquals(other.Figures);
+    }
 }
 
 public static class BoardExtensions
 {
-    private static JsonSerializerOptions Options { get; } = new()
-    {
-        Converters =
-        {
-            new DictionaryJsonConverter<Position, TileInfo>(),
-        },
-    };
-    public static string ToJson(this Board board) => JsonSerializer.Serialize(board, Options);
+    public static string ToJson(this Board board) => JsonSerializer.Serialize(board);
 
     public static bool TryFromJson(string json, [NotNullWhen(true)] out Board? board)
     {
-        board = JsonSerializer.Deserialize<Board>(json, Options);
+        board = JsonSerializer.Deserialize<Board>(json);
         return board is not null;
     }
 }
