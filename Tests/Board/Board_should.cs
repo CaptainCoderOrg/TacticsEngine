@@ -123,6 +123,20 @@ public class Board_should
         _ = Should.Throw<InvalidOperationException>(() => underTest.AddFigure(1, 1, second));
     }
 
+    [Theory]
+    [InlineData(1, 2)]
+    [InlineData(5, 7)]
+    public void not_have_figure_on_empty_tile(int x, int y)
+    {
+        Board underTest = new();
+        Position[] positions = [.. new BoundingBox(new Position(0, 0), 10, 10).Positions()];
+        underTest.CreateEmptyTiles(positions);
+        underTest.AddFigure(0, 0, new Figure());
+
+        TileInfo actual = underTest.GetTile(x, y);
+        actual.ShouldBe(new Tile());
+    }
+
     [Fact]
     public void should_have_position_to_tile_mapping()
     {
@@ -140,10 +154,10 @@ public class Board_should
         ];
         underTest.CreateEmptyTiles(positions);
 
-        IReadOnlyDictionary<Position, TileInfo> actual = underTest.Tiles;
+        HashSet<Position> actual = underTest.TileSet;
 
         actual.Count.ShouldBe(9);
-        actual.Keys.ShouldBeSubsetOf(positions);
+        actual.ShouldBeSubsetOf(positions);
     }
 
     [Theory]
@@ -156,8 +170,8 @@ public class Board_should
 
         underTest.RemoveTile(x, y);
 
-        underTest.Tiles.Count.ShouldBe(8);
-        underTest.Tiles.Keys.ShouldNotContain(new Position(x, y));
+        underTest.TileSet.Count.ShouldBe(8);
+        underTest.TileSet.ShouldNotContain(new Position(x, y));
     }
 
     [Fact]
