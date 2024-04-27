@@ -9,6 +9,10 @@
     {
         <TileRenderer @key="@position" Position="@position" Board="@Board"/>
     }
+    @foreach (Positioned<Figure> figure in Board.Figures)
+    {
+        <FigureRenderer Figure="@figure" /> 
+    }
 </div>
 
 @code

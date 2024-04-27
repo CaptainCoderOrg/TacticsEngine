@@ -1,9 +1,10 @@
 .figure-info
 {
     position: absolute;
-    width: var(--cell-size * --figure-width);
-    height: var(--cell-size * --figure-height);
-    left: calc(var(--pos-x) * var(--cell-size));
-    top: calc(var(--pos-y) * var(--cell-size));
-    color: green;
+    width: calc(var(--cell-size) * var(--figure-width) - 3px);
+    height: calc(var(--cell-size) * var(--figure-height) - 3px);
+    left: calc(var(--pos-x) * var(--cell-size) + 2px);
+    top: calc(var(--pos-y) * var(--cell-size) + 2px);
+    background-color: green;
+    z-index: 1;
 }
