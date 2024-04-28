@@ -11,7 +11,6 @@ public sealed class FigureTool : Tool
     public override void OnSelectFigure(Board board, Positioned<Figure> figure)
     {
         Selected = figure;
-        Console.WriteLine($"Selected: {Selected}");
     }
 
     public override void OnStartDragFigure(Board board, Positioned<Figure> figure)
@@ -19,7 +18,6 @@ public sealed class FigureTool : Tool
         IsDragging = true;
         Selected = figure;
         board.RemoveFigure(figure.Position);
-        Console.WriteLine($"OnStartDrag: {figure}");
     }
 
     public override void OnMouseOver(Board board, Position position)
@@ -29,10 +27,9 @@ public sealed class FigureTool : Tool
 
     public override void OnMouseUp(Board board, Position endPosition)
     {
-        Console.WriteLine($"OnEndDrag: {Selected} to {endPosition}");
         if (Selected != null)
         {
-            if (!board.Figures.TryAdd(endPosition, Selected.Element))
+            if (!board.TryAddFigure(endPosition, Selected.Element))
             {
                 board.Figures.Add(Selected);
             }

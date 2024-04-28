@@ -42,7 +42,7 @@ public class Board_should
         underTest.CreateEmptyTile(x, y);
         Figure toAdd = new() { Width = 1, Height = 1 };
 
-        underTest.AddFigure(x, y, toAdd);
+        underTest.TryAddFigure(x, y, toAdd);
 
         Tile actual = (Tile)underTest.GetTile(x, y);
         actual.Figure.ShouldBe(toAdd);
@@ -56,14 +56,10 @@ public class Board_should
         Board underTest = new();
         underTest.CreateEmptyTile(x, y);
         Figure added = new() { Width = 1, Height = 1 };
-        underTest.AddFigure(x, y, added);
+        underTest.TryAddFigure(x, y, added);
 
         Figure toAdd = new() { Width = 1, Height = 1 };
-
-        _ = Should.Throw<InvalidOperationException>(() =>
-        {
-            underTest.AddFigure(x, y, toAdd);
-        });
+        underTest.TryAddFigure(x, y, toAdd).ShouldBeFalse();
     }
 
     [Theory]
@@ -81,7 +77,7 @@ public class Board_should
         }
         Figure toAdd = new() { Width = w, Height = h };
 
-        underTest.AddFigure(x, y, toAdd);
+        underTest.TryAddFigure(x, y, toAdd);
 
         foreach (Position position in positions)
         {
@@ -95,7 +91,7 @@ public class Board_should
     public void not_allow_add_figure_to_no_tile()
     {
         Board underTest = new();
-        _ = Should.Throw<ArgumentOutOfRangeException>(() => underTest.AddFigure(0, 0, new Figure()));
+        underTest.TryAddFigure(0, 0, new Figure()).ShouldBeFalse();
     }
 
     [Fact]
@@ -106,8 +102,7 @@ public class Board_should
         underTest.CreateEmptyTile(1, 0);
         underTest.CreateEmptyTile(0, 1);
         Figure tooLarge = new() { Width = 2, Height = 2 };
-
-        _ = Should.Throw<ArgumentOutOfRangeException>(() => underTest.AddFigure(0, 0, tooLarge));
+        underTest.TryAddFigure(0, 0, tooLarge).ShouldBeFalse();
     }
 
     [Fact]
@@ -117,10 +112,10 @@ public class Board_should
         BoundingBox box = new(new Position(0, 0), 3, 3);
         underTest.CreateEmptyTiles(box.Positions());
         Figure first = new() { Width = 2, Height = 2 };
-        underTest.AddFigure(0, 0, first);
+        underTest.TryAddFigure(0, 0, first);
         Figure second = new() { Width = 2, Height = 2 };
+        underTest.TryAddFigure(1, 1, second).ShouldBeFalse();
 
-        _ = Should.Throw<InvalidOperationException>(() => underTest.AddFigure(1, 1, second));
     }
 
     [Theory]
@@ -131,7 +126,7 @@ public class Board_should
         Board underTest = new();
         Position[] positions = [.. new BoundingBox(new Position(0, 0), 10, 10).Positions()];
         underTest.CreateEmptyTiles(positions);
-        underTest.AddFigure(0, 0, new Figure());
+        underTest.TryAddFigure(0, 0, new Figure());
 
         TileInfo actual = underTest.GetTile(x, y);
         actual.ShouldBe(new Tile());
@@ -205,8 +200,8 @@ public class Board_should
             board.CreateEmptyTiles(
                 new BoundingBox(new Position(0, 0), 7, 5).Positions()
             );
-            board.AddFigure(0, 0, new Figure());
-            board.AddFigure(3, 3, new Figure() { Width = 2, Height = 2 });
+            board.TryAddFigure(0, 0, new Figure());
+            board.TryAddFigure(3, 3, new Figure() { Width = 2, Height = 2 });
             return board;
         }
     }
@@ -225,15 +220,15 @@ public class Board_should
         board0.CreateEmptyTiles(
             new BoundingBox(new Position(0, 0), 5, 7).Positions()
         );
-        board0.AddFigure(0, 0, new Figure());
-        board0.AddFigure(3, 3, new Figure() { Width = 2, Height = 2 });
+        board0.TryAddFigure(0, 0, new Figure());
+        board0.TryAddFigure(3, 3, new Figure() { Width = 2, Height = 2 });
 
         Board board1 = new();
         board1.CreateEmptyTiles(
             new BoundingBox(new Position(0, 0), 7, 5).Positions()
         );
-        board1.AddFigure(3, 3, new Figure());
-        board1.AddFigure(0, 0, new Figure() { Width = 2, Height = 2 });
+        board1.TryAddFigure(3, 3, new Figure());
+        board1.TryAddFigure(0, 0, new Figure() { Width = 2, Height = 2 });
 
         board0.ShouldNotBe(board1);
     }
@@ -253,8 +248,8 @@ public class Board_should
             board.CreateEmptyTiles(
                 new BoundingBox(new Position(0, 0), 7, 5).Positions()
             );
-            board.AddFigure(0, 0, new Figure());
-            board.AddFigure(3, 3, new Figure() { Width = 2, Height = 2 });
+            board.TryAddFigure(0, 0, new Figure());
+            board.TryAddFigure(3, 3, new Figure() { Width = 2, Height = 2 });
             return board;
         }
     }
