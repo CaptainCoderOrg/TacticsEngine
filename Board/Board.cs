@@ -59,13 +59,14 @@ public static class BoardExtensions
     public static bool MoveFigure(this Board board, int startX, int startY, int endX, int endY) => board.MoveFigure(new Position(startX, startY), new Position(endX, endY));
     public static bool MoveFigure(this Board board, Position start, Position end)
     {
-        Positioned<Figure>? toMove = board.Figures.FirstOrDefault(f => f.Position == start);
-        if (toMove is null) { return false; }
+        if (!board.Figures.TryRemove(start, out Positioned<Figure>? toMove)) { return false; };
         BoundingBox endBox = new(end.X, end.Y, toMove.Element.Width, toMove.Element.Height);
-        IEnumerable<BoundingBox> others = board.Figures.Where(f => f != toMove).Select(f => f.BoundingBox());
-        if (endBox.OverlapsAny(others)) { return false; }
+        if (endBox.Positions().Any(board.Figures.IsOccupied))
+        {
+            board.Figures.Add(toMove);
+            return false;
+        }
         board.AddFigure(end.X, end.Y, toMove.Element);
-        _ = board.Figures.TryRemove(start, out _);
         return true;
     }
     private static JsonSerializerOptions Options { get; } = new()
