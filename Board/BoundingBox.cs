@@ -17,9 +17,4 @@ public static class BoundingBoxExtensions
             }
         }
     }
-
-    public static bool OverlapsWith(this BoundingBox box, BoundingBox other) => box.Positions().Any(pos => other.Contains(pos));
-
-    public static bool OverlapsAny(this BoundingBox box, IEnumerable<BoundingBox> others) => others.Any(other => box.OverlapsWith(other));
-    public static bool Contains(this BoundingBox box, Position toCheck) => box.Positions().Any(toCheck.Equals);
 }
