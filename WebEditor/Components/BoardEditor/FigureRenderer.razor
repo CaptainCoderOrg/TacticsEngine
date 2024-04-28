@@ -1,19 +1,42 @@
 @using CaptainCoder.TacticsEngine.Board
 @using System.Diagnostics.CodeAnalysis
 @inject ToolManager ToolManager
+@if (Board.Figures.Contains(Figure))
+{
 <div 
     class="figure-info"
     style="
         --pos-x: @(Figure.Position.X); 
         --pos-y: @(Figure.Position.Y);
         --figure-width: @(Figure.Element.Width);
-        --figure-height: @(Figure.Element.Height)"
+        --figure-height: @(Figure.Element.Height);"
+    @onmouseenter="@(() => OnMouseEnter.InvokeAsync(Figure.Position))"
+    @onclick="@(() => ToolManager.SelectFigure(Board, Figure))"
+    @onmousedown="@(() => _mouseDown = true)"
+    @onmouseup="@(() => _mouseDown = false)"
+    @onmouseleave="@(() => CheckDragStart())"
     >
-    <span class="figure"></span>
 </div>
+}
 
 @code
 {
+    private bool _mouseDown = false;
     [Parameter, EditorRequired, AllowNull]
     public Positioned<Figure> Figure { get; set; }
+    [CascadingParameter, AllowNull]
+    public Board Board { get; set; }
+    [Parameter]
+    public EventCallback<Position> OnMouseEnter { get; set; }
+    private void CheckDragStart()
+    {
+        Console.WriteLine("Checking drag");
+        if (_mouseDown)
+        {
+            _mouseDown = false;
+            Console.WriteLine("Starting drag");
+            ToolManager.StartDragFigure(Board, Figure);
+        }
+    }
+
 }

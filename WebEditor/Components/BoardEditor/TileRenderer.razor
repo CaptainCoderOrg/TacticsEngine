@@ -6,8 +6,10 @@
     style="
         --pos-x: @(Position.X); 
         --pos-y: @(Position.Y);"
-    @onclick="() => SelectTile()"
+    @onclick="@SelectTile"
     @onclick:stopPropagation="true"
+    @onmouseenter="@(() => OnMouseEnter.InvokeAsync(Position))"
+    
     >
     @if(Board.GetTile(Position.X, Position.Y) is Tile tile)
     {
@@ -19,8 +21,10 @@
 {
     [Parameter, EditorRequired]
     public Position Position { get; set; }
-    [Parameter, EditorRequired, AllowNull]
+    [CascadingParameter, AllowNull]
     public Board Board { get; set; }
+    [Parameter]
+    public EventCallback<Position> OnMouseEnter { get; set; }
     private string TileType => Board.GetTile(Position.X, Position.Y) switch
     {
         NoTile => "no-tile",
@@ -28,5 +32,5 @@
         var other => throw new NotImplementedException($"Unknown Tile type {other}"),
     };
 
-    public void SelectTile() => ToolManager.Click(Board, Position);
+    public void SelectTile() => ToolManager.SelectTile(Board, Position);
 }

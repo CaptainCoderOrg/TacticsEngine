@@ -4,6 +4,7 @@ namespace WebEditor.Components.BoardEditor;
 
 public class ToolManager
 {
+    internal static ToolManager Shared { get; } = new();
     private Tool _tool = TileTool.Shared;
     public Tool Tool
     {
@@ -16,23 +17,52 @@ public class ToolManager
         }
     }
     public event Action<Tool>? OnChange;
-    public event Action<Board, Position>? OnClick;
-    public event Action<Board, Position>? OnMouseOver;
-    public void Click(Board board, Position position)
+    public void SelectTile(Board board, Position position)
     {
-        _tool.OnClick(board, position);
-        OnClick?.Invoke(board, position);
+        _tool.OnSelectTile(board, position);
     }
 
     public void MouseOver(Board board, Position position)
     {
         _tool.OnMouseOver(board, position);
-        OnMouseOver?.Invoke(board, position);
+    }
+
+    public void SelectFigure(Board board, Positioned<Figure> figure)
+    {
+        _tool.OnSelectFigure(board, figure);
+    }
+
+    public void StartDragFigure(Board board, Positioned<Figure> figure)
+    {
+        _tool.OnStartDragFigure(board, figure);
+    }
+
+    public void MouseUp(Board board, Position position)
+    {
+        _tool.OnMouseUp(board, position);
     }
 }
 
 public abstract class Tool
 {
-    public virtual void OnClick(Board board, Position position) { }
+    private ToolManager ToolManager => ToolManager.Shared;
+    public virtual void OnSelectTile(Board board, Position position) { }
     public virtual void OnMouseOver(Board board, Position position) { }
+    public virtual void OnSelectFigure(Board board, Positioned<Figure> figure)
+    {
+        ToolManager.Tool = FigureTool.Shared;
+        FigureTool.Shared.OnSelectFigure(board, figure);
+    }
+
+    public virtual void OnStartDragFigure(Board board, Positioned<Figure> figure)
+    {
+        ToolManager.Tool = FigureTool.Shared;
+        FigureTool.Shared.OnStartDragFigure(board, figure);
+    }
+
+    public virtual void OnMouseUp(Board board, Position endPosition)
+    {
+        ToolManager.Tool = FigureTool.Shared;
+        FigureTool.Shared.OnMouseUp(board, endPosition);
+    }
 }
