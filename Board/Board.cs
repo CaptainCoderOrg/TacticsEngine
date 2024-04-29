@@ -38,14 +38,6 @@ public static class BoardExtensions
     }
     public static TileInfo GetTile(this Board board, int x, int y) => board.GetTile(new Position(x, y));
 
-    // public static void AddFigure(this Board board, int x, int y, Figure toAdd)
-    // {
-    //     Position position = new(x, y);
-    //     BoundingBox bbox = new(position, toAdd.Width, toAdd.Height);
-    //     if (!board.HasTiles(bbox)) { throw new ArgumentOutOfRangeException($"Board does not contain a tile at position {x}, {y}"); }
-    //     board.Figures.Add(position, toAdd);
-    // }
-
     public static bool TryAddFigure(this Board board, Position position, Figure toAdd)
     {
         BoundingBox bbox = new(position, toAdd.Width, toAdd.Height);

@@ -8,3 +8,9 @@
     background-color: green;
     z-index: 1;
 }
+
+.dragged
+{
+    border: 2px solid red;
+    pointer-events: none;
+}

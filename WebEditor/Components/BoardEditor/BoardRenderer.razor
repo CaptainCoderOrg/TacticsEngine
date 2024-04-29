@@ -17,7 +17,7 @@
     }
     @if (FigureTool.Shared.IsDragging && FigureTool.Shared.Target is Positioned<Figure> target)
     {
-        <FigureRenderer Figure="@target" AlwaysVisible />
+        <FigureRenderer Figure="@target" IsDragging />
     }
     </CascadingValue>
 </div>
@@ -49,6 +49,5 @@
         _mousePosition = position;
         ToolManager.MouseOver(Board, position);
         StateHasChanged();
-        Console.WriteLine("Changed");
     }
 }

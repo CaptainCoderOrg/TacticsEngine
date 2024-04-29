@@ -10,11 +10,7 @@
     @onclick:stopPropagation="true"
     @onmouseenter="@(() => OnMouseEnter.InvokeAsync(Position))"
     
-    >
-    @if(Board.GetTile(Position.X, Position.Y) is Tile tile)
-    {
-    }
-    
+    >    
 </div>
 
 @code

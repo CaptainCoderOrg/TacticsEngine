@@ -26,8 +26,7 @@ public sealed class FigureTool : Tool
         base.OnMouseOver(board, position);
         if (IsDragging && Selected is Positioned<Figure> figure)
         {
-            Target = new Positioned<Figure>(figure.Element, position);
-            Console.WriteLine(Target);
+            Target = new(figure.Element, position);
         }
     }
 

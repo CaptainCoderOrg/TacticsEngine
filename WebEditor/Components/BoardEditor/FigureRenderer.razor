@@ -1,10 +1,10 @@
 @using CaptainCoder.TacticsEngine.Board
 @using System.Diagnostics.CodeAnalysis
 @inject ToolManager ToolManager
-@if (AlwaysVisible || Board.Figures.Contains(Figure))
+@if (IsDragging || Board.Figures.Contains(Figure))
 {
 <div 
-    class="figure-info"
+    class="figure-info @(IsDragging ? "dragged" : "")"
     style="
         --pos-x: @(Figure.Position.X); 
         --pos-y: @(Figure.Position.Y);
@@ -14,7 +14,7 @@
     @onclick="@(() => ToolManager.SelectFigure(Board, Figure))"
     @onmousedown="@(() => _mouseDown = true)"
     @onmouseup="@(() => _mouseDown = false)"
-    @onmouseleave="@(() => CheckDragStart())"
+    @onmousemove="@CheckDragStart"
     >
 </div>
 }
@@ -29,8 +29,8 @@
     [Parameter]
     public EventCallback<Position> OnMouseEnter { get; set; }
     [Parameter]
-    public bool AlwaysVisible { get; set; } = false;
-    private void CheckDragStart()
+    public bool IsDragging { get; set; } = false;
+    private void CheckDragStart(MouseEventArgs args)
     {
         if (_mouseDown)
         {
