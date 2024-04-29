@@ -1,24 +1,24 @@
 @using CaptainCoder.TacticsEngine.Board
 @using System.Diagnostics.CodeAnalysis;
 @inject ToolManager ToolManager;
-<div class="board-container" 
-    style="--cell-size: @(CellSize)px;
+<div class="board-container" style="--cell-size: @(CellSize)px;
            --board-width: @Width;
-           --board-height: @Height;"
-            @onmouseup="@(() => ToolManager.MouseUp(Board, _mousePosition))">
+           --board-height: @Height;" @onmouseup="@(() => ToolManager.MouseUp(Board, _mousePosition))">
     <CascadingValue Value="@Board">
-    @foreach (Position position in Positions)
-    {
-        <TileRenderer @key="@position" Position="@position" OnMouseEnter="@(() => MouseEnter(@position))"/>
-    }
-    @foreach (Positioned<Figure> figure in Board.Figures)
-    {
-        <FigureRenderer Figure="@figure" OnMouseEnter="@(() => MouseEnter(@figure.Position))" /> 
-    }
-    @if (FigureTool.Shared.IsDragging && FigureTool.Shared.Target is Positioned<Figure> target)
-    {
-        <FigureRenderer Figure="@target" IsDragging />
-    }
+        <CascadingValue Value="@this">
+            @foreach (Position position in Positions)
+            {
+                <TileRenderer @key="@position" Position="@position" OnMouseEnter="@(() => MouseEnter(@position))" />
+            }
+            @foreach (Positioned<Figure> figure in Board.Figures)
+            {
+                <FigureRenderer Figure="@figure" OnMouseEnter="@(() => MouseEnter(@figure.Position))" />
+            }
+            @if (FigureTool.Shared.IsDragging && FigureTool.Shared.Target is Positioned<Figure> target)
+            {
+                <FigureRenderer Figure="@target" IsDragging />
+            }
+        </CascadingValue>
     </CascadingValue>
 </div>
 
@@ -29,7 +29,7 @@
     public int Height { get; set; } = 20;
     [Parameter, EditorRequired, AllowNull]
     public Board Board { get; set; }
-    private Position _mousePosition = new (0, 0);
+    private Position _mousePosition = new(0, 0);
     public IEnumerable<Position> Positions
     {
         get

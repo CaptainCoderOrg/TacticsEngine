@@ -13,10 +13,10 @@ public abstract class Tool
         FigureTool.Shared.OnSelectFigure(board, figure);
     }
 
-    public virtual void OnStartDragFigure(Board board, Positioned<Figure> figure)
+    public virtual void OnStartDragFigure(Board board, Positioned<Figure> figure, Position offset)
     {
         ToolManager.Tool = FigureTool.Shared;
-        FigureTool.Shared.OnStartDragFigure(board, figure);
+        FigureTool.Shared.OnStartDragFigure(board, figure, offset);
     }
 
     public virtual void OnMouseUp(Board board, Position endPosition)

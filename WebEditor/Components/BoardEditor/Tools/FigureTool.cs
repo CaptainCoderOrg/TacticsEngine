@@ -7,6 +7,7 @@ public sealed class FigureTool : Tool
     public Figure ToDraw { get; private set; } = new() { Width = 1, Height = 2 };
     public Positioned<Figure>? Selected { get; private set; }
     public Positioned<Figure>? Target { get; private set; }
+    private Position _offset = new();
     public bool IsDragging { get; private set; } = false;
 
     public override void OnSelectFigure(Board board, Positioned<Figure> figure)
@@ -14,8 +15,9 @@ public sealed class FigureTool : Tool
         Selected = figure;
     }
 
-    public override void OnStartDragFigure(Board board, Positioned<Figure> figure)
+    public override void OnStartDragFigure(Board board, Positioned<Figure> figure, Position offset)
     {
+        _offset = offset;
         IsDragging = true;
         Selected = figure;
         board.RemoveFigure(figure.Position);
@@ -26,18 +28,17 @@ public sealed class FigureTool : Tool
         base.OnMouseOver(board, position);
         if (IsDragging && Selected is Positioned<Figure> figure)
         {
-            Target = new(figure.Element, position);
+            Position withOffset = new(position.X + _offset.X, position.Y + _offset.Y);
+            Target = new(figure.Element, withOffset);
         }
     }
 
     public override void OnMouseUp(Board board, Position endPosition)
     {
-        if (Selected != null)
+        Position withOffset = new(endPosition.X + _offset.X, endPosition.Y + _offset.Y);
+        if (Selected != null && !board.TryAddFigure(withOffset, Selected.Element))
         {
-            if (!board.TryAddFigure(endPosition, Selected.Element))
-            {
-                board.Figures.Add(Selected);
-            }
+            board.Figures.Add(Selected);
         }
         Selected = null;
         Target = null;

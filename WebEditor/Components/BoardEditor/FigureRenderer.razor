@@ -29,6 +29,8 @@
     public Positioned<Figure> Figure { get; set; }
     [CascadingParameter, AllowNull]
     public Board Board { get; set; }
+    [CascadingParameter, AllowNull]
+    public BoardRenderer Parent { get; set; }
     [Parameter]
     public EventCallback<Position> OnMouseEnter { get; set; }
     [Parameter]
@@ -50,8 +52,9 @@
     {
         if (_mouseDown)
         {
+            Position offset = new (-(int)(args.OffsetX / Parent.CellSize), -(int)(args.OffsetY / Parent.CellSize));
             _mouseDown = false;
-            ToolManager.StartDragFigure(Board, Figure);
+            ToolManager.StartDragFigure(Board, Figure, offset);
         }
     }
 
