@@ -4,7 +4,10 @@
 @if (IsDragging || Board.Figures.Contains(Figure))
 {
 <div 
-    class="figure-info @Dragged @ValidPosition @IgnoreMouse"
+    class="figure-info"
+    dragged="@IsDragging"
+    is-invalid="@IsInvalid"
+    ignore-mouse="@FigureTool.Shared.IsDragging"
     style="
         --pos-x: @(Figure.Position.X); 
         --pos-y: @(Figure.Position.Y);
@@ -21,9 +24,6 @@
 
 @code
 {
-    private string IgnoreMouse => FigureTool.Shared.IsDragging ? "ignore-mouse" : ""; 
-    private string Dragged => IsDragging ? "dragged" : "";
-    private string ValidPosition => IsValidPosition ? "valid-position" : "invalid-position";
     private bool _mouseDown = false;
     [Parameter, EditorRequired, AllowNull]
     public Positioned<Figure> Figure { get; set; }
@@ -33,16 +33,17 @@
     public EventCallback<Position> OnMouseEnter { get; set; }
     [Parameter]
     public bool IsDragging { get; set; } = false;
-    public bool IsValidPosition
+    public bool IsInvalid
     {
         get
         {
+            if (!IsDragging) { return false; }
             if(Board.TryAddFigure(Figure.Position, Figure.Element))
             {
                 Board.RemoveFigure(Figure.Position);
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
     }
     private void CheckDragStart(MouseEventArgs args)

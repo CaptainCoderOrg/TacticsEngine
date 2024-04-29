@@ -9,22 +9,17 @@
     z-index: 1;
 }
 
-.ignore-mouse
+.figure-info[dragged]
+{
+    border: 2px solid lightgreen;
+}
+
+.figure-info[ignore-mouse]
 {
     pointer-events: none;
 }
 
-.dragged
-{
-    border: 2px solid;
-}
-
-.valid-position
-{
-    border-color: lightgreen;
-}
-
-.invalid-position
+.figure-info[is-invalid]
 {
     border-color: red;
 }
