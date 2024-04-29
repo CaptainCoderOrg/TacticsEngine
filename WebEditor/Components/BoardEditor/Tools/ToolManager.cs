@@ -42,27 +42,3 @@ public class ToolManager
         _tool.OnMouseUp(board, position);
     }
 }
-
-public abstract class Tool
-{
-    private ToolManager ToolManager => ToolManager.Shared;
-    public virtual void OnSelectTile(Board board, Position position) { }
-    public virtual void OnMouseOver(Board board, Position position) { }
-    public virtual void OnSelectFigure(Board board, Positioned<Figure> figure)
-    {
-        ToolManager.Tool = FigureTool.Shared;
-        FigureTool.Shared.OnSelectFigure(board, figure);
-    }
-
-    public virtual void OnStartDragFigure(Board board, Positioned<Figure> figure)
-    {
-        ToolManager.Tool = FigureTool.Shared;
-        FigureTool.Shared.OnStartDragFigure(board, figure);
-    }
-
-    public virtual void OnMouseUp(Board board, Position endPosition)
-    {
-        ToolManager.Tool = FigureTool.Shared;
-        FigureTool.Shared.OnMouseUp(board, endPosition);
-    }
-}

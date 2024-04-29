@@ -1,7 +1,7 @@
 @using CaptainCoder.TacticsEngine.Board
 @using System.Diagnostics.CodeAnalysis
 @inject ToolManager ToolManager
-@if (Board.Figures.Contains(Figure))
+@if (AlwaysVisible || Board.Figures.Contains(Figure))
 {
 <div 
     class="figure-info"
@@ -28,6 +28,8 @@
     public Board Board { get; set; }
     [Parameter]
     public EventCallback<Position> OnMouseEnter { get; set; }
+    [Parameter]
+    public bool AlwaysVisible { get; set; } = false;
     private void CheckDragStart()
     {
         if (_mouseDown)

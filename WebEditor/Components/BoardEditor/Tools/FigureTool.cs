@@ -6,6 +6,7 @@ public sealed class FigureTool : Tool
     public static FigureTool Shared { get; } = new();
     public Figure ToDraw { get; private set; } = new() { Width = 1, Height = 2 };
     public Positioned<Figure>? Selected { get; private set; }
+    public Positioned<Figure>? Target { get; private set; }
     public bool IsDragging { get; private set; } = false;
 
     public override void OnSelectFigure(Board board, Positioned<Figure> figure)
@@ -23,6 +24,11 @@ public sealed class FigureTool : Tool
     public override void OnMouseOver(Board board, Position position)
     {
         base.OnMouseOver(board, position);
+        if (IsDragging && Selected is Positioned<Figure> figure)
+        {
+            Target = new Positioned<Figure>(figure.Element, position);
+            Console.WriteLine(Target);
+        }
     }
 
     public override void OnMouseUp(Board board, Position endPosition)
@@ -35,5 +41,7 @@ public sealed class FigureTool : Tool
             }
         }
         Selected = null;
+        Target = null;
+        IsDragging = false;
     }
 }
