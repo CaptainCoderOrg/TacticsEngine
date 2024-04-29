@@ -23,7 +23,7 @@
 {
     private string IgnoreMouse => FigureTool.Shared.IsDragging ? "ignore-mouse" : ""; 
     private string Dragged => IsDragging ? "dragged" : "";
-    private string ValidPosition => IsValidPosition ? "valid-position" : "invalid-position";
+    private string ValidPosition => IsDragging ? IsValidPosition ? "valid-position" : "invalid-position" : "";
     private bool _mouseDown = false;
     [Parameter, EditorRequired, AllowNull]
     public Positioned<Figure> Figure { get; set; }
