@@ -28,15 +28,13 @@ public sealed class FigureTool : Tool
         base.OnMouseOver(board, position);
         if (IsDragging && Selected is Positioned<Figure> figure)
         {
-            Position withOffset = new(position.X + _offset.X, position.Y + _offset.Y);
-            Target = new(figure.Element, withOffset);
+            Target = new(figure.Element, position + _offset);
         }
     }
 
     public override void OnMouseUp(Board board, Position endPosition)
     {
-        Position withOffset = new(endPosition.X + _offset.X, endPosition.Y + _offset.Y);
-        if (Selected != null && !board.TryAddFigure(withOffset, Selected.Element))
+        if (IsDragging && Selected != null && !board.TryAddFigure(endPosition + _offset, Selected.Element))
         {
             board.Figures.Add(Selected);
         }
