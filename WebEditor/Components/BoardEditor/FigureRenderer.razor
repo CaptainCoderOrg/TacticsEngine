@@ -1,13 +1,13 @@
 @using CaptainCoder.TacticsEngine.Board
 @using System.Diagnostics.CodeAnalysis
 @inject ToolManager ToolManager
-@if (IsDragging || Board.Figures.Contains(Figure))
+@if (IsVisible)
 {
 <div 
     class="figure-info"
-    dragged="@IsDragging"
+    dragged="@AlwaysVisible"
     is-invalid="@IsInvalid"
-    ignore-mouse="@FigureTool.Shared.IsDragging"
+    ignore-mouse="@IgnoreMouse"
     style="
         --pos-x: @(Figure.Position.X); 
         --pos-y: @(Figure.Position.Y);
@@ -34,12 +34,14 @@
     [Parameter]
     public EventCallback<Position> OnMouseEnter { get; set; }
     [Parameter]
-    public bool IsDragging { get; set; } = false;
+    public bool AlwaysVisible { get; set; } = false;
+    public bool IsVisible => AlwaysVisible || Board.Figures.Contains(Figure);
+    public bool IgnoreMouse => FigureTool.Shared.DraggedFigure is not null;
     public bool IsInvalid
     {
         get
         {
-            if (!IsDragging) { return false; }
+            if (!AlwaysVisible) { return false; }
             if(Board.TryAddFigure(Figure.Position, Figure.Element))
             {
                 Board.RemoveFigure(Figure.Position);

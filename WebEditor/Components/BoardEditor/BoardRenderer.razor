@@ -14,9 +14,9 @@
             {
                 <FigureRenderer Figure="@figure" OnMouseEnter="@(() => MouseEnter(@figure.Position))" />
             }
-            @if (FigureTool.Shared.IsDragging && FigureTool.Shared.Target is Positioned<Figure> target)
+            @if (FigureTool.Shared.DraggedFigure is Positioned<Figure> target)
             {
-                <FigureRenderer Figure="@target" IsDragging />
+                <FigureRenderer Figure="@target" AlwaysVisible />
             }
         </CascadingValue>
     </CascadingValue>
