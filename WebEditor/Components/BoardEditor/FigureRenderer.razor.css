@@ -9,8 +9,22 @@
     z-index: 1;
 }
 
+.ignore-mouse
+{
+    pointer-events: none;
+}
+
 .dragged
 {
-    border: 2px solid red;
-    pointer-events: none;
+    border: 2px solid;
+}
+
+.valid-position
+{
+    border-color: lightgreen;
+}
+
+.invalid-position
+{
+    border-color: red;
 }
