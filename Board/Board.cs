@@ -44,6 +44,7 @@ public static class BoardExtensions
         if (!board.HasTiles(bbox)) { return false; }
         return board.Figures.CanAdd(position, toAdd);
     }
+    public static bool CanAddFigure(this Board board, int x, int y, Figure toAdd) => board.CanAddFigure(new Position(x, y), toAdd);
 
     public static bool TryAddFigure(this Board board, Position position, Figure toAdd)
     {

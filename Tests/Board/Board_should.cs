@@ -59,6 +59,7 @@ public class Board_should
         underTest.TryAddFigure(x, y, added);
 
         Figure toAdd = new() { Width = 1, Height = 1 };
+        underTest.CanAddFigure(x, y, toAdd).ShouldBeFalse();
         underTest.TryAddFigure(x, y, toAdd).ShouldBeFalse();
     }
 
@@ -91,6 +92,7 @@ public class Board_should
     public void not_allow_add_figure_to_no_tile()
     {
         Board underTest = new();
+        underTest.CanAddFigure(0, 0, new Figure()).ShouldBeFalse();
         underTest.TryAddFigure(0, 0, new Figure()).ShouldBeFalse();
     }
 
@@ -102,6 +104,7 @@ public class Board_should
         underTest.CreateEmptyTile(1, 0);
         underTest.CreateEmptyTile(0, 1);
         Figure tooLarge = new() { Width = 2, Height = 2 };
+        underTest.CanAddFigure(0, 0, tooLarge).ShouldBeFalse();
         underTest.TryAddFigure(0, 0, tooLarge).ShouldBeFalse();
     }
 
@@ -114,6 +117,7 @@ public class Board_should
         Figure first = new() { Width = 2, Height = 2 };
         underTest.TryAddFigure(0, 0, first);
         Figure second = new() { Width = 2, Height = 2 };
+        underTest.CanAddFigure(1, 1, second).ShouldBeFalse();
         underTest.TryAddFigure(1, 1, second).ShouldBeFalse();
 
     }
