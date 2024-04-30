@@ -33,18 +33,8 @@
     public EventCallback<Position> OnMouseEnter { get; set; }
     [Parameter]
     public bool IsDragging { get; set; } = false;
-    public bool IsValidPosition
-    {
-        get
-        {
-            if(Board.TryAddFigure(Figure.Position, Figure.Element))
-            {
-                Board.RemoveFigure(Figure.Position);
-                return true;
-            }
-            return false;
-        }
-    }
+    public bool IsValidPosition => Board.CanAddFigure(Figure.Position, Figure.Element);
+
     private void CheckDragStart(MouseEventArgs args)
     {
         if (_mouseDown)

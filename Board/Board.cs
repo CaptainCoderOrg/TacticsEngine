@@ -38,6 +38,13 @@ public static class BoardExtensions
     }
     public static TileInfo GetTile(this Board board, int x, int y) => board.GetTile(new Position(x, y));
 
+    public static bool CanAddFigure(this Board board, Position position, Figure toAdd)
+    {
+        BoundingBox bbox = new(position, toAdd.Width, toAdd.Height);
+        if (!board.HasTiles(bbox)) { return false; }
+        return board.Figures.CanAdd(position, toAdd);
+    }
+
     public static bool TryAddFigure(this Board board, Position position, Figure toAdd)
     {
         BoundingBox bbox = new(position, toAdd.Width, toAdd.Height);
