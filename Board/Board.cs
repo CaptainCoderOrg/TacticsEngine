@@ -38,13 +38,24 @@ public static class BoardExtensions
     }
     public static TileInfo GetTile(this Board board, int x, int y) => board.GetTile(new Position(x, y));
 
-    public static void AddFigure(this Board board, int x, int y, Figure toAdd)
+    public static bool CanAddFigure(this Board board, Position position, Figure toAdd)
     {
-        Position position = new(x, y);
         BoundingBox bbox = new(position, toAdd.Width, toAdd.Height);
-        if (!bbox.Positions().All(board.Tiles.Contains)) { throw new ArgumentOutOfRangeException($"Board does not contain a tile at position {x}, {y}"); }
-        board.Figures.Add(position, toAdd);
+        if (!board.HasTiles(bbox)) { return false; }
+        return board.Figures.CanAdd(position, toAdd);
     }
+    public static bool CanAddFigure(this Board board, int x, int y, Figure toAdd) => board.CanAddFigure(new Position(x, y), toAdd);
+
+    public static bool TryAddFigure(this Board board, Position position, Figure toAdd)
+    {
+        BoundingBox bbox = new(position, toAdd.Width, toAdd.Height);
+        if (!board.HasTiles(bbox)) { return false; }
+        return board.Figures.TryAdd(position, toAdd);
+    }
+
+    public static bool TryAddFigure(this Board board, int x, int y, Figure toAdd) => board.TryAddFigure(new Position(x, y), toAdd);
+
+    public static bool HasTiles(this Board board, BoundingBox box) => box.Positions().All(board.Tiles.Contains);
 
     public static void RemoveTile(this Board board, int x, int y) => board.RemoveTile(new Position(x, y));
     public static void RemoveTile(this Board board, Position position)
@@ -66,8 +77,7 @@ public static class BoardExtensions
             board.Figures.Add(toMove);
             return false;
         }
-        board.AddFigure(end.X, end.Y, toMove.Element);
-        return true;
+        return board.TryAddFigure(end.X, end.Y, toMove.Element);
     }
     private static JsonSerializerOptions Options { get; } = new()
     {

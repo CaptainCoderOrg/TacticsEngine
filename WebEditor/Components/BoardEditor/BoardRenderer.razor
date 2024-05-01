@@ -1,18 +1,25 @@
 @using CaptainCoder.TacticsEngine.Board
 @using System.Diagnostics.CodeAnalysis;
 @inject ToolManager ToolManager;
-<div class="board-container" 
-    style="--cell-size: @(CellSize)px;
+<div class="board-container" style="--cell-size: @(CellSize)px;
            --board-width: @Width;
-           --board-height: @Height;">
-    @foreach (Position position in Positions)
-    {
-        <TileRenderer @key="@position" Position="@position" Board="@Board"/>
-    }
-    @foreach (Positioned<Figure> figure in Board.Figures)
-    {
-        <FigureRenderer Figure="@figure" /> 
-    }
+           --board-height: @Height;" @onmouseup="@(() => ToolManager.MouseUp(Board, _mousePosition))">
+    <CascadingValue Value="@Board">
+        <CascadingValue Value="@this">
+            @foreach (Position position in Positions)
+            {
+                <TileRenderer @key="@position" Position="@position" OnMouseEnter="@(() => MouseEnter(@position))" />
+            }
+            @foreach (Positioned<Figure> figure in Board.Figures)
+            {
+                <FigureRenderer Figure="@figure" OnMouseEnter="@(() => MouseEnter(@figure.Position))" />
+            }
+            @if (FigureTool.Shared.DraggedFigure is Positioned<Figure> target)
+            {
+                <FigureRenderer Figure="@target" AlwaysVisible />
+            }
+        </CascadingValue>
+    </CascadingValue>
 </div>
 
 @code
@@ -22,6 +29,7 @@
     public int Height { get; set; } = 20;
     [Parameter, EditorRequired, AllowNull]
     public Board Board { get; set; }
+    private Position _mousePosition = new(0, 0);
     public IEnumerable<Position> Positions
     {
         get
@@ -36,17 +44,10 @@
         }
     }
 
-    protected override void OnInitialized()
+    private void MouseEnter(Position position)
     {
-        ToolManager.OnClick += (_, _) => 
-        {
-            Console.WriteLine("Redraw board?");
-            StateHasChanged();
-        };
-    }
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        Console.WriteLine("Rendered board");
+        _mousePosition = position;
+        ToolManager.MouseOver(Board, position);
+        StateHasChanged();
     }
 }

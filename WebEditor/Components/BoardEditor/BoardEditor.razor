@@ -55,10 +55,15 @@
 
     protected override void OnInitialized()
     {
-        _board.CreateEmptyTiles(new BoundingBox(new Position(2, 2), 10, 10).Positions());
-        _board.AddFigure(3, 3, new Figure());
-        _board.AddFigure(5, 2, new Figure(){ Width = 2, Height = 1 });
-        _board.AddFigure(2, 5, new Figure(){ Width = 1, Height = 2 });
-        _board.AddFigure(7, 7, new Figure(){ Width = 3, Height = 2 });
+        _board = new()
+        {
+            Tiles = [.. new BoundingBox(new Position(2, 2), 10, 10).Positions()],
+            Figures = [
+                new (new Figure(), new Position(3, 3)),
+                new (new Figure() { Width = 2, Height = 1}, new Position(5, 2)),
+                new (new Figure() { Width = 1, Height = 2}, new Position(2, 5)),
+                new (new Figure() { Width = 3, Height = 2}, new Position(7, 7)),
+            ]
+        };
     }
 }
