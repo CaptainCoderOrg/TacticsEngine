@@ -8,11 +8,6 @@ public sealed class FigureTool : Tool
     public Positioned<Figure>? DraggedFigure { get; private set; }
     private Position _offset = new();
 
-    public override void OnSelectFigure(Board board, Positioned<Figure> figure)
-    {
-        _selected = figure;
-    }
-
     public override void OnStartDragFigure(Board board, Positioned<Figure> figure, Position offset)
     {
         _offset = offset;

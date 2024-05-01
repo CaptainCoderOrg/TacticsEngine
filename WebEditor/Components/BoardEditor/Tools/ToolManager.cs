@@ -19,7 +19,7 @@ public class ToolManager
     public event Action<Tool>? OnChange;
     public void SelectTile(Board board, Position position)
     {
-        _tool.OnSelectTile(board, position);
+        _tool.OnClickTile(board, position);
     }
 
     public void MouseOver(Board board, Position position)
@@ -29,7 +29,7 @@ public class ToolManager
 
     public void SelectFigure(Board board, Positioned<Figure> figure)
     {
-        _tool.OnSelectFigure(board, figure);
+        _tool.OnClickFigure(board, figure);
     }
 
     public void StartDragFigure(Board board, Positioned<Figure> figure, Position offset)
