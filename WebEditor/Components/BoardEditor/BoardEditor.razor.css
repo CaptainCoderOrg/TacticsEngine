@@ -2,6 +2,12 @@
 {
     display: flex;
     flex-direction: row;
+    gap: 10px;
+}
+
+.editor-menu h1
+{
+    margin: 0;    
 }
 
 .editor-menu

@@ -1,0 +1,12 @@
+h2 {
+    margin: 0;
+}
+.figure-panel {
+    --cell-size: 25px;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    gap: .25em;
+    min-width: 300px;
+    padding: .25em;
+}

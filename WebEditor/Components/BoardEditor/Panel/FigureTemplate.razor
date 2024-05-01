@@ -1,0 +1,30 @@
+@using CaptainCoder.TacticsEngine.Board
+@using System.Diagnostics.CodeAnalysis
+@inject ToolManager ToolManager
+
+<div class="figure"
+    style="
+     --figure-width: @Figure.Width;
+     --figure-height: @Figure.Height;
+    "
+    @onmousedown="@(() => _mouseDown = true)"
+    @onmouseup="@(() => _mouseDown = false)"
+    @onmousemove="@CheckDragStart"></div>
+
+@code
+{
+    [Parameter, AllowNull]
+    public Figure Figure { get; set; }
+    [CascadingParameter, AllowNull]
+    public Board Board { get; set; }
+    private bool _mouseDown = false;
+
+    private void CheckDragStart(MouseEventArgs args)
+    {
+        if (_mouseDown)
+        {
+            _mouseDown = false;
+            ToolManager.StartDragFigure(Board, new Positioned<Figure>(Figure, new Position(0, 0)), new Position(0, 0));
+        }
+    }
+}   

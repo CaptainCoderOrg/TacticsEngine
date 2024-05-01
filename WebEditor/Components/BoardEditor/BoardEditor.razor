@@ -3,6 +3,7 @@
 @using CaptainCoder.TacticsEngine.Board
 @using System.Diagnostics.CodeAnalysis
 @using System.Text
+@using WebEditor.Components.BoardEditor.Panel
 @inject IJSRuntime JSRuntime
 @inject IBlazorDownloadFileService BlazorDownloadFileService
 @inject ToolManager ToolManager
@@ -19,6 +20,9 @@
     <div class="editor-content">
         <BoardRenderer Board="@_board" />
     </div>
+    <CascadingValue Value="@_board">
+        <FigurePanel />
+    </CascadingValue>
 </div>
 
 @code

@@ -1,0 +1,6 @@
+.figure {
+	width: calc(var(--cell-size) * var(--figure-width) - 3px);
+	height: calc(var(--cell-size) * var(--figure-height) - 3px);
+	background-color: green;
+	z-index: 1;
+}
