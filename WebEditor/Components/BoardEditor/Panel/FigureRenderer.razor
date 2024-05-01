@@ -7,24 +7,28 @@
      --figure-width: @Figure.Width;
      --figure-height: @Figure.Height;
     "
+    is-dragging="@IsDragging"
     @onmousedown="@(() => _mouseDown = true)"
     @onmouseup="@(() => _mouseDown = false)"
     @onmousemove="@CheckDragStart"></div>
 
 @code
 {
-    [Parameter, AllowNull]
+    [Parameter, EditorRequired, AllowNull]
     public Figure Figure { get; set; }
-    [CascadingParameter, AllowNull]
-    public Board Board { get; set; }
+    private bool _dragStarted = false;
+    public bool IsDragging => _dragStarted || FigureTool.Shared.DraggedFigure is not null;
     private bool _mouseDown = false;
+    [Parameter]
+    public Action<MouseEventArgs, Figure>? OnDragStart { get; set; }
 
     private void CheckDragStart(MouseEventArgs args)
     {
         if (_mouseDown)
         {
             _mouseDown = false;
-            ToolManager.StartDragFigure(Board, new Positioned<Figure>(Figure, new Position(0, 0)), new Position(0, 0));
+            _dragStarted = true;
+            OnDragStart?.Invoke(args, Figure);
         }
     }
 }   

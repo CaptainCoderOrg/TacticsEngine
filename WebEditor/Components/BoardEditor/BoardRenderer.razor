@@ -12,11 +12,11 @@
             }
             @foreach (Positioned<Figure> figure in Board.Figures)
             {
-                <FigureRenderer Figure="@figure" OnMouseEnter="@(() => MouseEnter(@figure.Position))" />
+                <PositionedFigureRenderer Figure="@figure"/>
             }
             @if (FigureTool.Shared.DraggedFigure is Positioned<Figure> target)
             {
-                <FigureRenderer Figure="@target" AlwaysVisible />
+                <PositionedFigureRenderer Figure="@target" IsDragging />
             }
         </CascadingValue>
     </CascadingValue>
