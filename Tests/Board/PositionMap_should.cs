@@ -77,4 +77,31 @@ public class PositionMap_should
         underTest.TryAdd(new Position(1, 2), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
         underTest.TryAdd(new Position(2, 2), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
     }
+
+    [Fact]
+    public void report_on_can_add()
+    {
+        PositionMap<Figure> underTest = [];
+        underTest.CanAdd(new Position(0, 0), new Figure()).ShouldBeTrue();
+        underTest.TryAdd(new Position(0, 0), new Figure()).ShouldBeTrue();
+        underTest.CanAdd(new Position(0, 0), new Figure()).ShouldBeFalse();
+        underTest.TryAdd(new Position(0, 0), new Figure()).ShouldBeFalse();
+
+        underTest.CanAdd(new Position(2, 2), new Figure() { Width = 2, Height = 2 }).ShouldBeTrue();
+        underTest.TryAdd(new Position(2, 2), new Figure() { Width = 2, Height = 2 }).ShouldBeTrue();
+
+        underTest.CanAdd(new Position(3, 2), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
+        underTest.TryAdd(new Position(3, 2), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
+        underTest.CanAdd(new Position(2, 3), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
+        underTest.TryAdd(new Position(2, 3), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
+        underTest.CanAdd(new Position(3, 3), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
+        underTest.TryAdd(new Position(3, 3), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
+
+        underTest.CanAdd(new Position(1, 1), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
+        underTest.TryAdd(new Position(1, 1), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
+        underTest.CanAdd(new Position(1, 2), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
+        underTest.TryAdd(new Position(1, 2), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
+        underTest.CanAdd(new Position(2, 2), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
+        underTest.TryAdd(new Position(2, 2), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
+    }
 }

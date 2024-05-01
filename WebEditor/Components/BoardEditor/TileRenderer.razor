@@ -3,9 +3,6 @@
 @inject ToolManager ToolManager
 <div 
     class="tile-info @TileType"
-    style="
-        --pos-x: @(Position.X); 
-        --pos-y: @(Position.Y);"
     @onclick="@SelectTile"
     @onclick:stopPropagation="true"
     @onmouseenter="@(() => OnMouseEnter.InvokeAsync(Position))"

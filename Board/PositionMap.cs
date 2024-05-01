@@ -27,6 +27,11 @@ public sealed class PositionMap<T> : IReadOnlySet<Positioned<T>>, IEquatable<Pos
         _elements.Add(toAdd);
         toAdd.BoundingBox().Positions().ToList().ForEach(position => _occupied.Add(position, toAdd));
     }
+    public bool CanAdd(Position position, T element)
+    {
+        Positioned<T> toAdd = new(element, position);
+        return !toAdd.BoundingBox().Positions().Any(_occupied.ContainsKey);
+    }
     public bool TryAdd(Position position, T element)
     {
         Positioned<T> toAdd = new(element, position);
