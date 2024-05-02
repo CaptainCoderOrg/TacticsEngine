@@ -1,9 +1,9 @@
 @using System.Diagnostics.CodeAnalysis
 @inject ToolManager ToolManager
 
-<PositionedElement Position="@Figure.Position">
+<ElementRenderer Position="@Figure.Position">
     <FigureRenderer Figure="@Figure.Element" OnDragStart="@OnDragStart"/>
-</PositionedElement>
+</ElementRenderer>
 
 @code
 {
