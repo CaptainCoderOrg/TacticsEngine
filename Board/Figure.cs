@@ -12,11 +12,8 @@ public abstract record FigureInfo
 }
 public sealed record NoFigure : FigureInfo;
 
-public sealed record Figure : FigureInfo, IHasSize
-{
-    public int Width { get; init; } = 1;
-    public int Height { get; init; } = 1;
-}
+public sealed record Figure(int Width = 1, int Height = 1) : FigureInfo, IHasSize;
+
 
 public static class FigureInfoExtensions
 {
