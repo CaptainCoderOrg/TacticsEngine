@@ -1,14 +1,8 @@
-.positioned-figure {
+.positioned-element {
 	position: absolute;
     --figure-margin: 2px;
 	left: calc(var(--pos-x) * var(--cell-size) + var(--figure-margin));
 	top: calc(var(--pos-y) * var(--cell-size) + var(--figure-margin));
 	z-index: 1;
     pointer-events: none;
-}
-
-.positioned-figure[is-dragging]
-{
-    border: 2px solid lightgreen;
-    opacity: .5; 
 }

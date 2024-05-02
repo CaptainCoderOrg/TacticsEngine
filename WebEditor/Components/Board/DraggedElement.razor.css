@@ -1,13 +1,8 @@
 .dragged-element
 {
-    --figure-margin: 2px;
-    position: absolute;
-    left: calc(var(--pos-x) * var(--cell-size) + var(--figure-margin));
-	top: calc(var(--pos-y) * var(--cell-size) + var(--figure-margin));
     opacity: .5;
     border: 2px solid lightgreen;
     pointer-events: none;
-    z-index: 1;
 }
 
 .invalid-position

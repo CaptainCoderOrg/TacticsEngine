@@ -1,17 +1,9 @@
 @using System.Diagnostics.CodeAnalysis
 @inject ToolManager ToolManager
-@if (IsVisible)
-{
-<div 
-    class="positioned-figure"
-    style="
-        --pos-x: @(Figure.Position.X); 
-        --pos-y: @(Figure.Position.Y);
-        "
-    >
+
+<PositionedElement Position="@Figure.Position">
     <FigureRenderer Figure="@Figure.Element" OnDragStart="@OnDragStart"/>
-</div>
-}
+</PositionedElement>
 
 @code
 {
@@ -21,11 +13,9 @@
     public Board Board { get; set; }
     [CascadingParameter, AllowNull]
     public BoardRenderer Parent { get; set; }
-    public bool IsVisible => Board.Figures.Contains(Figure);
     private void OnDragStart(MouseEventArgs args, Figure _)
     {
         Position offset = new (-(int)(args.OffsetX / Parent.CellSize), -(int)(args.OffsetY / Parent.CellSize));
         ToolManager.StartDragFigure(Board, Figure, offset);
     }
-
 }
