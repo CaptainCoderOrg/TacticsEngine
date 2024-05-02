@@ -10,12 +10,10 @@
     [Parameter, EditorRequired, AllowNull]
     public Positioned<Figure> Figure { get; set; }
     [CascadingParameter, AllowNull]
-    public Board Board { get; set; }
-    [CascadingParameter, AllowNull]
     public BoardRenderer Parent { get; set; }
     private void OnDragStart(MouseEventArgs args, Figure _)
     {
         Position offset = new (-(int)(args.OffsetX / Parent.CellSize), -(int)(args.OffsetY / Parent.CellSize));
-        ToolManager.StartDragFigure(Board, Figure, offset);
+        ToolManager.StartDragFigure(Parent.Board, Figure, offset);
     }
 }
