@@ -24,6 +24,6 @@
 
     private void OnDragStart(MouseEventArgs args, Figure figure)
     {
-        ToolManager.StartDragFigure(CurrentBoard, new Positioned<Figure>(figure, new Position(0, 0)), new Position(0, 0));
+        ToolManager.StartDragFigure(CurrentBoard, new Positioned<Figure>(figure, new NoPosition()), new Position(0, 0));
     }
 }
