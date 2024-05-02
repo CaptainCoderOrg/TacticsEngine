@@ -4,16 +4,11 @@
 {
 <div 
     class="positioned-figure"
-    is-dragging="@IsDragging"
     style="
         --pos-x: @(Figure.Position.X); 
         --pos-y: @(Figure.Position.Y);
         "
     >
-    @if(IsInvalid)
-    {
-        <div class="invalid-position"></div>
-    }
     <FigureRenderer Figure="@Figure.Element" OnDragStart="@OnDragStart"/>
 </div>
 }
@@ -26,22 +21,7 @@
     public Board Board { get; set; }
     [CascadingParameter, AllowNull]
     public BoardRenderer Parent { get; set; }
-    [Parameter]
-    public bool IsDragging { get; set; } = false;
-    public bool IsVisible => IsDragging || Board.Figures.Contains(Figure);
-    public bool IsInvalid
-    {
-        get
-        {
-            if (!IsDragging) { return false; }
-            if(Board.TryAddFigure(Figure.Position, Figure.Element))
-            {
-                Board.RemoveFigure(Figure.Position);
-                return false;
-            }
-            return true;
-        }
-    }
+    public bool IsVisible => Board.Figures.Contains(Figure);
     private void OnDragStart(MouseEventArgs args, Figure _)
     {
         Position offset = new (-(int)(args.OffsetX / Parent.CellSize), -(int)(args.OffsetY / Parent.CellSize));

@@ -15,7 +15,9 @@
             }
             @if (FigureTool.Shared.DraggedFigure is Positioned<Figure> target)
             {
-                <PositionedFigureRenderer Figure="@target" IsDragging />
+                <DraggedElement Position="@target.Position" IsValid="@Board.CanAddFigure(target.Position, target.Element)">
+                    <FigureRenderer Figure="@target.Element"/>
+                </DraggedElement>
             }
         </CascadingValue>
     </CascadingValue>
