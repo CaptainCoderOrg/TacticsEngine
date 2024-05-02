@@ -1,12 +1,9 @@
-@using CaptainCoder.TacticsEngine.Board
-@using System.Diagnostics.CodeAnalysis
 @inject ToolManager ToolManager
 <div 
     class="tile-info @TileType"
     @onclick="@SelectTile"
     @onclick:stopPropagation="true"
     @onmouseenter="@(() => OnMouseEnter.InvokeAsync(Position))"
-    
     >    
 </div>
 

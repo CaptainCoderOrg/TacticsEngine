@@ -1,6 +1,6 @@
 using CaptainCoder.TacticsEngine.Board;
 
-namespace WebEditor.Components.BoardEditor;
+namespace WebEditor.Tools;
 
 public class ToolManager
 {

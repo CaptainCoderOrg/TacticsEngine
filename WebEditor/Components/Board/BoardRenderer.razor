@@ -1,9 +1,18 @@
-@using CaptainCoder.TacticsEngine.Board
 @using System.Diagnostics.CodeAnalysis;
 @inject ToolManager ToolManager;
-<div class="board-container" style="--cell-size: @(CellSize)px;
-           --board-width: @Width;
-           --board-height: @Height;" @onmouseup="@(() => ToolManager.MouseUp(Board, _mousePosition))">
+@* 
+    It seems that all 3 of these lines are required to prevent the default dragging behavior 
+    @ondragstart="@(() => {})" 
+    @ondragstart:stopPropagation
+    @ondragstart:preventDefault
+*@
+<div 
+    class="board-container" 
+    style="--cell-size: @(CellSize)px; --board-width: @Width; --board-height: @Height;"
+    @ondragstart="@(() => {})" 
+    @ondragstart:stopPropagation
+    @ondragstart:preventDefault
+    @onmouseup="@(() => ToolManager.MouseUp(Board, _mousePosition))">
     <CascadingValue Value="@Board">
         <CascadingValue Value="@this">
             @foreach (Position position in Positions)
@@ -12,11 +21,13 @@
             }
             @foreach (Positioned<Figure> figure in Board.Figures)
             {
-                <FigureRenderer Figure="@figure" OnMouseEnter="@(() => MouseEnter(@figure.Position))" />
+                <PositionedFigureRenderer Figure="@figure"/>
             }
             @if (FigureTool.Shared.DraggedFigure is Positioned<Figure> target)
             {
-                <FigureRenderer Figure="@target" AlwaysVisible />
+                <DraggedElement Position="@target.Position" IsValid="@Board.CanAddFigure(target.Position, target.Element)">
+                    <FigureRenderer Figure="@target.Element"/>
+                </DraggedElement>
             }
         </CascadingValue>
     </CascadingValue>
