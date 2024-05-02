@@ -9,9 +9,9 @@
 
 @code
 {
-    [Parameter, EditorRequired]
-    public Position Position { get; set; }
-    [CascadingParameter, AllowNull]
+	[Parameter, EditorRequired]
+	public required Position Position { get; set; }
+	[CascadingParameter, AllowNull]
     public Board Board { get; set; }
     [Parameter]
     public EventCallback<Position> OnMouseEnter { get; set; }
