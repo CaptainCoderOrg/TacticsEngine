@@ -40,7 +40,7 @@ public class Board_should
     {
         Board underTest = new();
         underTest.CreateEmptyTile(x, y);
-        Figure toAdd = new() { Width = 1, Height = 1 };
+        Figure toAdd = new(1, 1);
 
         underTest.TryAddFigure(x, y, toAdd);
 
@@ -55,10 +55,10 @@ public class Board_should
     {
         Board underTest = new();
         underTest.CreateEmptyTile(x, y);
-        Figure added = new() { Width = 1, Height = 1 };
+        Figure added = new(1, 1);
         underTest.TryAddFigure(x, y, added);
 
-        Figure toAdd = new() { Width = 1, Height = 1 };
+        Figure toAdd = new(1, 1);
         underTest.CanAddFigure(x, y, toAdd).ShouldBeFalse();
         underTest.TryAddFigure(x, y, toAdd).ShouldBeFalse();
     }
@@ -76,7 +76,7 @@ public class Board_should
         {
             underTest.CreateEmptyTile(position.X, position.Y);
         }
-        Figure toAdd = new() { Width = w, Height = h };
+        Figure toAdd = new(w, h);
 
         underTest.TryAddFigure(x, y, toAdd);
 
@@ -114,9 +114,9 @@ public class Board_should
         Board underTest = new();
         BoundingBox box = new(new Position(0, 0), 3, 3);
         underTest.CreateEmptyTiles(box.Positions());
-        Figure first = new() { Width = 2, Height = 2 };
+        Figure first = new(2, 2);
         underTest.TryAddFigure(0, 0, first);
-        Figure second = new() { Width = 2, Height = 2 };
+        Figure second = new(2, 2);
         underTest.CanAddFigure(1, 1, second).ShouldBeFalse();
         underTest.TryAddFigure(1, 1, second).ShouldBeFalse();
 
@@ -205,7 +205,7 @@ public class Board_should
                 new BoundingBox(new Position(0, 0), 7, 5).Positions()
             );
             board.TryAddFigure(0, 0, new Figure());
-            board.TryAddFigure(3, 3, new Figure() { Width = 2, Height = 2 });
+            board.TryAddFigure(3, 3, new Figure(2, 2));
             return board;
         }
     }
@@ -225,14 +225,14 @@ public class Board_should
             new BoundingBox(new Position(0, 0), 5, 7).Positions()
         );
         board0.TryAddFigure(0, 0, new Figure());
-        board0.TryAddFigure(3, 3, new Figure() { Width = 2, Height = 2 });
+        board0.TryAddFigure(3, 3, new Figure(2, 2));
 
         Board board1 = new();
         board1.CreateEmptyTiles(
             new BoundingBox(new Position(0, 0), 7, 5).Positions()
         );
         board1.TryAddFigure(3, 3, new Figure());
-        board1.TryAddFigure(0, 0, new Figure() { Width = 2, Height = 2 });
+        board1.TryAddFigure(0, 0, new Figure(2, 2));
 
         board0.ShouldNotBe(board1);
     }
@@ -253,7 +253,7 @@ public class Board_should
                 new BoundingBox(new Position(0, 0), 7, 5).Positions()
             );
             board.TryAddFigure(0, 0, new Figure());
-            board.TryAddFigure(3, 3, new Figure() { Width = 2, Height = 2 });
+            board.TryAddFigure(3, 3, new Figure(2, 2));
             return board;
         }
     }
@@ -286,7 +286,7 @@ public class Board_should
     [InlineData(3, 2, 3, 3, 6, 6)]
     public void move_figure(int startX, int startY, int width, int height, int endX, int endY)
     {
-        Figure figure = new() { Width = width, Height = height };
+        Figure figure = new(width, height);
         Board board = new()
         {
             Tiles = [.. new BoundingBox(0, 0, 10, 10).Positions()],
@@ -339,8 +339,8 @@ public class Board_should
     [Fact]
     public void not_move_figure_when_end_is_occupied()
     {
-        Figure figure = new() { Width = 3, Height = 3 };
-        Figure other = new() { Width = 2, Height = 2 };
+        Figure figure = new(3, 3);
+        Figure other = new(2, 2);
         Board board = new()
         {
             Tiles = [.. new BoundingBox(0, 0, 10, 10).Positions()],
@@ -370,8 +370,8 @@ public class Board_should
     [InlineData(3, 4)]
     public void remove_figure(int x, int y)
     {
-        Figure figure = new() { Width = 3, Height = 3 };
-        Figure other = new() { Width = 2, Height = 2 };
+        Figure figure = new(3, 3);
+        Figure other = new(2, 2);
         Board underTest = new()
         {
             Tiles = [.. new BoundingBox(0, 0, 10, 10).Positions()],
@@ -394,7 +394,7 @@ public class Board_should
     [InlineData(2, 1)]
     public void not_remove_figure(int x, int y)
     {
-        Figure other = new() { Width = 2, Height = 2 };
+        Figure other = new(2, 2);
         Board underTest = new()
         {
             Tiles = [.. new BoundingBox(0, 0, 10, 10).Positions()],
@@ -416,7 +416,7 @@ public class Board_should
     [InlineData(2, 1, 4, 2)]
     public void not_move_empty_tile(int startX, int startY, int endX, int endY)
     {
-        Figure other = new() { Width = 2, Height = 2 };
+        Figure other = new(2, 2);
         Board underTest = new()
         {
             Tiles = [.. new BoundingBox(0, 0, 10, 10).Positions()],
