@@ -1,6 +1,9 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
+using Optional;
+using Optional.Collections;
+
 namespace CaptainCoder.TacticsEngine.Board;
 
 public sealed class Board : IEquatable<Board>
@@ -28,12 +31,12 @@ public static class BoardExtensions
     public static bool HasTile(this Board board, int x, int y) => board.Tiles.Contains(new Position(x, y));
     public static TileInfo GetTile(this Board board, Position position)
     {
-        if (!board.Tiles.Contains(position)) { return TileInfo.None; }
-        FigureInfo? info = board.Figures
+        if (!board.Tiles.Contains(position)) { return TileInfo.None; };
+        Option<Figure> figure = board.Figures
             .Where(f => new BoundingBox(f.Position, f.Element.Width, f.Element.Height).Positions().Contains(position))
             .Select(f => f.Element)
-            .FirstOrDefault();
-        Tile tile = new() { Figure = info ?? FigureInfo.None };
+            .FirstOrNone();
+        Tile tile = new() { Figure = figure };
         return tile;
     }
     public static TileInfo GetTile(this Board board, int x, int y) => board.GetTile(new Position(x, y));
