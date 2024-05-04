@@ -3,6 +3,7 @@ using System.Text.Json;
 
 using Optional;
 using Optional.Collections;
+using Optional.Linq;
 
 namespace CaptainCoder.TacticsEngine.Board;
 
@@ -29,17 +30,15 @@ public static class BoardExtensions
         }
     }
     public static bool HasTile(this Board board, int x, int y) => board.Tiles.Contains(new Position(x, y));
-    public static TileInfo GetTile(this Board board, Position position)
+    public static Option<Tile> GetTile(this Board board, Position position)
     {
-        if (!board.Tiles.Contains(position)) { return TileInfo.None; };
-        Option<Figure> figure = board.Figures
-            .Where(f => new BoundingBox(f.Position, f.Element.Width, f.Element.Height).Positions().Contains(position))
-            .Select(f => f.Element)
-            .FirstOrNone();
-        Tile tile = new() { Figure = figure };
-        return tile;
+        return board
+            .SomeWhen(b => b.Tiles.Contains(position))
+            .Select(b => b.Figures.Where(OccupiesPosition).FirstOrNone())
+            .Select(positionedFigure => new Tile() { Figure = positionedFigure.Select(f => f.Element) });
+        bool OccupiesPosition(Positioned<Figure> f) => f.BoundingBox().Positions().Contains(position);
     }
-    public static TileInfo GetTile(this Board board, int x, int y) => board.GetTile(new Position(x, y));
+    public static Option<Tile> GetTile(this Board board, int x, int y) => board.GetTile(new Position(x, y));
 
     public static bool CanAddFigure(this Board board, Position position, Figure toAdd)
     {

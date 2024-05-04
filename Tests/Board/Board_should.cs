@@ -19,8 +19,8 @@ public class Board_should
 
         // Adds an empty tile
         underTest.HasTile(x, y).ShouldBeTrue();
-        TileInfo actual = underTest.GetTile(x, y);
-        actual.ShouldBe(new Tile());
+        Option<Tile> actual = underTest.GetTile(x, y);
+        actual.ValueOrDefault().ShouldBe(new Tile());
     }
 
     [Theory]
@@ -31,9 +31,9 @@ public class Board_should
     {
         Board underTest = new();
 
-        TileInfo actual = underTest.GetTile(x, y);
+        Option<Tile> actual = underTest.GetTile(x, y);
 
-        actual.ShouldBe(TileInfo.None);
+        actual.HasValue.ShouldBeFalse();
     }
 
     [Theory]
@@ -47,8 +47,8 @@ public class Board_should
 
         underTest.TryAddFigure(x, y, toAdd);
 
-        Tile actual = (Tile)underTest.GetTile(x, y);
-        actual.Figure.ValueOrDefault().ShouldBe(toAdd);
+        Option<Tile> actual = underTest.GetTile(x, y);
+        actual.ValueOrDefault().Figure.ValueOrDefault().ShouldBe(toAdd);
     }
 
     [Theory]
@@ -85,8 +85,8 @@ public class Board_should
 
         foreach (Position position in positions)
         {
-            Tile actual = (Tile)underTest.GetTile(position.X, position.Y);
-            actual.Figure.ValueOrDefault().ShouldBe(toAdd);
+            Option<Tile> actual = underTest.GetTile(position.X, position.Y);
+            actual.ValueOrDefault().Figure.ValueOrDefault().ShouldBe(toAdd);
         }
 
     }
@@ -135,8 +135,8 @@ public class Board_should
         underTest.CreateEmptyTiles(positions);
         underTest.TryAddFigure(0, 0, new Figure());
 
-        TileInfo actual = underTest.GetTile(x, y);
-        actual.ShouldBe(new Tile());
+        Option<Tile> actual = underTest.GetTile(x, y);
+        actual.ValueOrDefault().ShouldBe(new Tile());
     }
 
     [Fact]
@@ -279,8 +279,8 @@ public class Board_should
 
         result.ShouldBeTrue();
         board.Figures.Count.ShouldBe(1);
-        board.GetTile(startX, startY).ShouldBe(new Tile() { Figure = Option.None<Figure>() });
-        board.GetTile(endX, endY).ShouldBe(new Tile() { Figure = figure.Some() });
+        board.GetTile(startX, startY).ValueOrDefault().ShouldBe(new Tile() { Figure = Option.None<Figure>() });
+        board.GetTile(endX, endY).ValueOrDefault().ShouldBe(new Tile() { Figure = figure.Some() });
     }
 
     [Theory]
@@ -305,13 +305,13 @@ public class Board_should
         BoundingBox startBox = new(startX, startY, width, height);
         startBox.Positions()
                 .Select(board.GetTile)
-                .All(new Tile().Equals)
+                .All(new Tile().Some().Equals)
                 .ShouldBeTrue();
 
         BoundingBox endBox = new(endX, endY, width, height);
         endBox.Positions()
                 .Select(board.GetTile)
-                .All(new Tile() { Figure = figure.Some() }.Equals)
+                .All(new Tile() { Figure = figure.Some() }.Some().Equals)
                 .ShouldBeTrue();
     }
 
@@ -335,8 +335,8 @@ public class Board_should
 
         result.ShouldBeFalse();
         board.Figures.Count.ShouldBe(2);
-        board.GetTile(startX, startY).ShouldBe(new Tile() { Figure = figure.Some() });
-        board.GetTile(endX, endY).ShouldBe(new Tile() { Figure = other.Some() });
+        board.GetTile(startX, startY).ValueOrDefault().ShouldBe(new Tile() { Figure = figure.Some() });
+        board.GetTile(endX, endY).ValueOrDefault().ShouldBe(new Tile() { Figure = other.Some() });
     }
 
     [Fact]
@@ -357,8 +357,8 @@ public class Board_should
 
         result.ShouldBeFalse();
         board.Figures.Count.ShouldBe(2);
-        board.GetTile(1, 2).ShouldBe(new Tile() { Figure = figure.Some() });
-        board.GetTile(4, 2).ShouldBe(new Tile() { Figure = Option.None<Figure>() });
+        board.GetTile(1, 2).ValueOrDefault().ShouldBe(new Tile() { Figure = figure.Some() });
+        board.GetTile(4, 2).ValueOrDefault().ShouldBe(new Tile() { Figure = Option.None<Figure>() });
     }
 
     [Theory]
