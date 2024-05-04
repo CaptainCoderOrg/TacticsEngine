@@ -1,0 +1,22 @@
+<div class="@PositionedElement @DraggedElement" style="@PositionedStyle">
+	@if (IsDragging && !IsValid) {
+        <div class="invalid-position"></div>
+	}
+	@ChildContent
+</div>
+@code
+{
+	[Parameter, EditorRequired, AllowNull]
+	public RenderFragment ChildContent { get; set; }
+	[Parameter, EditorRequired]
+	public Position Position { get; set; }
+	[Parameter]
+	public bool IsValid { get; set; } = false;
+	[Parameter]
+	public bool IsDragging { get; set; } = false;
+	[Parameter]
+	public bool IsPositioned { get; set; } = true;
+	private string? DraggedElement => IsDragging ? "dragged-element" : null;
+	private string? PositionedElement => IsPositioned ? "positioned-element" : null;
+	private string? PositionedStyle => IsPositioned ? $"--pos-x:{Position.X}; --pos-y:{Position.Y};" : null;
+}
