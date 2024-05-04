@@ -12,8 +12,8 @@ public class PositionMap_should
     {
         PositionMap<Figure> underTest = [
             new Positioned<Figure>(new Figure(), new Position(0, 0)),
-            new Positioned<Figure>(new Figure() { Width = 1, Height = 2 }, new Position(1, 4)),
-            new Positioned<Figure>(new Figure() { Width = 2, Height = 2 }, new Position(-3, -4)),
+            new Positioned<Figure>(new Figure(1, 2), new Position(1, 4)),
+            new Positioned<Figure>(new Figure(2, 2), new Position(-3, -4)),
         ];
 
         bool actual = underTest.IsOccupied(x, y);
@@ -67,15 +67,15 @@ public class PositionMap_should
         underTest.TryAdd(new Position(0, 0), new Figure()).ShouldBeTrue();
         underTest.TryAdd(new Position(0, 0), new Figure()).ShouldBeFalse();
 
-        underTest.TryAdd(new Position(2, 2), new Figure() { Width = 2, Height = 2 }).ShouldBeTrue();
+        underTest.TryAdd(new Position(2, 2), new Figure(2, 2) { Width = 2, Height = 2 }).ShouldBeTrue();
 
-        underTest.TryAdd(new Position(3, 2), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
-        underTest.TryAdd(new Position(2, 3), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
-        underTest.TryAdd(new Position(3, 3), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
+        underTest.TryAdd(new Position(3, 2), new Figure(2, 2)).ShouldBeFalse();
+        underTest.TryAdd(new Position(2, 3), new Figure(2, 2)).ShouldBeFalse();
+        underTest.TryAdd(new Position(3, 3), new Figure(2, 2)).ShouldBeFalse();
 
-        underTest.TryAdd(new Position(1, 1), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
-        underTest.TryAdd(new Position(1, 2), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
-        underTest.TryAdd(new Position(2, 2), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
+        underTest.TryAdd(new Position(1, 1), new Figure(2, 2)).ShouldBeFalse();
+        underTest.TryAdd(new Position(1, 2), new Figure(2, 2)).ShouldBeFalse();
+        underTest.TryAdd(new Position(2, 2), new Figure(2, 2)).ShouldBeFalse();
     }
 
     [Fact]
@@ -87,21 +87,21 @@ public class PositionMap_should
         underTest.CanAdd(new Position(0, 0), new Figure()).ShouldBeFalse();
         underTest.TryAdd(new Position(0, 0), new Figure()).ShouldBeFalse();
 
-        underTest.CanAdd(new Position(2, 2), new Figure() { Width = 2, Height = 2 }).ShouldBeTrue();
-        underTest.TryAdd(new Position(2, 2), new Figure() { Width = 2, Height = 2 }).ShouldBeTrue();
+        underTest.CanAdd(new Position(2, 2), new Figure(2, 2)).ShouldBeTrue();
+        underTest.TryAdd(new Position(2, 2), new Figure(2, 2)).ShouldBeTrue();
 
-        underTest.CanAdd(new Position(3, 2), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
-        underTest.TryAdd(new Position(3, 2), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
-        underTest.CanAdd(new Position(2, 3), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
-        underTest.TryAdd(new Position(2, 3), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
-        underTest.CanAdd(new Position(3, 3), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
-        underTest.TryAdd(new Position(3, 3), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
+        underTest.CanAdd(new Position(3, 2), new Figure(2, 2)).ShouldBeFalse();
+        underTest.TryAdd(new Position(3, 2), new Figure(2, 2)).ShouldBeFalse();
+        underTest.CanAdd(new Position(2, 3), new Figure(2, 2)).ShouldBeFalse();
+        underTest.TryAdd(new Position(2, 3), new Figure(2, 2)).ShouldBeFalse();
+        underTest.CanAdd(new Position(3, 3), new Figure(2, 2)).ShouldBeFalse();
+        underTest.TryAdd(new Position(3, 3), new Figure(2, 2)).ShouldBeFalse();
 
-        underTest.CanAdd(new Position(1, 1), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
-        underTest.TryAdd(new Position(1, 1), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
-        underTest.CanAdd(new Position(1, 2), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
-        underTest.TryAdd(new Position(1, 2), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
-        underTest.CanAdd(new Position(2, 2), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
-        underTest.TryAdd(new Position(2, 2), new Figure() { Width = 2, Height = 2 }).ShouldBeFalse();
+        underTest.CanAdd(new Position(1, 1), new Figure(2, 2)).ShouldBeFalse();
+        underTest.TryAdd(new Position(1, 1), new Figure(2, 2)).ShouldBeFalse();
+        underTest.CanAdd(new Position(1, 2), new Figure(2, 2)).ShouldBeFalse();
+        underTest.TryAdd(new Position(1, 2), new Figure(2, 2)).ShouldBeFalse();
+        underTest.CanAdd(new Position(2, 2), new Figure(2, 2)).ShouldBeFalse();
+        underTest.TryAdd(new Position(2, 2), new Figure(2, 2)).ShouldBeFalse();
     }
 }
