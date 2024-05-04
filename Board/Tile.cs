@@ -15,5 +15,4 @@ public sealed record NoTile : TileInfo;
 public sealed record Tile : TileInfo
 {
     public Option<Figure> Figure { get; init; } = Option.None<Figure>();
-    public PropInfo Prop { get; init; } = PropInfo.None;
 }
