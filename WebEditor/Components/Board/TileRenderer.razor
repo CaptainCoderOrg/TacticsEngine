@@ -15,12 +15,6 @@
     public Board Board { get; set; }
     [Parameter]
     public EventCallback<Position> OnMouseEnter { get; set; }
-    private string TileType => Board.GetTile(Position.X, Position.Y) switch
-    {
-        NoTile => "no-tile",
-        Tile => "tile",
-        var other => throw new NotImplementedException($"Unknown Tile type {other}"),
-    };
-
+    private string TileType => Board.HasTile(Position.X, Position.Y) ? "tile" : "no-tile";
     public void SelectTile() => ToolManager.SelectTile(Board, Position);
 }

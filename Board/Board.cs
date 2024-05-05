@@ -5,6 +5,8 @@ namespace CaptainCoder.TacticsEngine.Board;
 
 public sealed class Board : IEquatable<Board>
 {
+    public Tile this[int x, int y] => this[new Position(x, y)];
+    public Tile this[Position ix] => this.GetTile(ix);
     public HashSet<Position> Tiles { get; set; } = [];
     public PositionMap<Figure> Figures { get; set; } = new();
     public bool Equals(Board? other)
@@ -25,18 +27,27 @@ public static class BoardExtensions
             board.CreateEmptyTile(p.X, p.Y);
         }
     }
-    public static bool HasTile(this Board board, int x, int y) => board.Tiles.Contains(new Position(x, y));
-    public static TileInfo GetTile(this Board board, Position position)
+    public static bool HasTile(this Board board, int x, int y) => board.HasTile(new Position(x, y));
+    public static bool HasTile(this Board board, Position position) => board.Tiles.Contains(position);
+    public static Tile GetTile(this Board board, Position position)
     {
-        if (!board.Tiles.Contains(position)) { return TileInfo.None; }
-        FigureInfo? info = board.Figures
-            .Where(f => new BoundingBox(f.Position, f.Element.Width, f.Element.Height).Positions().Contains(position))
-            .Select(f => f.Element)
-            .FirstOrDefault();
-        Tile tile = new() { Figure = info ?? FigureInfo.None };
-        return tile;
+        if (board.TryGetTile(position, out Tile? tile))
+        {
+            return tile;
+        }
+        throw new IndexOutOfRangeException($"No tile at position {position}.");
     }
-    public static TileInfo GetTile(this Board board, int x, int y) => board.GetTile(new Position(x, y));
+
+    public static bool TryGetTile(this Board board, Position position, [NotNullWhen(true)] out Tile? tile)
+    {
+        tile = null;
+        if (!board.Tiles.Contains(position)) { return false; }
+        Positioned<Figure>? figure = board.Figures
+            .FirstOrDefault(f => f.BoundingBox().Contains(position));
+        tile = new() { Figure = figure };
+        return true;
+    }
+    public static bool TryGetTile(this Board board, int x, int y, [NotNullWhen(true)] out Tile? tile) => board.TryGetTile(new Position(x, y), out tile);
 
     public static bool CanAddFigure(this Board board, Position position, Figure toAdd)
     {
@@ -45,6 +56,11 @@ public static class BoardExtensions
         return board.Figures.CanAdd(position, toAdd);
     }
     public static bool CanAddFigure(this Board board, int x, int y, Figure toAdd) => board.CanAddFigure(new Position(x, y), toAdd);
+    public static bool TryAddFigure(this Board board, Positioned<Figure> toAdd)
+    {
+        if (!board.HasTiles(toAdd.BoundingBox())) { return false; }
+        return board.Figures.TryAdd(toAdd);
+    }
 
     public static bool TryAddFigure(this Board board, Position position, Figure toAdd)
     {
@@ -62,23 +78,12 @@ public static class BoardExtensions
     {
         if (board.Tiles.Remove(position))
         {
-            board.RemoveFigure(position);
+            board.TryRemoveFigure(position, out Positioned<Figure>? _);
         }
     }
+    public static bool TryRemoveFigure(this Board board, Position position, [NotNullWhen(true)] out Positioned<Figure>? removed) =>
+        board.Figures.TryRemove(position, out removed);
 
-    public static bool RemoveFigure(this Board board, Position position) => board.Figures.TryRemove(position, out _);
-    public static bool MoveFigure(this Board board, int startX, int startY, int endX, int endY) => board.MoveFigure(new Position(startX, startY), new Position(endX, endY));
-    public static bool MoveFigure(this Board board, Position start, Position end)
-    {
-        if (!board.Figures.TryRemove(start, out Positioned<Figure>? toMove)) { return false; };
-        BoundingBox endBox = new(end.X, end.Y, toMove.Element.Width, toMove.Element.Height);
-        if (endBox.Positions().Any(board.Figures.IsOccupied))
-        {
-            board.Figures.Add(toMove);
-            return false;
-        }
-        return board.TryAddFigure(end.X, end.Y, toMove.Element);
-    }
     private static JsonSerializerOptions Options { get; } = new()
     {
         Converters = { FigureMapConverter.Shared }
