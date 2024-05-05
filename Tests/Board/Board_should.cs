@@ -261,105 +261,6 @@ public class Board_should
         }
     }
 
-    [Theory]
-    [InlineData(2, 2, 4, 4)]
-    [InlineData(1, 2, 3, 2)]
-    public void move_1x1_figure(int startX, int startY, int endX, int endY)
-    {
-        Figure figure = new();
-        Board board = new()
-        {
-            Tiles = [.. new BoundingBox(0, 0, 10, 10).Positions()],
-            Figures = [
-                new Positioned<Figure>(figure, new Position(startX, startY)),
-            ]
-        };
-
-        bool result = board.MoveFigure(new Position(startX, startY), new Position(endX, endY));
-
-        result.ShouldBeTrue();
-        board.Figures.Count.ShouldBe(1);
-        board.GetTile(startX, startY).ValueOrDefault().ShouldBe(new Tile() { Figure = Option.None<Figure>() });
-        board.GetTile(endX, endY).ValueOrDefault().ShouldBe(new Tile() { Figure = figure.Some() });
-    }
-
-    [Theory]
-    [InlineData(2, 2, 2, 2, 4, 4)]
-    [InlineData(1, 2, 2, 1, 3, 2)]
-    [InlineData(3, 2, 3, 3, 6, 6)]
-    public void move_figure(int startX, int startY, int width, int height, int endX, int endY)
-    {
-        Figure figure = new(width, height);
-        Board board = new()
-        {
-            Tiles = [.. new BoundingBox(0, 0, 10, 10).Positions()],
-            Figures = [
-                new Positioned<Figure>(figure, new Position(startX, startY)),
-            ]
-        };
-
-        bool result = board.MoveFigure(new Position(startX, startY), new Position(endX, endY));
-
-        result.ShouldBeTrue();
-        board.Figures.Count.ShouldBe(1);
-        BoundingBox startBox = new(startX, startY, width, height);
-        startBox.Positions()
-                .Select(board.GetTile)
-                .All(new Tile().Some().Equals)
-                .ShouldBeTrue();
-
-        BoundingBox endBox = new(endX, endY, width, height);
-        endBox.Positions()
-                .Select(board.GetTile)
-                .All(new Tile() { Figure = figure.Some() }.Some().Equals)
-                .ShouldBeTrue();
-    }
-
-    [Theory]
-    [InlineData(2, 2, 4, 4)]
-    [InlineData(1, 2, 3, 2)]
-    public void not_move_1x1_figure_when_end_is_occupied(int startX, int startY, int endX, int endY)
-    {
-        Figure figure = new();
-        Figure other = new();
-        Board board = new()
-        {
-            Tiles = [.. new BoundingBox(0, 0, 10, 10).Positions()],
-            Figures = [
-                new Positioned<Figure>(figure, new Position(startX, startY)),
-                new Positioned<Figure>(other, new Position(endX, endY)),
-            ]
-        };
-
-        bool result = board.MoveFigure(new Position(startX, startY), new Position(endX, endY));
-
-        result.ShouldBeFalse();
-        board.Figures.Count.ShouldBe(2);
-        board.GetTile(startX, startY).ValueOrDefault().ShouldBe(new Tile() { Figure = figure.Some() });
-        board.GetTile(endX, endY).ValueOrDefault().ShouldBe(new Tile() { Figure = other.Some() });
-    }
-
-    [Fact]
-    public void not_move_figure_when_end_is_occupied()
-    {
-        Figure figure = new(3, 3);
-        Figure other = new(2, 2);
-        Board board = new()
-        {
-            Tiles = [.. new BoundingBox(0, 0, 10, 10).Positions()],
-            Figures = [
-                new Positioned<Figure>(figure, new Position(1, 2)),
-                new Positioned<Figure>(other, new Position(5, 3)),
-            ]
-        };
-
-        bool result = board.MoveFigure(new Position(1, 2), new Position(4, 2));
-
-        result.ShouldBeFalse();
-        board.Figures.Count.ShouldBe(2);
-        board.GetTile(1, 2).ValueOrDefault().ShouldBe(new Tile() { Figure = figure.Some() });
-        board.GetTile(4, 2).ValueOrDefault().ShouldBe(new Tile() { Figure = Option.None<Figure>() });
-    }
 
     [Theory]
     [InlineData(1, 2)]
@@ -407,28 +308,6 @@ public class Board_should
         };
 
         bool result = underTest.RemoveFigure(new Position(x, y));
-
-        result.ShouldBeFalse();
-        underTest.Figures.Count.ShouldBe(1);
-        underTest.Figures.First().ShouldBe(new Positioned<Figure>(other, new Position(5, 3)));
-    }
-
-    [Theory]
-    [InlineData(1, 2, 2, 2)]
-    [InlineData(2, 2, 3, 2)]
-    [InlineData(2, 1, 4, 2)]
-    public void not_move_empty_tile(int startX, int startY, int endX, int endY)
-    {
-        Figure other = new(2, 2);
-        Board underTest = new()
-        {
-            Tiles = [.. new BoundingBox(0, 0, 10, 10).Positions()],
-            Figures = [
-                new Positioned<Figure>(other, new Position(5, 3)),
-            ]
-        };
-
-        bool result = underTest.MoveFigure(startX, startY, endX, endY);
 
         result.ShouldBeFalse();
         underTest.Figures.Count.ShouldBe(1);
