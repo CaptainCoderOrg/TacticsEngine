@@ -17,4 +17,10 @@ public static class BoundingBoxExtensions
             }
         }
     }
+
+    public static bool Contains(this BoundingBox box, Position position) =>
+        position.X >= box.TopLeft.X &&
+        position.X < box.TopLeft.X + box.Width &&
+        position.Y >= box.TopLeft.Y &&
+        position.Y < box.TopLeft.Y + box.Height;
 }
