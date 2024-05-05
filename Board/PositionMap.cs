@@ -1,7 +1,11 @@
 using System.Collections;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+
+using CaptainCoder.Linq;
+
+using Optional;
+using Optional.Collections;
 
 namespace CaptainCoder.TacticsEngine.Board;
 
@@ -11,13 +15,13 @@ public sealed class PositionMap<T> : IReadOnlySet<Positioned<T>>, IEquatable<Pos
     private readonly Dictionary<Position, Positioned<T>> _occupied = [];
     public bool IsOccupied(Position position) => _occupied.ContainsKey(position);
     public bool IsOccupied(int x, int y) => IsOccupied(new Position(x, y));
-    public Positioned<T>? GetValueOrDefault(Position position) => _occupied.GetValueOrDefault(position);
-    public bool TryRemove(Position position, [NotNullWhen(true)] out Positioned<T>? removed)
+    public Option<Positioned<T>> GetValue(Position position) => _occupied.GetValueOrNone(position);
+    public Option<Positioned<T>> Remove(Position position)
     {
-        if (!_occupied.TryGetValue(position, out removed)) { return false; }
-        removed.BoundingBox().Positions().ToList().ForEach(position => _occupied.Remove(position));
-        _elements.Remove(removed);
-        return true;
+        Option<Positioned<T>> removed = _occupied.GetValueOrNone(position);
+        removed.MatchSome(r => r.BoundingBox().Positions().ForEach(_occupied.Remove));
+        removed.MatchSome(r => _elements.Remove(r));
+        return removed;
     }
     public void Add(Positioned<T> toAdd) => Add(toAdd.Position, toAdd.Element);
     public void Add(Position position, T element)

@@ -1,5 +1,8 @@
 namespace CaptainCoder.TacticsEngine.Board.Tests;
 
+using Optional;
+using Optional.Unsafe;
+
 using Shouldly;
 
 public class PositionMap_should
@@ -26,8 +29,8 @@ public class PositionMap_should
         Positioned<Figure> toAdd = new(new Figure(), new Position(2, 1));
         PositionMap<Figure> underTest = [toAdd];
 
-        Positioned<Figure>? actual = underTest.GetValueOrDefault(new Position(2, 1));
-        actual.ShouldBe(toAdd);
+        Option<Positioned<Figure>> actual = underTest.GetValue(new Position(2, 1));
+        actual.ValueOrDefault().ShouldBe(toAdd);
     }
 
     [Fact]
@@ -35,8 +38,8 @@ public class PositionMap_should
     {
         PositionMap<Figure> underTest = [];
 
-        Positioned<Figure>? actual = underTest.GetValueOrDefault(new Position(2, 1));
-        actual.ShouldBeNull();
+        Option<Positioned<Figure>> actual = underTest.GetValue(new Position(2, 1));
+        actual.HasValue.ShouldBeFalse();
     }
 
     [Fact]
