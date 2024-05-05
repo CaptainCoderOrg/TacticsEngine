@@ -56,6 +56,11 @@ public static class BoardExtensions
         return board.Figures.CanAdd(position, toAdd);
     }
     public static bool CanAddFigure(this Board board, int x, int y, Figure toAdd) => board.CanAddFigure(new Position(x, y), toAdd);
+    public static bool TryAddFigure(this Board board, Positioned<Figure> toAdd)
+    {
+        if (!board.HasTiles(toAdd.BoundingBox())) { return false; }
+        return board.Figures.TryAdd(toAdd);
+    }
 
     public static bool TryAddFigure(this Board board, Position position, Figure toAdd)
     {
@@ -73,11 +78,12 @@ public static class BoardExtensions
     {
         if (board.Tiles.Remove(position))
         {
-            board.RemoveFigure(position);
+            board.TryRemoveFigure(position, out Positioned<Figure>? _);
         }
     }
+    public static bool TryRemoveFigure(this Board board, Position position, [NotNullWhen(true)] out Positioned<Figure>? removed) =>
+        board.Figures.TryRemove(position, out removed);
 
-    public static bool RemoveFigure(this Board board, Position position) => board.Figures.TryRemove(position, out _);
     private static JsonSerializerOptions Options { get; } = new()
     {
         Converters = { FigureMapConverter.Shared }

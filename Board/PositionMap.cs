@@ -32,14 +32,15 @@ public sealed class PositionMap<T> : IReadOnlySet<Positioned<T>>, IEquatable<Pos
         Positioned<T> toAdd = new(element, position);
         return !toAdd.BoundingBox().Positions().Any(_occupied.ContainsKey);
     }
-    public bool TryAdd(Position position, T element)
+    public bool TryAdd(Positioned<T> toAdd)
     {
-        Positioned<T> toAdd = new(element, position);
         if (toAdd.BoundingBox().Positions().Any(_occupied.ContainsKey)) { return false; }
         _elements.Add(toAdd);
         toAdd.BoundingBox().Positions().ToList().ForEach(position => _occupied.Add(position, toAdd));
         return true;
     }
+
+    public bool TryAdd(Position position, T element) => TryAdd(new Positioned<T>(element, position));
 
     public bool Equals(PositionMap<T>? other) =>
         other is not null &&

@@ -280,7 +280,7 @@ public class Board_should
             ]
         };
 
-        bool result = underTest.RemoveFigure(new Position(x, y));
+        bool result = underTest.TryRemoveFigure(new Position(x, y), out Positioned<Figure>? _);
 
         result.ShouldBeTrue();
         underTest.Figures.Count.ShouldBe(1);
@@ -302,7 +302,7 @@ public class Board_should
             ]
         };
 
-        bool result = underTest.RemoveFigure(new Position(x, y));
+        bool result = underTest.TryRemoveFigure(new Position(x, y), out Positioned<Figure>? _);
 
         result.ShouldBeFalse();
         underTest.Figures.Count.ShouldBe(1);
