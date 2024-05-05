@@ -10,7 +10,7 @@ namespace CaptainCoder.TacticsEngine.Board;
 public sealed class Board : IEquatable<Board>
 {
     public HashSet<Position> Tiles { get; set; } = [];
-    public PositionMap<Figure> Figures { get; set; } = new();
+    public PositionMap<Figure> Figures { get; set; } = [];
     public bool Equals(Board? other)
     {
         return other is not null &&
@@ -30,29 +30,24 @@ public static class BoardExtensions
         }
     }
     public static bool HasTile(this Board board, int x, int y) => board.Tiles.Contains(new Position(x, y));
-    public static Option<Tile> GetTile(this Board board, Position position)
-    {
-        return board
-            .SomeWhen(b => b.Tiles.Contains(position))
-            .Select(b => b.Figures.Where(OccupiesPosition).FirstOrNone())
-            .Select(positionedFigure => new Tile() { Figure = positionedFigure.Select(f => f.Element) });
-        bool OccupiesPosition(Positioned<Figure> f) => f.BoundingBox().Positions().Contains(position);
-    }
+    public static Option<Tile> GetTile(this Board board, Position position) =>
+        board.NoneWhen(board => !board.Tiles.Contains(position))
+             .Select(board => board.Figures.FirstOrNone(f => f.BoundingBox().Contains(position)))
+             .Select(positionedFigure => new Tile() { Figure = positionedFigure.Select(f => f.Element) });
+
     public static Option<Tile> GetTile(this Board board, int x, int y) => board.GetTile(new Position(x, y));
 
     public static bool CanAddFigure(this Board board, Position position, Figure toAdd)
     {
         BoundingBox bbox = new(position, toAdd.Width, toAdd.Height);
-        if (!board.HasTiles(bbox)) { return false; }
-        return board.Figures.CanAdd(position, toAdd);
+        return board.HasTiles(bbox) && board.Figures.CanAdd(position, toAdd);
     }
     public static bool CanAddFigure(this Board board, int x, int y, Figure toAdd) => board.CanAddFigure(new Position(x, y), toAdd);
 
     public static bool TryAddFigure(this Board board, Position position, Figure toAdd)
     {
         BoundingBox bbox = new(position, toAdd.Width, toAdd.Height);
-        if (!board.HasTiles(bbox)) { return false; }
-        return board.Figures.TryAdd(position, toAdd);
+        return board.HasTiles(bbox) && board.Figures.TryAdd(position, toAdd);
     }
 
     public static bool TryAddFigure(this Board board, int x, int y, Figure toAdd) => board.TryAddFigure(new Position(x, y), toAdd);
