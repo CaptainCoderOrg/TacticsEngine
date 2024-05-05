@@ -12,5 +12,5 @@ public abstract record TileInfo
 public sealed record NoTile : TileInfo;
 public sealed record Tile : TileInfo
 {
-    public FigureInfo Figure { get; init; } = FigureInfo.None;
+    public Figure? Figure { get; init; }
 }

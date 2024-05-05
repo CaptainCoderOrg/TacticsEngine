@@ -26,17 +26,18 @@ public static class BoardExtensions
         }
     }
     public static bool HasTile(this Board board, int x, int y) => board.Tiles.Contains(new Position(x, y));
-    public static TileInfo GetTile(this Board board, Position position)
+    public static bool TryGetTile(this Board board, Position position, [NotNullWhen(true)] out Tile? tile)
     {
-        if (!board.Tiles.Contains(position)) { return TileInfo.None; }
-        FigureInfo? info = board.Figures
+        tile = null;
+        if (!board.Tiles.Contains(position)) { return false; }
+        Figure? figure = board.Figures
             .Where(f => new BoundingBox(f.Position, f.Element.Width, f.Element.Height).Positions().Contains(position))
             .Select(f => f.Element)
             .FirstOrDefault();
-        Tile tile = new() { Figure = info ?? FigureInfo.None };
-        return tile;
+        tile = new() { Figure = figure };
+        return true;
     }
-    public static TileInfo GetTile(this Board board, int x, int y) => board.GetTile(new Position(x, y));
+    public static bool TryGetTile(this Board board, int x, int y, [NotNullWhen(true)] out Tile? tile) => board.TryGetTile(new Position(x, y), out tile);
 
     public static bool CanAddFigure(this Board board, Position position, Figure toAdd)
     {
@@ -67,18 +68,6 @@ public static class BoardExtensions
     }
 
     public static bool RemoveFigure(this Board board, Position position) => board.Figures.TryRemove(position, out _);
-    public static bool MoveFigure(this Board board, int startX, int startY, int endX, int endY) => board.MoveFigure(new Position(startX, startY), new Position(endX, endY));
-    public static bool MoveFigure(this Board board, Position start, Position end)
-    {
-        if (!board.Figures.TryRemove(start, out Positioned<Figure>? toMove)) { return false; };
-        BoundingBox endBox = new(end.X, end.Y, toMove.Element.Width, toMove.Element.Height);
-        if (endBox.Positions().Any(board.Figures.IsOccupied))
-        {
-            board.Figures.Add(toMove);
-            return false;
-        }
-        return board.TryAddFigure(end.X, end.Y, toMove.Element);
-    }
     private static JsonSerializerOptions Options { get; } = new()
     {
         Converters = { FigureMapConverter.Shared }
