@@ -17,7 +17,7 @@ public class Board_should
         // Adds an empty tile
         underTest.HasTile(x, y).ShouldBeTrue();
         TileInfo actual = underTest.GetTile(x, y);
-        actual.ShouldBe(new Tile() { Figure = FigureInfo.None, Prop = PropInfo.None });
+        actual.ShouldBe(new Tile());
     }
 
     [Theory]
@@ -276,8 +276,8 @@ public class Board_should
 
         result.ShouldBeTrue();
         board.Figures.Count.ShouldBe(1);
-        board.GetTile(startX, startY).ShouldBe(new Tile() { Figure = FigureInfo.None, Prop = PropInfo.None });
-        board.GetTile(endX, endY).ShouldBe(new Tile() { Figure = figure, Prop = PropInfo.None });
+        board.GetTile(startX, startY).ShouldBe(new Tile());
+        board.GetTile(endX, endY).ShouldBe(new Tile() { Figure = figure });
     }
 
     [Theory]
@@ -302,13 +302,13 @@ public class Board_should
         BoundingBox startBox = new(startX, startY, width, height);
         startBox.Positions()
                 .Select(board.GetTile)
-                .All(new Tile() { Figure = FigureInfo.None, Prop = PropInfo.None }.Equals)
+                .All(new Tile().Equals)
                 .ShouldBeTrue();
 
         BoundingBox endBox = new(endX, endY, width, height);
         endBox.Positions()
                 .Select(board.GetTile)
-                .All(new Tile() { Figure = figure, Prop = PropInfo.None }.Equals)
+                .All(new Tile() { Figure = figure }.Equals)
                 .ShouldBeTrue();
     }
 
@@ -332,8 +332,8 @@ public class Board_should
 
         result.ShouldBeFalse();
         board.Figures.Count.ShouldBe(2);
-        board.GetTile(startX, startY).ShouldBe(new Tile() { Figure = figure, Prop = PropInfo.None });
-        board.GetTile(endX, endY).ShouldBe(new Tile() { Figure = other, Prop = PropInfo.None });
+        board.GetTile(startX, startY).ShouldBe(new Tile() { Figure = figure });
+        board.GetTile(endX, endY).ShouldBe(new Tile() { Figure = other });
     }
 
     [Fact]
@@ -354,8 +354,8 @@ public class Board_should
 
         result.ShouldBeFalse();
         board.Figures.Count.ShouldBe(2);
-        board.GetTile(1, 2).ShouldBe(new Tile() { Figure = figure, Prop = PropInfo.None });
-        board.GetTile(4, 2).ShouldBe(new Tile() { Figure = FigureInfo.None, Prop = PropInfo.None });
+        board.GetTile(1, 2).ShouldBe(new Tile() { Figure = figure });
+        board.GetTile(4, 2).ShouldBe(new Tile());
     }
 
     [Theory]
