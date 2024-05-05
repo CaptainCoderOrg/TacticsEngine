@@ -5,6 +5,8 @@ namespace CaptainCoder.TacticsEngine.Board;
 
 public sealed class Board : IEquatable<Board>
 {
+    public Tile this[int x, int y] => this[new Position(x, y)];
+    public Tile this[Position ix] => this.GetTile(ix);
     public HashSet<Position> Tiles { get; set; } = [];
     public PositionMap<Figure> Figures { get; set; } = new();
     public bool Equals(Board? other)
@@ -26,6 +28,15 @@ public static class BoardExtensions
         }
     }
     public static bool HasTile(this Board board, int x, int y) => board.Tiles.Contains(new Position(x, y));
+    public static Tile GetTile(this Board board, Position position)
+    {
+        if (board.TryGetTile(position, out Tile? tile))
+        {
+            return tile;
+        }
+        throw new IndexOutOfRangeException($"No tile at position {position}.");
+    }
+
     public static bool TryGetTile(this Board board, Position position, [NotNullWhen(true)] out Tile? tile)
     {
         tile = null;

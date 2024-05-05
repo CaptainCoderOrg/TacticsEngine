@@ -16,7 +16,7 @@ public class Board_should
 
         // Adds an empty tile
         underTest.HasTile(x, y).ShouldBeTrue();
-        underTest.TryGetTile(x, y, out Tile? actual).ShouldBeTrue();
+        Tile actual = underTest[x, y];
         actual.ShouldBe(new Tile());
     }
 
@@ -42,7 +42,7 @@ public class Board_should
 
         underTest.TryAddFigure(x, y, toAdd);
 
-        underTest.TryGetTile(x, y, out Tile? actual).ShouldBeTrue();
+        Tile actual = underTest[x, y];
         actual.ShouldBe(new Tile() { Figure = toAdd });
     }
 
@@ -76,11 +76,11 @@ public class Board_should
         }
         Figure toAdd = new(w, h);
 
-        underTest.TryAddFigure(x, y, toAdd);
+        underTest.TryAddFigure(x, y, toAdd).ShouldBeTrue();
 
         foreach (Position position in positions)
         {
-            underTest.TryGetTile(position, out Tile? actual).ShouldBeTrue();
+            Tile actual = underTest[position];
             actual.Figure.ShouldBe(toAdd);
         }
 
@@ -130,7 +130,7 @@ public class Board_should
         underTest.CreateEmptyTiles(positions);
         underTest.TryAddFigure(0, 0, new Figure());
 
-        underTest.TryGetTile(x, y, out Tile? actual).ShouldBeTrue();
+        Tile actual = underTest[x, y];
         actual.ShouldBe(new Tile());
     }
 
@@ -310,4 +310,10 @@ public class Board_should
     }
 
 
+    [Fact]
+    public void throw_out_of_range_exception()
+    {
+        Board underTest = new();
+        Should.Throw<IndexOutOfRangeException>(() => underTest[0, 0]);
+    }
 }
