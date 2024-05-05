@@ -1,6 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
+using CaptainCoder.Linq;
+
 using Optional;
 using Optional.Collections;
 using Optional.Linq;
@@ -21,15 +23,15 @@ public sealed class Board : IEquatable<Board>
 
 public static class BoardExtensions
 {
-    public static void CreateEmptyTile(this Board board, int x, int y) => board.Tiles.Add(new Position(x, y));
-    public static void CreateEmptyTiles(this Board board, IEnumerable<Position> positions)
-    {
-        foreach (Position p in positions)
-        {
-            board.CreateEmptyTile(p.X, p.Y);
-        }
-    }
+    public static void CreateEmptyTile(this Board board, int x, int y) => board.CreateEmptyTile(new Position(x, y));
+
+    public static void CreateEmptyTile(this Board board, Position position) => board.Tiles.Add(position);
+
+    public static void CreateEmptyTiles(this Board board, IEnumerable<Position> positions) =>
+        positions.ForEach(board.CreateEmptyTile);
+
     public static bool HasTile(this Board board, int x, int y) => board.Tiles.Contains(new Position(x, y));
+
     public static Option<Tile> GetTile(this Board board, Position position) =>
         board.NoneWhen(board => !board.Tiles.Contains(position))
              .Select(board => board.Figures.FirstOrNone(f => f.BoundingBox().Contains(position)))
@@ -42,18 +44,21 @@ public static class BoardExtensions
         BoundingBox bbox = new(position, toAdd.Width, toAdd.Height);
         return board.HasTiles(bbox) && board.Figures.CanAdd(position, toAdd);
     }
-    public static bool CanAddFigure(this Board board, int x, int y, Figure toAdd) => board.CanAddFigure(new Position(x, y), toAdd);
+    public static bool CanAddFigure(this Board board, int x, int y, Figure toAdd) =>
+        board.CanAddFigure(new Position(x, y), toAdd);
 
     public static Option<Positioned<Figure>> TryAddFigure(this Board board, Position position, Figure toAdd) =>
         new BoundingBox(position, toAdd.Width, toAdd.Height)
             .SomeWhen(board.HasTiles)
             .SelectMany(_ => board.Figures.TryAdd(position, toAdd));
 
-    public static Option<Positioned<Figure>> TryAddFigure(this Board board, int x, int y, Figure toAdd) => board.TryAddFigure(new Position(x, y), toAdd);
+    public static Option<Positioned<Figure>> TryAddFigure(this Board board, int x, int y, Figure toAdd) =>
+        board.TryAddFigure(new Position(x, y), toAdd);
 
     public static bool HasTiles(this Board board, BoundingBox box) => box.Positions().All(board.Tiles.Contains);
 
     public static Option<Tile> RemoveTile(this Board board, int x, int y) => board.RemoveTile(new Position(x, y));
+
     public static Option<Tile> RemoveTile(this Board board, Position position)
     {
         Option<Tile> tile = board.GetTile(position);
@@ -62,11 +67,14 @@ public static class BoardExtensions
         return tile;
     }
 
-    public static Option<Positioned<Figure>> RemoveFigure(this Board board, Position position) => board.Figures.Remove(position);
+    public static Option<Positioned<Figure>> RemoveFigure(this Board board, Position position) =>
+        board.Figures.Remove(position);
+
     private static JsonSerializerOptions Options { get; } = new()
     {
         Converters = { FigureMapConverter.Shared }
     };
+
     public static string ToJson(this Board board) => JsonSerializer.Serialize(board, Options);
 
     public static bool TryFromJson(string json, [NotNullWhen(true)] out Board? board)

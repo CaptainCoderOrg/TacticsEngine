@@ -27,7 +27,10 @@ public sealed class PositionMap<T> : IReadOnlySet<Positioned<T>>, IEquatable<Pos
     public void Add(Position position, T element)
     {
         Positioned<T> toAdd = new(element, position);
-        if (toAdd.BoundingBox().Positions().Any(_occupied.ContainsKey)) { throw new InvalidOperationException($"Overlapping elements around: {toAdd.BoundingBox()}"); }
+        if (toAdd.BoundingBox().Positions().Any(_occupied.ContainsKey))
+        {
+            throw new InvalidOperationException($"Overlapping elements around: {toAdd.BoundingBox()}");
+        }
         _elements.Add(toAdd);
         toAdd.BoundingBox().Positions().ToList().ForEach(position => _occupied.Add(position, toAdd));
     }
