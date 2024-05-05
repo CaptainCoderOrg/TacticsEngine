@@ -27,7 +27,8 @@ public static class BoardExtensions
             board.CreateEmptyTile(p.X, p.Y);
         }
     }
-    public static bool HasTile(this Board board, int x, int y) => board.Tiles.Contains(new Position(x, y));
+    public static bool HasTile(this Board board, int x, int y) => board.HasTile(new Position(x, y));
+    public static bool HasTile(this Board board, Position position) => board.Tiles.Contains(position);
     public static Tile GetTile(this Board board, Position position)
     {
         if (board.TryGetTile(position, out Tile? tile))
