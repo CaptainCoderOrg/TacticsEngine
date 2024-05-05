@@ -54,16 +54,16 @@ public static class BoardExtensions
 
     public static bool HasTiles(this Board board, BoundingBox box) => box.Positions().All(board.Tiles.Contains);
 
-    public static void RemoveTile(this Board board, int x, int y) => board.RemoveTile(new Position(x, y));
-    public static void RemoveTile(this Board board, Position position)
+    public static Option<Tile> RemoveTile(this Board board, int x, int y) => board.RemoveTile(new Position(x, y));
+    public static Option<Tile> RemoveTile(this Board board, Position position)
     {
-        if (board.Tiles.Remove(position))
-        {
-            board.RemoveFigure(position);
-        }
+        Option<Tile> tile = board.GetTile(position);
+        board.Tiles.Remove(position);
+        board.RemoveFigure(position);
+        return tile;
     }
 
-    public static bool RemoveFigure(this Board board, Position position) => board.Figures.Remove(position).HasValue;
+    public static Option<Positioned<Figure>> RemoveFigure(this Board board, Position position) => board.Figures.Remove(position);
     private static JsonSerializerOptions Options { get; } = new()
     {
         Converters = { FigureMapConverter.Shared }
