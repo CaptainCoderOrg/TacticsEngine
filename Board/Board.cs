@@ -42,10 +42,8 @@ public static class BoardExtensions
     {
         tile = null;
         if (!board.Tiles.Contains(position)) { return false; }
-        Figure? figure = board.Figures
-            .Where(f => new BoundingBox(f.Position, f.Element.Width, f.Element.Height).Positions().Contains(position))
-            .Select(f => f.Element)
-            .FirstOrDefault();
+        Positioned<Figure>? figure = board.Figures
+            .FirstOrDefault(f => f.BoundingBox().Contains(position));
         tile = new() { Figure = figure };
         return true;
     }

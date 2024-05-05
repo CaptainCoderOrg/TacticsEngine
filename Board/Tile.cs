@@ -1,5 +1,5 @@
 namespace CaptainCoder.TacticsEngine.Board;
 public sealed record Tile
 {
-    public Figure? Figure { get; init; }
+    public Positioned<Figure>? Figure { get; init; }
 }

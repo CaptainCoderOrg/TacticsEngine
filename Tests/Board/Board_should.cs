@@ -43,7 +43,7 @@ public class Board_should
         underTest.TryAddFigure(x, y, toAdd);
 
         Tile actual = underTest[x, y];
-        actual.ShouldBe(new Tile() { Figure = toAdd });
+        actual.ShouldBe(new Tile() { Figure = new Positioned<Figure>(toAdd, new Position(x, y)) });
     }
 
     [Theory]
@@ -81,7 +81,7 @@ public class Board_should
         foreach (Position position in positions)
         {
             Tile actual = underTest[position];
-            actual.Figure.ShouldBe(toAdd);
+            actual.Figure.ShouldBe(new Positioned<Figure>(toAdd, new Position(x, y)));
         }
 
     }
