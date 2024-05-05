@@ -63,7 +63,8 @@ public class Board_should
 
         Figure toAdd = new(1, 1);
         underTest.CanAddFigure(x, y, toAdd).ShouldBeFalse();
-        underTest.TryAddFigure(x, y, toAdd).ShouldBeFalse();
+        var result = underTest.TryAddFigure(x, y, toAdd);
+        result.HasValue.ShouldBeFalse();
     }
 
     [Theory]
@@ -96,7 +97,7 @@ public class Board_should
     {
         Board underTest = new();
         underTest.CanAddFigure(0, 0, new Figure()).ShouldBeFalse();
-        underTest.TryAddFigure(0, 0, new Figure()).ShouldBeFalse();
+        underTest.TryAddFigure(0, 0, new Figure()).HasValue.ShouldBeFalse();
     }
 
     [Fact]
@@ -108,7 +109,7 @@ public class Board_should
         underTest.CreateEmptyTile(0, 1);
         Figure tooLarge = new() { Width = 2, Height = 2 };
         underTest.CanAddFigure(0, 0, tooLarge).ShouldBeFalse();
-        underTest.TryAddFigure(0, 0, tooLarge).ShouldBeFalse();
+        underTest.TryAddFigure(0, 0, tooLarge).HasValue.ShouldBeFalse();
     }
 
     [Fact]
@@ -121,7 +122,7 @@ public class Board_should
         underTest.TryAddFigure(0, 0, first);
         Figure second = new(2, 2);
         underTest.CanAddFigure(1, 1, second).ShouldBeFalse();
-        underTest.TryAddFigure(1, 1, second).ShouldBeFalse();
+        underTest.TryAddFigure(1, 1, second).HasValue.ShouldBeFalse();
 
     }
 

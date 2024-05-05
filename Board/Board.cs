@@ -44,13 +44,12 @@ public static class BoardExtensions
     }
     public static bool CanAddFigure(this Board board, int x, int y, Figure toAdd) => board.CanAddFigure(new Position(x, y), toAdd);
 
-    public static bool TryAddFigure(this Board board, Position position, Figure toAdd)
-    {
-        BoundingBox bbox = new(position, toAdd.Width, toAdd.Height);
-        return board.HasTiles(bbox) && board.Figures.TryAdd(position, toAdd);
-    }
+    public static Option<Positioned<Figure>> TryAddFigure(this Board board, Position position, Figure toAdd) =>
+        new BoundingBox(position, toAdd.Width, toAdd.Height)
+            .SomeWhen(board.HasTiles)
+            .SelectMany(_ => board.Figures.TryAdd(position, toAdd));
 
-    public static bool TryAddFigure(this Board board, int x, int y, Figure toAdd) => board.TryAddFigure(new Position(x, y), toAdd);
+    public static Option<Positioned<Figure>> TryAddFigure(this Board board, int x, int y, Figure toAdd) => board.TryAddFigure(new Position(x, y), toAdd);
 
     public static bool HasTiles(this Board board, BoundingBox box) => box.Positions().All(board.Tiles.Contains);
 

@@ -26,7 +26,7 @@ public sealed class FigureTool : Tool
 
     public override void OnMouseUp(Board board, Position endPosition)
     {
-        if (_selected != null && !board.TryAddFigure(endPosition + _offset, _selected.Element))
+        if (_selected != null && !board.TryAddFigure(endPosition + _offset, _selected.Element).HasValue)
         {
             board.Figures.Add(_selected);
         }

@@ -67,18 +67,18 @@ public class PositionMap_should
     public void report_on_add()
     {
         PositionMap<Figure> underTest = [];
-        underTest.TryAdd(new Position(0, 0), new Figure()).ShouldBeTrue();
-        underTest.TryAdd(new Position(0, 0), new Figure()).ShouldBeFalse();
+        underTest.TryAdd(new Position(0, 0), new Figure()).HasValue.ShouldBeTrue();
+        underTest.TryAdd(new Position(0, 0), new Figure()).HasValue.ShouldBeFalse();
 
-        underTest.TryAdd(new Position(2, 2), new Figure(2, 2) { Width = 2, Height = 2 }).ShouldBeTrue();
+        underTest.TryAdd(new Position(2, 2), new Figure(2, 2) { Width = 2, Height = 2 }).HasValue.ShouldBeTrue();
 
-        underTest.TryAdd(new Position(3, 2), new Figure(2, 2)).ShouldBeFalse();
-        underTest.TryAdd(new Position(2, 3), new Figure(2, 2)).ShouldBeFalse();
-        underTest.TryAdd(new Position(3, 3), new Figure(2, 2)).ShouldBeFalse();
+        underTest.TryAdd(new Position(3, 2), new Figure(2, 2)).HasValue.ShouldBeFalse();
+        underTest.TryAdd(new Position(2, 3), new Figure(2, 2)).HasValue.ShouldBeFalse();
+        underTest.TryAdd(new Position(3, 3), new Figure(2, 2)).HasValue.ShouldBeFalse();
 
-        underTest.TryAdd(new Position(1, 1), new Figure(2, 2)).ShouldBeFalse();
-        underTest.TryAdd(new Position(1, 2), new Figure(2, 2)).ShouldBeFalse();
-        underTest.TryAdd(new Position(2, 2), new Figure(2, 2)).ShouldBeFalse();
+        underTest.TryAdd(new Position(1, 1), new Figure(2, 2)).HasValue.ShouldBeFalse();
+        underTest.TryAdd(new Position(1, 2), new Figure(2, 2)).HasValue.ShouldBeFalse();
+        underTest.TryAdd(new Position(2, 2), new Figure(2, 2)).HasValue.ShouldBeFalse();
     }
 
     [Fact]
@@ -86,25 +86,25 @@ public class PositionMap_should
     {
         PositionMap<Figure> underTest = [];
         underTest.CanAdd(new Position(0, 0), new Figure()).ShouldBeTrue();
-        underTest.TryAdd(new Position(0, 0), new Figure()).ShouldBeTrue();
+        underTest.TryAdd(new Position(0, 0), new Figure()).HasValue.ShouldBeTrue();
         underTest.CanAdd(new Position(0, 0), new Figure()).ShouldBeFalse();
-        underTest.TryAdd(new Position(0, 0), new Figure()).ShouldBeFalse();
+        underTest.TryAdd(new Position(0, 0), new Figure()).HasValue.ShouldBeFalse();
 
         underTest.CanAdd(new Position(2, 2), new Figure(2, 2)).ShouldBeTrue();
-        underTest.TryAdd(new Position(2, 2), new Figure(2, 2)).ShouldBeTrue();
+        underTest.TryAdd(new Position(2, 2), new Figure(2, 2)).HasValue.ShouldBeTrue();
 
         underTest.CanAdd(new Position(3, 2), new Figure(2, 2)).ShouldBeFalse();
-        underTest.TryAdd(new Position(3, 2), new Figure(2, 2)).ShouldBeFalse();
+        underTest.TryAdd(new Position(3, 2), new Figure(2, 2)).HasValue.ShouldBeFalse();
         underTest.CanAdd(new Position(2, 3), new Figure(2, 2)).ShouldBeFalse();
-        underTest.TryAdd(new Position(2, 3), new Figure(2, 2)).ShouldBeFalse();
+        underTest.TryAdd(new Position(2, 3), new Figure(2, 2)).HasValue.ShouldBeFalse();
         underTest.CanAdd(new Position(3, 3), new Figure(2, 2)).ShouldBeFalse();
-        underTest.TryAdd(new Position(3, 3), new Figure(2, 2)).ShouldBeFalse();
+        underTest.TryAdd(new Position(3, 3), new Figure(2, 2)).HasValue.ShouldBeFalse();
 
         underTest.CanAdd(new Position(1, 1), new Figure(2, 2)).ShouldBeFalse();
-        underTest.TryAdd(new Position(1, 1), new Figure(2, 2)).ShouldBeFalse();
+        underTest.TryAdd(new Position(1, 1), new Figure(2, 2)).HasValue.ShouldBeFalse();
         underTest.CanAdd(new Position(1, 2), new Figure(2, 2)).ShouldBeFalse();
-        underTest.TryAdd(new Position(1, 2), new Figure(2, 2)).ShouldBeFalse();
+        underTest.TryAdd(new Position(1, 2), new Figure(2, 2)).HasValue.ShouldBeFalse();
         underTest.CanAdd(new Position(2, 2), new Figure(2, 2)).ShouldBeFalse();
-        underTest.TryAdd(new Position(2, 2), new Figure(2, 2)).ShouldBeFalse();
+        underTest.TryAdd(new Position(2, 2), new Figure(2, 2)).HasValue.ShouldBeFalse();
     }
 }
