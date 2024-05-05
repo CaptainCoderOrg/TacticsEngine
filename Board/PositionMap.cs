@@ -39,9 +39,9 @@ public sealed class PositionMap<T> : IReadOnlySet<Positioned<T>>, IEquatable<Pos
         Positioned<T> toAdd = new(element, position);
         return !toAdd.BoundingBox().Positions().Any(_occupied.ContainsKey);
     }
-    public Option<Positioned<T>> TryAdd(Position position, T element)
+    public Option<Positioned<T>> TryAdd(Position position, T element) => TryAdd(new Positioned<T>(element, position));
+    public Option<Positioned<T>> TryAdd(Positioned<T> toAdd)
     {
-        Positioned<T> toAdd = new(element, position);
         if (toAdd.BoundingBox().Positions().Any(_occupied.ContainsKey)) { return Option.None<Positioned<T>>(); }
         _elements.Add(toAdd);
         toAdd.BoundingBox().Positions().ForEach(position => _occupied.Add(position, toAdd));
