@@ -23,4 +23,5 @@
     background-color: darkred;
     border: 2px solid red;
     margin: -2px -2px;
+    box-shadow: red 0px 0px 16px;
 }
