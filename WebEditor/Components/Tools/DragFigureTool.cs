@@ -9,7 +9,15 @@ public sealed class DragFigureTool : Tool
     public Positioned<Figure>? DraggedFigure { get; private set; }
     private Position _offset;
 
-    public override void OnStartDragFigure(Board board, Figure figure, Position? originalPosition)
+    public override void OnStartDrag(Board board, Position position)
+    {
+        if (board.TryGetTile(position, out Tile? tile) && tile.Figure is Positioned<Figure> figure)
+        {
+            StartDragFigure(board, figure.Element, position);
+        }
+    }
+
+    public void StartDragFigure(Board board, Figure figure, Position? originalPosition = null)
     {
         _selected = figure;
         _offset = default;

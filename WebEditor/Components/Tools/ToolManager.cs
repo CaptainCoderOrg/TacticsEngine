@@ -27,9 +27,9 @@ public class ToolManager
         _tool.OnMouseOver(board, position);
     }
 
-    public void StartDragFigure(Board board, Figure figure, Position? originalPosition = null)
+    public void StartDrag(Board board, Position position)
     {
-        _tool.OnStartDragFigure(board, figure, originalPosition);
+        _tool.OnStartDrag(board, position);
     }
 
     public void MouseUp(Board board, Position position)

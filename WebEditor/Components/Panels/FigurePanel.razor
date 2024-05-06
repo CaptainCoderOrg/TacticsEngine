@@ -24,6 +24,6 @@
 
     private void OnDragStart(MouseEventArgs args, Figure figure)
     {
-        ToolManager.StartDragFigure(CurrentBoard, figure);
+        DragFigureTool.Shared.StartDragFigure(CurrentBoard, figure);
     }
 }

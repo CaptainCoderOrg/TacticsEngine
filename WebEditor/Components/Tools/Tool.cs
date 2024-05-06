@@ -18,10 +18,10 @@ public abstract class Tool
         return EventResult.Unhandled;
     }
 
-    public virtual void OnStartDragFigure(Board board, Figure figure, Position? originalPosition = null)
+    public virtual void OnStartDrag(Board board, Position position)
     {
         ToolManager.Tool = DragFigureTool.Shared;
-        DragFigureTool.Shared.OnStartDragFigure(board, figure, originalPosition);
+        DragFigureTool.Shared.OnStartDrag(board, position);
     }
     public virtual void OnMouseOver(Board board, Position position) { }
     public virtual void OnMouseUp(Board board, Position endPosition) { }
