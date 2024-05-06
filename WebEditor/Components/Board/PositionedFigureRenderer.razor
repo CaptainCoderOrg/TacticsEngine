@@ -1,7 +1,7 @@
 @using System.Diagnostics.CodeAnalysis
 @inject ToolManager ToolManager
 
-<ElementRenderer Position="@Figure.Position">
+<ElementRenderer Position="@Figure.Position" IsSelected="@IsSelected">
     <FigureRenderer Figure="@Figure.Element" OnDragStart="@OnDragStart"/>
 </ElementRenderer>
 
@@ -11,6 +11,7 @@
     public Positioned<Figure> Figure { get; set; }
     [CascadingParameter, AllowNull]
     public BoardRenderer Parent { get; set; }
+    public bool IsSelected => FigureTool.Shared.Selected == Figure;
     private void OnDragStart(MouseEventArgs args, Figure _)
     {
         Position offset = new ((int)(args.OffsetX / Parent.CellSize), (int)(args.OffsetY / Parent.CellSize));
