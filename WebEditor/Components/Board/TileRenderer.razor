@@ -4,6 +4,9 @@
     @onclick="@SelectTile"
     @onclick:stopPropagation="true"
     @onmouseenter="@(() => OnMouseEnter.InvokeAsync(Position))"
+    @onmousedown="@(() => _mouseDown = true)"
+    @onmouseup="@(() => _mouseDown = false)"
+    @onmousemove="@CheckDragStart"
     >    
 </div>
 
@@ -15,6 +18,15 @@
     public Board Board { get; set; }
     [Parameter]
     public EventCallback<Position> OnMouseEnter { get; set; }
+    private bool _mouseDown = false;
     private string TileType => Board.HasTile(Position.X, Position.Y) ? "tile" : "no-tile";
     public void SelectTile() => ToolManager.SelectTile(Board, Position);
+    private void CheckDragStart(MouseEventArgs args)
+    {
+        if (_mouseDown)
+        {
+            _mouseDown = false;
+            ToolManager.StartDrag(Board, Position);
+        }
+    }
 }

@@ -3,30 +3,11 @@
 
 <div 
     class="figure"
-    style="--figure-width: @Figure.Width; --figure-height: @Figure.Height;"
-    is-dragging="@IsDragging"
-    @onmousedown="@(() => _mouseDown = true)"
-    @onmouseup="@(() => _mouseDown = false)"
-    @onmouseleave="@(() => _dragStarted = false)"
-    @onmousemove="@CheckDragStart"></div>
+    style="--figure-width: @Figure.Width; --figure-height: @Figure.Height;">
+    </div>
 
 @code
 {
     [Parameter, EditorRequired, AllowNull]
     public Figure Figure { get; set; }
-    private bool _dragStarted = false;
-    public bool IsDragging => _dragStarted || DragFigureTool.Shared.DraggedFigure is not null;
-    private bool _mouseDown = false;
-    [Parameter]
-    public Action<MouseEventArgs, Figure>? OnDragStart { get; set; }
-
-    private void CheckDragStart(MouseEventArgs args)
-    {
-        if (_mouseDown)
-        {
-            _mouseDown = false;
-            _dragStarted = true;
-            OnDragStart?.Invoke(args, Figure);
-        }
-    }
 }   

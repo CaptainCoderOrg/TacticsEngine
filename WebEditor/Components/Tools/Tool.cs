@@ -20,7 +20,7 @@ public abstract class Tool
 
     public virtual void OnStartDrag(Board board, Position position)
     {
-        ToolManager.Tool = DragFigureTool.Shared;
+        Console.WriteLine("OnStartDrag");
         DragFigureTool.Shared.OnStartDrag(board, position);
     }
     public virtual void OnMouseOver(Board board, Position position) { }

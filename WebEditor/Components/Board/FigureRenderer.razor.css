@@ -3,10 +3,5 @@
 	width: calc(var(--cell-size) * var(--figure-width) - var(--figure-margin));
 	height: calc(var(--cell-size) * var(--figure-height) - var(--figure-margin));
 	background-color: green;
-    pointer-events: visible;
-}
-
-.figure[is-dragging]
-{
     pointer-events: none;
 }

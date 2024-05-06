@@ -19,6 +19,7 @@ public sealed class DragFigureTool : Tool
 
     public void StartDragFigure(Board board, Figure figure, Position? originalPosition = null)
     {
+        ToolManager.Shared.Tool = this;
         _selected = figure;
         _offset = default;
         _removed = null;
@@ -48,5 +49,6 @@ public sealed class DragFigureTool : Tool
         }
         _selected = null;
         DraggedFigure = null;
+        ToolManager.Shared.Tool = FigureTool.Shared;
     }
 }
