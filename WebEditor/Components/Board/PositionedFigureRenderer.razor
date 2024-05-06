@@ -1,4 +1,5 @@
 @using System.Diagnostics.CodeAnalysis
+@implements IDisposable
 @inject ToolManager ToolManager
 
 <ElementRenderer Position="@Figure.Position" IsSelected="@IsSelected">
@@ -9,7 +10,23 @@
 {
     [Parameter, EditorRequired, AllowNull]
     public Positioned<Figure> Figure { get; set; }
+
     [CascadingParameter, AllowNull]
     public BoardRenderer Parent { get; set; }
     public bool IsSelected => FigureTool.Shared.Selected == Figure;
+
+    protected override void OnInitialized()
+    {
+        FigureTool.Shared.OnChange += CheckSelected;
+    }
+
+    public void Dispose()
+    {
+        FigureTool.Shared.OnChange -= CheckSelected;
+    }
+    private void CheckSelected(Positioned<Figure>? previous, Positioned<Figure>? selected)
+    {
+        if (previous == Figure || selected == Figure) { StateHasChanged(); }
+    }
+
 }

@@ -12,7 +12,9 @@
     @ondragstart="@(() => {})" 
     @ondragstart:stopPropagation
     @ondragstart:preventDefault
-    @onmouseup="@(() => ToolManager.MouseUp(Board, _mousePosition))">
+    @onmouseup="@(() => ToolManager.MouseUp(Board, _mousePosition))"
+    @onclick="@(() => Console.WriteLine("Clicked?"))"
+    >
     <CascadingValue Value="@Board">
         <CascadingValue Value="@this">
             @foreach (Position position in Positions)
