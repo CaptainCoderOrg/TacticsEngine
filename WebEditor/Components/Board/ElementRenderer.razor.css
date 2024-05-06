@@ -6,7 +6,6 @@
     top: calc(var(--pos-y) * var(--cell-size) + var(--figure-margin));
     z-index: 1;
     pointer-events: none;
-
 }
 
 .dragged-element
