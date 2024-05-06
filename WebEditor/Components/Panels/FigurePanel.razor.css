@@ -1,5 +1,8 @@
 h2 {
     margin: 0;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 .figure-panel {
     --cell-size: 25px;
