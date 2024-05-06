@@ -6,9 +6,11 @@ public sealed class EraseTool : Tool
 {
     public static EraseTool Shared { get; } = new();
 
-    public override void OnClick(Board board, Position position)
+    public override EventResult OnClick(Board board, Position position)
     {
-        if (!board.HasTile(position.X, position.Y)) { return; }
+        if (base.OnClick(board, position) is EventResult.Handled) { return EventResult.Handled; };
+        if (!board.HasTile(position.X, position.Y)) { return EventResult.Unhandled; }
         board.RemoveTile(position.X, position.Y);
+        return EventResult.Handled;
     }
 }
