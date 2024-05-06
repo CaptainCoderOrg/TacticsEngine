@@ -7,12 +7,10 @@ public abstract class Tool
     private ToolManager ToolManager => ToolManager.Shared;
     public virtual EventResult OnClick(Board board, Position position)
     {
-        Console.WriteLine("Click");
         if (board.TryGetTile(position, out Tile? tile) && tile.Figure is Positioned<Figure> figure)
         {
             ToolManager.Tool = FigureTool.Shared;
             FigureTool.Shared.Selected = figure;
-            Console.WriteLine($"Selected Figure: {figure}");
             return EventResult.Handled;
         }
         return EventResult.Unhandled;
@@ -20,7 +18,6 @@ public abstract class Tool
 
     public virtual void OnStartDrag(Board board, Position position)
     {
-        Console.WriteLine("OnStartDrag");
         DragFigureTool.Shared.OnStartDrag(board, position);
     }
     public virtual void OnMouseOver(Board board, Position position) { }
