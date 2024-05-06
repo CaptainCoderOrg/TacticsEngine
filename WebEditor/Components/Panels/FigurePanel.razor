@@ -5,7 +5,9 @@
     <h2>Figures</h2>
     @foreach(Figure figure in _figures)
     {
-        <FigureRenderer Figure="@figure"/>   
+        <Draggable OnDragStart="@((mouseEvent) => OnDragStart(mouseEvent, figure))">
+            <FigureRenderer Figure="@figure"/>   
+        </Draggable>
     }
 </div>
 
