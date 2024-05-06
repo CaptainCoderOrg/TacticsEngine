@@ -1,5 +1,4 @@
-.positioned-element
-{
+.positioned-element {
     position: absolute;
     --figure-margin: 2px;
     left: calc(var(--pos-x) * var(--cell-size) + var(--figure-margin));
@@ -8,20 +7,20 @@
     pointer-events: none;
 }
 
-.dragged-element
-{
+.dragged-element {
     opacity: .5;
     border: 2px solid lightgreen;
     pointer-events: none;
     transition: cubic-bezier(0, 0, 0, 1) 150ms;
+    margin: -2px -2px;
 }
 
-.invalid-position 
-{
+.invalid-position {
     position: absolute;
     width: 100%;
     height: 100%;
     z-index: 2;
     background-color: darkred;
     border: 2px solid red;
+    margin: -2px -2px;
 }
