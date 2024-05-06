@@ -5,8 +5,7 @@ namespace WebEditor.Tools;
 public abstract class Tool
 {
     private ToolManager ToolManager => ToolManager.Shared;
-    public virtual void OnClickTile(Board board, Position position) { }
-    public virtual void OnClickFigure(Board board, Positioned<Figure> figure) { }
+    public virtual void OnClick(Board board, Position position) { }
     public virtual void OnStartDragFigure(Board board, Figure figure, Position? originalPosition = null)
     {
         ToolManager.Tool = FigureTool.Shared;
