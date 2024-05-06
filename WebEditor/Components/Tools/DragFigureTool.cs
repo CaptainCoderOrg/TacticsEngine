@@ -1,9 +1,9 @@
 using CaptainCoder.TacticsEngine.Board;
 
 namespace WebEditor.Tools;
-public sealed class FigureTool : Tool
+public sealed class DragFigureTool : Tool
 {
-    public static FigureTool Shared { get; } = new();
+    public static DragFigureTool Shared { get; } = new();
     private Figure? _selected;
     private Positioned<Figure>? _removed;
     public Positioned<Figure>? DraggedFigure { get; private set; }

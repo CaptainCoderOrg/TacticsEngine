@@ -8,8 +8,8 @@ public abstract class Tool
     public virtual void OnClick(Board board, Position position) { }
     public virtual void OnStartDragFigure(Board board, Figure figure, Position? originalPosition = null)
     {
-        ToolManager.Tool = FigureTool.Shared;
-        FigureTool.Shared.OnStartDragFigure(board, figure, originalPosition);
+        ToolManager.Tool = DragFigureTool.Shared;
+        DragFigureTool.Shared.OnStartDragFigure(board, figure, originalPosition);
     }
     public virtual void OnMouseOver(Board board, Position position) { }
     public virtual void OnMouseUp(Board board, Position endPosition) { }
