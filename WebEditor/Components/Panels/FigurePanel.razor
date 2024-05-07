@@ -3,18 +3,21 @@
 @inject ToolManager ToolManager
 <div class="figure-panel">
     <h2>Figures</h2>
-    @foreach(Figure figure in _figures)
-    {
-        <Draggable OnDragStart="@((mouseEvent) => OnDragStart(mouseEvent, figure))">
-            <FigureRenderer Figure="@figure"/>   
-        </Draggable>
-    }
+    <div class="figure-selection">
+        @foreach(Figure figure in _figures)
+        {
+            <Draggable OnDragStart="@((mouseEvent) => OnDragStart(mouseEvent, figure))">
+                <FigureRenderer Figure="@figure"/>   
+            </Draggable>
+        }
+    </div>
 </div>
+
 
 @code
 {
-    [CascadingParameter, EditorRequired, AllowNull]
-    public Board CurrentBoard { get; set; }
+    [CascadingParameter, EditorRequired]
+    public required Board CurrentBoard { get; set; }
     private List<Figure> _figures = [
 		new Figure(1, 1),
         new Figure(2, 2),
