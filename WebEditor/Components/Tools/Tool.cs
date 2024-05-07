@@ -13,6 +13,10 @@ public abstract class Tool
             FigureTool.Shared.Selected = figure;
             return EventResult.Handled;
         }
+        else
+        {
+            FigureTool.Shared.Selected = null;
+        }
         return EventResult.Unhandled;
     }
 
