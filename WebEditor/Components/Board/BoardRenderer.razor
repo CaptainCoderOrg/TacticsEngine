@@ -12,7 +12,8 @@
     @ondragstart="@(() => {})" 
     @ondragstart:stopPropagation
     @ondragstart:preventDefault
-    @onmouseup="@(() => ToolManager.MouseUp(Board, _mousePosition))">
+    @onmouseup="@(() => ToolManager.MouseUp(Board, _mousePosition))"
+    >
     <CascadingValue Value="@Board">
         <CascadingValue Value="@this">
             @foreach (Position position in Positions)
@@ -23,7 +24,7 @@
             {
                 <PositionedFigureRenderer Figure="@figure"/>
             }
-            @if (FigureTool.Shared.DraggedFigure is Positioned<Figure> target)
+            @if (DragFigureTool.Shared.DraggedFigure is Positioned<Figure> target)
             {
                 <ElementRenderer Position="@target.Position" IsDragging IsValid="@Board.CanAddFigure(target.Position, target.Element)">
                     <FigureRenderer Figure="@target.Element"/>
@@ -59,6 +60,5 @@
     {
         _mousePosition = position;
         ToolManager.MouseOver(Board, position);
-        StateHasChanged();
     }
 }

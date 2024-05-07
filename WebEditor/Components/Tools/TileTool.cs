@@ -5,9 +5,11 @@ namespace WebEditor.Tools;
 public sealed class TileTool : Tool
 {
     public static TileTool Shared { get; } = new();
-    public override void OnClickTile(Board board, Position position)
+    public override EventResult OnClick(Board board, Position position)
     {
-        if (board.HasTile(position.X, position.Y)) { return; }
+        if (base.OnClick(board, position) is EventResult.Handled) { return EventResult.Handled; };
+        if (board.HasTile(position.X, position.Y)) { return EventResult.Unhandled; }
         board.CreateEmptyTile(position.X, position.Y);
+        return EventResult.Handled;
     }
 }

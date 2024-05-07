@@ -1,0 +1,36 @@
+@using System.Diagnostics.CodeAnalysis;
+@using CaptainCoder.TacticsEngine.Board
+@inject ToolManager ToolManager
+<div class="inspector-panel">
+    <h2>Inspector</h2>
+    @if (FigureTool.Shared.Selected is Positioned<Figure> figure)
+    {
+        <span>Position: (@figure.Position.X, @figure.Position.Y)</span>
+        <span>Size: (@figure.Element.Width, @figure.Element.Height)</span>
+        <button @onclick="@RemoveFigure">Remove Figure</button>
+    }
+</div>
+
+@code
+{
+    [CascadingParameter, EditorRequired]
+    public required Board CurrentBoard { get; set; }
+    protected override void OnInitialized()
+    {
+        FigureTool.Shared.OnChange += UpdateSelected;
+    }
+
+    public void Dispose()
+    {
+        FigureTool.Shared.OnChange -= UpdateSelected;
+    }
+    private void UpdateSelected(Positioned<Figure>? previous, Positioned<Figure>? selected)
+    {
+        StateHasChanged();
+    }
+
+    private void RemoveFigure()
+    {
+        _ = FigureTool.Shared.RemoveSelected(CurrentBoard);
+    }
+}

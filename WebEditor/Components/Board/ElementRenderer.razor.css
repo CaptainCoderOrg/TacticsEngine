@@ -8,6 +8,11 @@
     pointer-events: none;
 }
 
+.selected-element
+{
+    border: 2px solid lightgreen;
+}
+
 .dragged-element
 {
     opacity: .5;
