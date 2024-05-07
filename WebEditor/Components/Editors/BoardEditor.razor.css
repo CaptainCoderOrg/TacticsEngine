@@ -21,3 +21,11 @@
 {
     flex: grow;
 }
+
+.panels-content
+{
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    gap: .25em;
+}

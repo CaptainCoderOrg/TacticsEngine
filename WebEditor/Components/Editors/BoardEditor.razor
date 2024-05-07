@@ -18,9 +18,12 @@
     <div class="editor-content">
         <BoardRenderer Board="@_board" />
     </div>
-    <CascadingValue Value="@_board">
-        <FigurePanel />
-    </CascadingValue>
+    <div class="panels-content">
+        <CascadingValue Value="@_board">
+            <InspectorPanel />
+            <FigurePanel />
+        </CascadingValue>
+    </div>
 </div>
 
 @code
