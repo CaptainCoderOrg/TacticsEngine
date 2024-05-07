@@ -2,9 +2,12 @@
 @implements IDisposable
 @inject ToolManager ToolManager
 
+@if (Parent.Board.Figures.Contains(Figure))
+{
 <ElementRenderer Position="@Figure.Position" IsSelected="@IsSelected">
     <FigureRenderer Figure="@Figure.Element" />
 </ElementRenderer>
+}
 
 @code
 {
@@ -12,7 +15,7 @@
     public Positioned<Figure> Figure { get; set; }
 
     [CascadingParameter, AllowNull]
-    public BoardRenderer Parent { get; set; }
+    public required BoardRenderer Parent { get; set; }
     public bool IsSelected => FigureTool.Shared.Selected == Figure;
 
     protected override void OnInitialized()

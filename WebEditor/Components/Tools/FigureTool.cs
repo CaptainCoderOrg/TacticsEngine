@@ -18,4 +18,15 @@ public sealed class FigureTool : Tool
     }
 
     public event Action<Positioned<Figure>?, Positioned<Figure>?>? OnChange;
+
+    public bool RemoveSelected(Board board)
+    {
+        if (_selected is null) { return false; }
+        if (board.TryRemoveFigure(_selected.Position, out _))
+        {
+            Selected = null;
+            return true;
+        }
+        return false;
+    }
 }
