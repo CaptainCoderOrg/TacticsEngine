@@ -40,15 +40,16 @@ public sealed class DragFigureTool : Tool
 
     public override void OnMouseUp(Board board, Position endPosition)
     {
-        if (_selected is not null && !board.TryAddFigure(endPosition + _offset, _selected))
+        if (_selected is not null && board.TryAddFigure(endPosition + _offset, _selected))
         {
-            if (_removed is not null)
-            {
-                board.TryAddFigure(_removed);
-            }
+            FigureTool.Shared.Selected = new Positioned<Figure>(_selected, endPosition + _offset);
         }
+        else if (_removed is not null && board.TryAddFigure(_removed))
+        {
+            FigureTool.Shared.Selected = _removed;
+        }
+        ToolManager.Shared.Tool = FigureTool.Shared;
         _selected = null;
         DraggedFigure = null;
-        ToolManager.Shared.Tool = FigureTool.Shared;
     }
 }
