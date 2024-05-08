@@ -2,9 +2,7 @@
 @inject ToolManager ToolManager;
 <div 
     class="board-container" 
-    style="--cell-size: @(CellSize)px; --board-width: @Width; --board-height: @Height;"
-    
-    >
+    style="--cell-size: @(CellSize)px; --board-width: @Width; --board-height: @Height;">
     <CascadingValue Value="@Board">
         <CascadingValue Value="@this">
             @foreach (Position position in Positions)
@@ -41,6 +39,8 @@
             }
         }
     }
+
+    public void Redraw() => StateHasChanged();
     private void MouseEnter(Position position)
     {
         _mousePosition = position;
