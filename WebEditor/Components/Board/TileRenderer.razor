@@ -1,13 +1,11 @@
 @inject ToolManager ToolManager
-<Draggable OnDragStart="@StartDrag">
+<DropZone OnEnter="@OnDragEnter" OnDrop="@OnDrop">
     <div 
         class="tile-info @TileType"
         @onclick="@SelectTile"
-        @onclick:stopPropagation="true"
-        @onmouseenter="@(() => OnMouseEnter.InvokeAsync(Position))"
-        >    
+        @onclick:stopPropagation="true">    
     </div>
-</Draggable>
+</DropZone>
 
 @code
 {
@@ -22,5 +20,15 @@
     private void StartDrag(MouseEventArgs args)
     {
         ToolManager.StartDrag(Board, Position);
+    }
+
+    private void OnDragEnter(Figure figure)
+    {
+        DragFigureTool.Shared.OnMouseOver(Board, Position);
+    }
+
+    private void OnDrop(Figure figure)
+    {
+        DragFigureTool.Shared.OnMouseUp(Board, Position);
     }
 }

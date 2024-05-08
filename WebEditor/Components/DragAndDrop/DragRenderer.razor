@@ -1,0 +1,27 @@
+@implements IDisposable
+@if (DragFigureTool.Shared.DraggedFigure is Positioned<Figure> target)
+{
+    <ElementRenderer Position="@target.Position" IsDragging
+        IsValid="@CurrentBoard.CanAddFigure(target.Position, target.Element)">
+        <FigureRenderer Figure="@target.Element" />
+    </ElementRenderer>
+}
+
+@code
+{
+    [CascadingParameter, AllowNull]
+    public required Board CurrentBoard { get; set; }
+    protected override void OnInitialized()
+    {
+
+        DragFigureTool.Shared.OnDraggedFigureChanged += CheckSelected;
+    }
+    public void Dispose()
+    {
+        DragFigureTool.Shared.OnDraggedFigureChanged -= CheckSelected;
+    }
+    private void CheckSelected(Positioned<Figure>? _)
+    {
+        StateHasChanged();
+    }
+}

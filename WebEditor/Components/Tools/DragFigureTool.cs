@@ -6,8 +6,26 @@ public sealed class DragFigureTool : Tool
     public static DragFigureTool Shared { get; } = new();
     private Figure? _selected;
     private Positioned<Figure>? _removed;
-    public Positioned<Figure>? DraggedFigure { get; private set; }
+    private Positioned<Figure>? _draggedFigure;
+    public Positioned<Figure>? DraggedFigure
+    {
+        get => _draggedFigure;
+        private set
+        {
+            if (_draggedFigure == value) { return; }
+            _draggedFigure = value;
+            OnDraggedFigureChanged?.Invoke(_draggedFigure);
+        }
+    }
     private Position _offset;
+
+    public Action<Positioned<Figure>?>? OnDraggedFigureChanged;
+
+    public void ClearSelected()
+    {
+        _selected = null;
+        DraggedFigure = null;
+    }
 
     public override void OnStartDrag(Board board, Position position)
     {
@@ -49,7 +67,6 @@ public sealed class DragFigureTool : Tool
             FigureTool.Shared.Selected = _removed;
         }
         ToolManager.Shared.Tool = FigureTool.Shared;
-        _selected = null;
-        DraggedFigure = null;
+        ClearSelected();
     }
 }

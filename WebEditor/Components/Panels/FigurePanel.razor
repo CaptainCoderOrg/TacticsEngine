@@ -6,7 +6,7 @@
     <div class="figure-selection">
         @foreach(Figure figure in _figures)
         {
-            <Draggable OnDragStart="@((mouseEvent) => OnDragStart(mouseEvent, figure))">
+            <Draggable DragData="@figure" OnDragStart="@((args) => OnDragStart(args, figure))" OnDragEnd="@OnDragEnd">
                 <FigureRenderer Figure="@figure"/>   
             </Draggable>
         }
@@ -27,8 +27,15 @@
         new Figure(3, 3),
     ];
 
-    private void OnDragStart(MouseEventArgs args, Figure figure)
+
+    private void OnDragStart(DragEventArgs args, Figure figure)
     {
         DragFigureTool.Shared.StartDragFigure(CurrentBoard, figure);
     }
+
+    private void OnDragEnd(DragEventArgs args)
+    {
+        DragFigureTool.Shared.ClearSelected();
+    }
+
 }
