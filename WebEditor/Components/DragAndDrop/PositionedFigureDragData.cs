@@ -1,12 +1,19 @@
 ﻿using CaptainCoder.TacticsEngine.Board;
 
+#pragma warning disable IDE0005 // This import is required but dotnet format removes it
+using WebEditor.Components.Board;
+using WebEditor.Tools;
+#pragma warning restore IDE0005 // This import is required but dotnet format removes it
 namespace WebEditor.Components.DragAndDrop;
 
 public sealed record PositionedFigureDragData(Positioned<Figure> Figure, Position Offset, BoardRenderer Parent) : IDragData
 {
     private bool _wasMoved = false;
 
-    public void HandleDragStart() { }
+    public void HandleDragStart()
+    {
+        FigureTool.Shared.Selected = Figure;
+    }
 
     public void HandleDragEnterTile(BoardData board, Position position)
     {
@@ -20,7 +27,12 @@ public sealed record PositionedFigureDragData(Positioned<Figure> Figure, Positio
 
     public void HandleDropTile(BoardData board, Position position)
     {
-        _wasMoved = board.TryAddFigure(Figure with { Position = position + Offset });
+        var toMove = Figure with { Position = position + Offset };
+        if (board.TryAddFigure(toMove))
+        {
+            _wasMoved = true;
+            FigureTool.Shared.Selected = toMove;
+        }
     }
 
     public void HandleDragEnd()
