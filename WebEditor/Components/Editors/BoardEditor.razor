@@ -13,7 +13,6 @@
         <button @onclick="@(() => SaveBoard())">Save File</button>
         <button @onclick="@(() => ToolManager.Tool = EraseTool.Shared)">Erase</button>
         <button @onclick="@(() => ToolManager.Tool = TileTool.Shared)">Add Tiles</button>
-        <button @onclick="@(() => ToolManager.Tool = DragFigureTool.Shared)">Add Figure</button>
     </div>
     <div class="editor-content">
         <BoardRenderer Board="@_board" />

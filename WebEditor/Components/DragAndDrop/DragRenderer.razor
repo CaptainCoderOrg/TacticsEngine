@@ -1,9 +1,9 @@
 @inject DragAndDropManager DragAndDropManager
 @implements IDisposable
-@if (DragAndDropManager.DraggedFigure is Positioned<Figure> target)
+@if (DragAndDropManager.DraggedData is not null && DragAndDropManager.DraggedFigure is Positioned<Figure> target)
 {
     <ElementRenderer Position="@target.Position" IsDragging
-        IsValid="@CurrentBoard.CanAddFigure(target.Position, target.Element)">
+        IsValid="@DragAndDropManager.DraggedData.CanDrop(CurrentBoard, target.Position)">
         <FigureRenderer Figure="@target.Element" />
     </ElementRenderer>
 }

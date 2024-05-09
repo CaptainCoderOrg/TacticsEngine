@@ -1,10 +1,10 @@
 @inject DragAndDropManager DragAndDropManager
 <div class="draggable-element"
-    draggable="true"
-    @ondragstart="@CheckDragStart"
-    @ondragend="@CheckDragEnd"
-    >
-	@ChildContent
+     draggable="true"
+     @ondragstart="@CheckDragStart"
+     @ondragend:preventDefault
+     @ondragend="@CheckDragEnd">
+    @ChildContent
 </div>
 
 @code
@@ -16,10 +16,12 @@
 
     private void CheckDragStart(DragEventArgs args)
     {
-        DragAndDropManager.DraggedData = CreateDragData.Invoke(args);    
+        DragAndDropManager.DraggedData = CreateDragData.Invoke(args);
+        DragAndDropManager.DraggedData?.HandleDragStart();
     }
     private void CheckDragEnd(DragEventArgs args)
     {
         DragAndDropManager.DraggedData?.HandleDragEnd();
+        DragAndDropManager.DraggedData = null;
     }
 }

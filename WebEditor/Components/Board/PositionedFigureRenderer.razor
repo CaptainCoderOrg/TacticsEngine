@@ -4,9 +4,11 @@
 
 @if (Parent.Board.Figures.Contains(Figure))
 {
-<ElementRenderer Position="@Figure.Position" IsSelected="@IsSelected">
-    <FigureRenderer Figure="@Figure.Element" />
-</ElementRenderer>
+    <ElementRenderer Position="@Figure.Position" IsSelected="@IsSelected">
+        <Draggable CreateDragData="@CreateData">
+            <FigureRenderer Figure="@Figure.Element" />
+        </Draggable>
+    </ElementRenderer>
 }
 
 @code
@@ -30,5 +32,12 @@
     private void CheckSelected(Positioned<Figure>? previous, Positioned<Figure>? selected)
     {
         if (previous == Figure || selected == Figure) { StateHasChanged(); }
+    }
+
+    private IDragData CreateData(DragEventArgs args)
+    {
+        int offX = (int)(-args.OffsetX / Parent.CellSize);
+        int offY = (int)(-args.OffsetY / Parent.CellSize);
+        return new PositionedFigureDragData(Figure, new Position(offX, offY), Parent);
     }
 }

@@ -21,4 +21,6 @@ public sealed record FigureDragData(Figure Figure, Position Offset) : IDragData
     {
         board.TryAddFigure(new Positioned<Figure>(Figure, position + Offset));
     }
+
+    public bool CanDrop(BoardData board, Position position) => board.CanAddFigure(position + Offset, Figure);
 }

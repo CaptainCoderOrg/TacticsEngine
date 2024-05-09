@@ -27,13 +27,4 @@ public class ToolManager
         _tool.OnMouseOver(board, position);
     }
 
-    public void StartDrag(BoardData board, Position position)
-    {
-        _tool.OnStartDrag(board, position);
-    }
-
-    public void MouseUp(BoardData board, Position position)
-    {
-        _tool.OnMouseUp(board, position);
-    }
 }
