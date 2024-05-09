@@ -3,7 +3,7 @@
 @if (DragAndDropManager.DraggedData is not null && DragAndDropManager.DraggedFigure is Positioned<Figure> target)
 {
     <ElementRenderer Position="@target.Position" IsDragging
-        IsValid="@DragAndDropManager.DraggedData.CanDrop(CurrentBoard, target.Position)">
+                     IsValid="@DragAndDropManager.DraggedData.CanDrop(CurrentBoard, target.Position)">
         <FigureRenderer Figure="@target.Element" />
     </ElementRenderer>
 }
@@ -12,15 +12,17 @@
 {
     [CascadingParameter, AllowNull]
     public required BoardData CurrentBoard { get; set; }
+
     protected override void OnInitialized()
     {
-
         DragAndDropManager.OnDraggedFigureChange += CheckSelected;
     }
+
     public void Dispose()
     {
         DragAndDropManager.OnDraggedFigureChange -= CheckSelected;
     }
+
     private void CheckSelected(Positioned<Figure>? _)
     {
         StateHasChanged();

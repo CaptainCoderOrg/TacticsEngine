@@ -1,15 +1,8 @@
 ﻿using CaptainCoder.TacticsEngine.Board;
-
-
 namespace WebEditor.Components.DragAndDrop;
 
 public sealed record FigureDragData(Figure Figure, Position Offset) : IDragData
 {
-    public void HandleDragEnd()
-    {
-        DragAndDropManager.Shared.DraggedFigure = null;
-    }
-
     public void HandleDragStart() { }
 
     public void HandleDragEnterTile(BoardData board, Position position)
@@ -23,4 +16,9 @@ public sealed record FigureDragData(Figure Figure, Position Offset) : IDragData
     }
 
     public bool CanDrop(BoardData board, Position position) => board.CanAddFigure(position + Offset, Figure);
+
+    public void HandleDragEnd()
+    {
+        DragAndDropManager.Shared.DraggedFigure = null;
+    }
 }

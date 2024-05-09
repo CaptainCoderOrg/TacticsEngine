@@ -1,19 +1,21 @@
 @using System.Diagnostics.CodeAnalysis;
 @inject ToolManager ToolManager;
-<div 
-    class="board-container" 
-    style="--cell-size: @(CellSize)px; --board-width: @Width; --board-height: @Height;">
+<div class="board-container"
+     style="--cell-size: @(CellSize)px; --board-width: @Width; --board-height: @Height;">
     <CascadingValue Value="@Board">
         <CascadingValue Value="@this">
+
             @foreach (Position position in Positions)
             {
-                <TileRenderer @key="@position" Position="@position" OnMouseEnter="@(() => MouseEnter(@position))" />
+                <TileRenderer @key="@position" Position="@position"/>
             }
+
             @foreach (Positioned<Figure> figure in Board.Figures)
             {
-                <PositionedFigureRenderer Figure="@figure"/>
+                <PositionedFigureRenderer Figure="@figure" />
             }
-            <DragRenderer/>
+
+            <DraggedFigure />
         </CascadingValue>
     </CascadingValue>
 </div>
@@ -26,6 +28,7 @@
     [Parameter, EditorRequired, AllowNull]
     public BoardData Board { get; set; }
     private Position _mousePosition = new(0, 0);
+
     public IEnumerable<Position> Positions
     {
         get
@@ -41,9 +44,4 @@
     }
 
     public void Redraw() => StateHasChanged();
-    private void MouseEnter(Position position)
-    {
-        _mousePosition = position;
-        ToolManager.MouseOver(Board, position);
-    }
 }

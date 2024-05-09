@@ -2,7 +2,7 @@ using CaptainCoder.TacticsEngine.Board;
 
 namespace WebEditor.Components.DragAndDrop;
 
-internal class DragAndDropManager
+internal sealed class DragAndDropManager
 {
     private Positioned<Figure>? _draggedFigure;
     public static DragAndDropManager Shared { get; } = new DragAndDropManager();

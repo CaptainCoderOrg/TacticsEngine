@@ -11,6 +11,7 @@
 {
     [Parameter, EditorRequired]
     public required RenderFragment ChildContent { get; set; }
+
     [Parameter, EditorRequired]
     public required Func<DragEventArgs, IDragData> CreateDragData { get; set; }
 
@@ -19,6 +20,7 @@
         DragAndDropManager.DraggedData = CreateDragData.Invoke(args);
         DragAndDropManager.DraggedData?.HandleDragStart();
     }
+
     private void CheckDragEnd(DragEventArgs args)
     {
         DragAndDropManager.DraggedData?.HandleDragEnd();

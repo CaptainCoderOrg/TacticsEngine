@@ -1,17 +1,16 @@
 @inject DragAndDropManager DragAndDropManager
-<div
-    class="dropzone-element"
-    ondragover="event.preventDefault();"
-    @ondragenter="@CheckDragEnter"
-    @ondrop:preventDefault
-    @ondrop="@CheckDrop">
+<div class="dropzone-element"
+     ondragover="event.preventDefault();"
+     @ondragenter="@CheckDragEnter"
+     @ondrop:preventDefault
+     @ondrop="@CheckDrop">
     @ChildContent
 </div>
 
 @code
 {
     [Parameter, EditorRequired]
-	public required RenderFragment ChildContent { get; set; }
+    public required RenderFragment ChildContent { get; set; }
     [Parameter, EditorRequired]
     public required EventCallback<IDragData> OnEnter { get; set; }
     [Parameter, EditorRequired]

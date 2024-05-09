@@ -15,7 +15,6 @@
 {
     [Parameter, EditorRequired, AllowNull]
     public Positioned<Figure> Figure { get; set; }
-
     [CascadingParameter, AllowNull]
     public required BoardRenderer Parent { get; set; }
     public bool IsSelected => FigureTool.Shared.Selected == Figure;
@@ -29,6 +28,7 @@
     {
         FigureTool.Shared.OnChange -= CheckSelected;
     }
+
     private void CheckSelected(Positioned<Figure>? previous, Positioned<Figure>? selected)
     {
         if (previous == Figure || selected == Figure) { StateHasChanged(); }
