@@ -1,0 +1,43 @@
+﻿@inject DragAndDropManager DragAndDropManager
+@implements IDisposable
+<div class="drag-grid-container @OnTop">
+    @foreach (Position position in Parent.Positions)
+    {
+        <DropZone OnDrop="@(data => Drop(position, data))" OnEnter="@(data => Enter(position, data))">
+            <div class="drag-grid-cell">&nbsp;</div>
+        </DropZone>
+    }
+    <DraggedFigure />
+</div>
+
+@code {
+    [CascadingParameter, EditorRequired]
+    public required BoardRenderer Parent { get; set; }
+    private string OnTop => DragAndDropManager.DraggedData is null ? "below" : "on-top";
+
+    private void Drop(Position position, IDragData data)
+    {
+        data.HandleDropTile(Parent.Board, position);
+        Parent.Redraw();
+    }
+
+    private void Enter(Position position, IDragData data)
+    {
+        data.HandleDragEnterTile(Parent.Board, position);
+    }
+
+    protected override void OnInitialized()
+    {
+        DragAndDropManager.OnDragDataChange += CheckDragData;
+    }
+
+    public void Dispose()
+    {
+        DragAndDropManager.OnDragDataChange -= CheckDragData;
+    }
+
+    private void CheckDragData(IDragData? data)
+    {
+        StateHasChanged();
+    }
+}

@@ -1,5 +1,4 @@
-.board-container
-{
+.board-container {
     position: relative;
     display: grid;
     grid-gap: 0px;

@@ -16,19 +16,23 @@
     [Parameter, EditorRequired]
     public required EventCallback<IDragData> OnDrop { get; set; }
 
-    private void CheckDrop(DragEventArgs args)
+    private async Task CheckDrop(DragEventArgs args)
     {
         if (DragAndDropManager.DraggedData is IDragData data)
         {
-            OnDrop.InvokeAsync(data);
+            // We need to wait for the JS event to finish firing before we trigger our own
+            await Task.Delay(1);
+            await OnDrop.InvokeAsync(data);
         }
     }
 
-    private void CheckDragEnter(DragEventArgs args)
+    private async Task CheckDragEnter(DragEventArgs args)
     {
         if (DragAndDropManager.DraggedData is IDragData data)
         {
-            OnEnter.InvokeAsync(data);
+            // We need to wait for the JS event to finish firing before we trigger our own
+            await Task.Delay(1);
+            await OnEnter.InvokeAsync(data);
         }
     }
 }

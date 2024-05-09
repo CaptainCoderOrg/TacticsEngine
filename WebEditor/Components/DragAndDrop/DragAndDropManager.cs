@@ -4,9 +4,22 @@ namespace WebEditor.Components.DragAndDrop;
 
 internal sealed class DragAndDropManager
 {
-    private Positioned<Figure>? _draggedFigure;
     public static DragAndDropManager Shared { get; } = new DragAndDropManager();
-    public IDragData? DraggedData { get; set; }
+
+    private IDragData? _draggedData;
+    public IDragData? DraggedData
+    {
+        get => _draggedData;
+        set
+        {
+            if (_draggedData == value) { return; }
+            _draggedData = value;
+            OnDragDataChange?.Invoke(_draggedData);
+        }
+    }
+    public event Action<IDragData?>? OnDragDataChange;
+
+    private Positioned<Figure>? _draggedFigure;
     public Positioned<Figure>? DraggedFigure
     {
         get => _draggedFigure;
