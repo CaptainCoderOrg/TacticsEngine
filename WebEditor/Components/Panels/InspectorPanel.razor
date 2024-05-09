@@ -14,7 +14,7 @@
 @code
 {
     [CascadingParameter, EditorRequired]
-    public required Board CurrentBoard { get; set; }
+    public required BoardData CurrentBoard { get; set; }
     protected override void OnInitialized()
     {
         FigureTool.Shared.OnChange += UpdateSelected;

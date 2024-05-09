@@ -1,0 +1,34 @@
+@inject DragAndDropManager DragAndDropManager
+<div class="dropzone-element"
+     ondragover="event.preventDefault();"
+     @ondragenter="@CheckDragEnter"
+     @ondrop:preventDefault
+     @ondrop="@CheckDrop">
+    @ChildContent
+</div>
+
+@code
+{
+    [Parameter, EditorRequired]
+    public required RenderFragment ChildContent { get; set; }
+    [Parameter, EditorRequired]
+    public required EventCallback<IDragData> OnEnter { get; set; }
+    [Parameter, EditorRequired]
+    public required EventCallback<IDragData> OnDrop { get; set; }
+
+    private void CheckDrop(DragEventArgs args)
+    {
+        if (DragAndDropManager.DraggedData is IDragData data)
+        {
+            OnDrop.InvokeAsync(data);
+        }
+    }
+
+    private void CheckDragEnter(DragEventArgs args)
+    {
+        if (DragAndDropManager.DraggedData is IDragData data)
+        {
+            OnEnter.InvokeAsync(data);
+        }
+    }
+}

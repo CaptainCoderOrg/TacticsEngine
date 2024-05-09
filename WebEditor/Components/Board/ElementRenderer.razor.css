@@ -5,7 +5,6 @@
     left: calc(var(--pos-x) * var(--cell-size) + var(--figure-margin));
     top: calc(var(--pos-y) * var(--cell-size) + var(--figure-margin));
     z-index: 1;
-    pointer-events: none;
 }
 
 .selected-element

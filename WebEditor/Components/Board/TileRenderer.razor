@@ -1,26 +1,31 @@
 @inject ToolManager ToolManager
-<Draggable OnDragStart="@StartDrag">
+<DropZone OnEnter="@OnDragEnter" OnDrop="@OnDrop">
     <div 
         class="tile-info @TileType"
         @onclick="@SelectTile"
-        @onclick:stopPropagation="true"
-        @onmouseenter="@(() => OnMouseEnter.InvokeAsync(Position))"
-        >    
+        @onclick:stopPropagation="true">    
     </div>
-</Draggable>
+</DropZone>
 
 @code
 {
     [Parameter, EditorRequired]
     public Position Position { get; set; }
-    [CascadingParameter, AllowNull]
-    public Board Board { get; set; }
-    [Parameter]
-    public EventCallback<Position> OnMouseEnter { get; set; }
+    [CascadingParameter]
+    public required BoardData Board { get; set; }
+    [CascadingParameter]
+    public required BoardRenderer Parent { get; set; }
     private string TileType => Board.HasTile(Position.X, Position.Y) ? "tile" : "no-tile";
     public void SelectTile() => ToolManager.SelectTile(Board, Position);
-    private void StartDrag(MouseEventArgs args)
+
+    private void OnDragEnter(IDragData data)
     {
-        ToolManager.StartDrag(Board, Position);
+        data.HandleDragEnterTile(Board, Position);
+    }
+
+    private void OnDrop(IDragData data)
+    {
+        data.HandleDropTile(Board, Position);
+        Parent.Redraw();
     }
 }

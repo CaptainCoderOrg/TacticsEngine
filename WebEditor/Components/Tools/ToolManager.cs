@@ -17,23 +17,14 @@ public class ToolManager
         }
     }
     public event Action<Tool>? OnChange;
-    public void SelectTile(Board board, Position position)
+    public void SelectTile(BoardData board, Position position)
     {
         _tool.OnClick(board, position);
     }
 
-    public void MouseOver(Board board, Position position)
+    public void MouseOver(BoardData board, Position position)
     {
         _tool.OnMouseOver(board, position);
     }
 
-    public void StartDrag(Board board, Position position)
-    {
-        _tool.OnStartDrag(board, position);
-    }
-
-    public void MouseUp(Board board, Position position)
-    {
-        _tool.OnMouseUp(board, position);
-    }
 }

@@ -1,0 +1,29 @@
+@inject DragAndDropManager DragAndDropManager
+<div class="draggable-element"
+     draggable="true"
+     @ondragstart="@CheckDragStart"
+     @ondragend:preventDefault
+     @ondragend="@CheckDragEnd">
+    @ChildContent
+</div>
+
+@code
+{
+    [Parameter, EditorRequired]
+    public required RenderFragment ChildContent { get; set; }
+
+    [Parameter, EditorRequired]
+    public required Func<DragEventArgs, IDragData> CreateDragData { get; set; }
+
+    private void CheckDragStart(DragEventArgs args)
+    {
+        DragAndDropManager.DraggedData = CreateDragData.Invoke(args);
+        DragAndDropManager.DraggedData?.HandleDragStart();
+    }
+
+    private void CheckDragEnd(DragEventArgs args)
+    {
+        DragAndDropManager.DraggedData?.HandleDragEnd();
+        DragAndDropManager.DraggedData = null;
+    }
+}

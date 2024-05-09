@@ -1,35 +1,21 @@
 @using System.Diagnostics.CodeAnalysis;
 @inject ToolManager ToolManager;
-@* 
-    It seems that all 3 of these lines are required to prevent the default dragging behavior 
-    @ondragstart="@(() => {})" 
-    @ondragstart:stopPropagation
-    @ondragstart:preventDefault
-*@
-<div 
-    class="board-container" 
-    style="--cell-size: @(CellSize)px; --board-width: @Width; --board-height: @Height;"
-    @ondragstart="@(() => {})" 
-    @ondragstart:stopPropagation
-    @ondragstart:preventDefault
-    @onmouseup="@(() => ToolManager.MouseUp(Board, _mousePosition))"
-    >
+<div class="board-container"
+     style="--cell-size: @(CellSize)px; --board-width: @Width; --board-height: @Height;">
     <CascadingValue Value="@Board">
         <CascadingValue Value="@this">
+
             @foreach (Position position in Positions)
             {
-                <TileRenderer @key="@position" Position="@position" OnMouseEnter="@(() => MouseEnter(@position))" />
+                <TileRenderer @key="@position" Position="@position"/>
             }
+
             @foreach (Positioned<Figure> figure in Board.Figures)
             {
-                <PositionedFigureRenderer Figure="@figure"/>
+                <PositionedFigureRenderer Figure="@figure" />
             }
-            @if (DragFigureTool.Shared.DraggedFigure is Positioned<Figure> target)
-            {
-                <ElementRenderer Position="@target.Position" IsDragging IsValid="@Board.CanAddFigure(target.Position, target.Element)">
-                    <FigureRenderer Figure="@target.Element"/>
-                </ElementRenderer>
-            }
+
+            <DraggedFigure />
         </CascadingValue>
     </CascadingValue>
 </div>
@@ -40,8 +26,9 @@
     public int Width { get; set; } = 20;
     public int Height { get; set; } = 20;
     [Parameter, EditorRequired, AllowNull]
-    public Board Board { get; set; }
+    public BoardData Board { get; set; }
     private Position _mousePosition = new(0, 0);
+
     public IEnumerable<Position> Positions
     {
         get
@@ -56,9 +43,5 @@
         }
     }
 
-    private void MouseEnter(Position position)
-    {
-        _mousePosition = position;
-        ToolManager.MouseOver(Board, position);
-    }
+    public void Redraw() => StateHasChanged();
 }
