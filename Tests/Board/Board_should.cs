@@ -316,4 +316,101 @@ public class Board_should
         BoardData underTest = new();
         Should.Throw<IndexOutOfRangeException>(() => underTest[0, 0]);
     }
+
+    [Theory]
+    [InlineData(2, 2, 2, 2, 4, 4)]
+    [InlineData(1, 2, 2, 1, 3, 2)]
+    [InlineData(3, 2, 3, 3, 6, 6)]
+    public void move_figure(int startX, int startY, int width, int height, int endX, int endY)
+    {
+        Positioned<Figure> figure = new(new Figure(), new Position(startX, startY));
+        BoardData board = new()
+        {
+            Tiles = [.. new BoundingBox(0, 0, 10, 10).Positions()],
+            Figures = [figure]
+        };
+
+        bool result = board.TryMoveFigure(new Position(startX, startY), new Position(endX, endY));
+
+        result.ShouldBeTrue();
+        board.Figures.Count.ShouldBe(1);
+        BoundingBox startBox = new(startX, startY, width, height);
+        Positioned<Figure> movedFigure = new(new Figure(), new Position(endX, endY));
+        startBox.Positions()
+                .Select(board.GetTile)
+                .All(new Tile().Equals)
+                .ShouldBeTrue();
+
+        BoundingBox endBox = new(endX, endY, width, height);
+        board.TryGetTile(new Position(endX, endY), out Tile? tile).ShouldBeTrue();
+        tile.Figure.ShouldBe(figure with { Position = new Position(endX, endY) });
+    }
+
+    [Theory]
+    [InlineData(2, 2, 4, 4)]
+    [InlineData(1, 2, 3, 2)]
+    public void not_move_1x1_figure_when_end_is_occupied(int startX, int startY, int endX, int endY)
+    {
+        Positioned<Figure> figure = new(new Figure(), new Position(startX, startY));
+        Positioned<Figure> other = new(new Figure(), new Position(endX, endY));
+        BoardData board = new()
+        {
+            Tiles = [.. new BoundingBox(0, 0, 10, 10).Positions()],
+            Figures = [
+                figure,
+                other,
+            ]
+        };
+
+        bool result = board.TryMoveFigure(new Position(startX, startY), new Position(endX, endY));
+
+        result.ShouldBeFalse();
+        board.Figures.Count.ShouldBe(2);
+        board.GetTile(new Position(startX, startY)).ShouldBe(new Tile() { Figure = figure });
+        board.GetTile(new Position(endX, endY)).ShouldBe(new Tile() { Figure = other });
+    }
+
+    [Fact]
+    public void not_move_3x3_figure_when_end_is_occupied()
+    {
+        Positioned<Figure> figure = new(new Figure() { Width = 3, Height = 3 }, new Position(1, 2));
+        Figure other = new() { Width = 2, Height = 2 };
+        BoardData board = new()
+        {
+            Tiles = [.. new BoundingBox(0, 0, 10, 10).Positions()],
+            Figures = [
+                figure,
+                new Positioned<Figure>(other, new Position(5, 3)),
+            ]
+        };
+
+        bool result = board.TryMoveFigure(new Position(1, 2), new Position(4, 2));
+
+        result.ShouldBeFalse();
+        board.Figures.Count.ShouldBe(2);
+        board.GetTile(new Position(1, 2)).ShouldBe(new Tile() { Figure = figure });
+        board.GetTile(new Position(4, 2)).ShouldBe(new Tile());
+    }
+
+    [Theory]
+    [InlineData(1, 2, 2, 2)]
+    [InlineData(2, 2, 3, 2)]
+    [InlineData(2, 1, 4, 2)]
+    public void not_move_empty_tile(int startX, int startY, int endX, int endY)
+    {
+        Figure other = new() { Width = 2, Height = 2 };
+        BoardData underTest = new()
+        {
+            Tiles = [.. new BoundingBox(0, 0, 10, 10).Positions()],
+            Figures = [
+                new Positioned<Figure>(other, new Position(5, 3)),
+            ]
+        };
+
+        bool result = underTest.TryMoveFigure(new Position(startX, startY), new Position(endX, endY));
+
+        result.ShouldBeFalse();
+        underTest.Figures.Count.ShouldBe(1);
+        underTest.Figures.First().ShouldBe(new Positioned<Figure>(other, new Position(5, 3)));
+    }
 }

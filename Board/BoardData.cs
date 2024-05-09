@@ -83,7 +83,27 @@ public static class BoardExtensions
     }
     public static bool TryRemoveFigure(this BoardData board, Position position, [NotNullWhen(true)] out Positioned<Figure>? removed) =>
         board.Figures.TryRemove(position, out removed);
+    public static bool CanMoveFigure(this BoardData board, Position start, Position end)
+    {
+        if (board.TryRemoveFigure(start, out Positioned<Figure>? removed))
+        {
+            bool canMove = board.CanAddFigure(end, removed.Element);
+            _ = board.TryAddFigure(removed);
+            return canMove;
+        }
+        return false;
+    }
+    public static bool TryMoveFigure(this BoardData board, Position start, Position end)
+    {
+        if (board.CanMoveFigure(start, end))
+        {
+            _ = board.TryRemoveFigure(start, out Positioned<Figure>? removed);
+            _ = board.TryAddFigure(removed! with { Position = end });
+            return true;
+        }
+        return false;
 
+    }
     private static JsonSerializerOptions Options { get; } = new()
     {
         Converters = { FigureMapConverter.Shared }
