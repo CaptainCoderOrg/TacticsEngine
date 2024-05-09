@@ -22,7 +22,7 @@ public sealed record PositionedFigureDragData(Positioned<Figure> Figure, Positio
 
     public bool CanDrop(BoardData board, Position position)
     {
-        return board.CanAddFigure(position + Offset, Figure.Element);
+        return board.CanAddFigure(position, Figure.Element);
     }
 
     public void HandleDropTile(BoardData board, Position position)
