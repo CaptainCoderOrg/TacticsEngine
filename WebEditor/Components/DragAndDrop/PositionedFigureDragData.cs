@@ -8,8 +8,6 @@ namespace WebEditor.Components.DragAndDrop;
 
 public sealed record PositionedFigureDragData(Positioned<Figure> Figure, Position Offset, BoardRenderer Parent) : IDragData
 {
-    private bool _wasMoved = false;
-
     public void HandleDragStart()
     {
         FigureTool.Shared.Selected = Figure;
@@ -22,26 +20,21 @@ public sealed record PositionedFigureDragData(Positioned<Figure> Figure, Positio
 
     public bool CanDrop(BoardData board, Position position)
     {
-        return board.CanAddFigure(position, Figure.Element);
+        return board.CanMoveFigure(Figure.Position, position);
     }
 
     public void HandleDropTile(BoardData board, Position position)
     {
-        var toMove = Figure with { Position = position + Offset };
-        if (board.TryAddFigure(toMove))
+        if (board.TryMoveFigure(Figure.Position, position + Offset))
         {
-            _wasMoved = true;
-            FigureTool.Shared.Selected = toMove;
+            FigureTool.Shared.Selected = Figure with { Position = position + Offset };
+            DragAndDropManager.Shared.DraggedFigure = null;
+            Parent.Redraw();
         }
     }
 
     public void HandleDragEnd()
     {
         DragAndDropManager.Shared.DraggedFigure = null;
-        if (_wasMoved)
-        {
-            _ = Parent.Board.TryRemoveFigure(Figure.Position, out var _);
-        }
-        Parent.Redraw();
     }
 }
