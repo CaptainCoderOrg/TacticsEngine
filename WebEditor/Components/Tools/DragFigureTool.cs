@@ -27,7 +27,7 @@ public sealed class DragFigureTool : Tool
         DraggedFigure = null;
     }
 
-    public override void OnStartDrag(Board board, Position position)
+    public override void OnStartDrag(BoardData board, Position position)
     {
         if (board.TryGetTile(position, out Tile? tile) && tile.Figure is Positioned<Figure> figure)
         {
@@ -35,7 +35,7 @@ public sealed class DragFigureTool : Tool
         }
     }
 
-    public void StartDragFigure(Board board, Figure figure, Position? originalPosition = null)
+    public void StartDragFigure(BoardData board, Figure figure, Position? originalPosition = null)
     {
         ToolManager.Shared.Tool = this;
         _selected = figure;
@@ -47,7 +47,7 @@ public sealed class DragFigureTool : Tool
         }
     }
 
-    public override void OnMouseOver(Board board, Position position)
+    public override void OnMouseOver(BoardData board, Position position)
     {
         base.OnMouseOver(board, position);
         if (_selected is not null)
@@ -56,7 +56,7 @@ public sealed class DragFigureTool : Tool
         }
     }
 
-    public override void OnMouseUp(Board board, Position endPosition)
+    public override void OnMouseUp(BoardData board, Position endPosition)
     {
         if (_selected is not null && board.TryAddFigure(endPosition + _offset, _selected))
         {

@@ -1,4 +1,4 @@
-@inject IDragAndDropManager DragAndDropManager
+@inject DragAndDropManager DragAndDropManager
 <div
     class="dropzone-element"
     ondragover="event.preventDefault();"
@@ -13,23 +13,23 @@
     [Parameter, EditorRequired]
 	public required RenderFragment ChildContent { get; set; }
     [Parameter, EditorRequired]
-    public required EventCallback<Figure> OnEnter { get; set; }
+    public required EventCallback<IDragData> OnEnter { get; set; }
     [Parameter, EditorRequired]
-    public required EventCallback<Figure> OnDrop { get; set; }
+    public required EventCallback<IDragData> OnDrop { get; set; }
 
     private void CheckDrop(DragEventArgs args)
     {
-        if (DragAndDropManager.DraggedData is Figure figure)
+        if (DragAndDropManager.DraggedData is IDragData data)
         {
-            OnDrop.InvokeAsync(figure);
+            OnDrop.InvokeAsync(data);
         }
     }
 
     private void CheckDragEnter(DragEventArgs args)
     {
-        if (DragAndDropManager.DraggedData is Figure figure)
+        if (DragAndDropManager.DraggedData is IDragData data)
         {
-            OnEnter.InvokeAsync(figure);
+            OnEnter.InvokeAsync(data);
         }
     }
 }

@@ -10,7 +10,7 @@ public class Board_should
     [InlineData(-2, -3)]
     public void add_tiles(int x, int y)
     {
-        Board underTest = new();
+        BoardData underTest = new();
 
         underTest.CreateEmptyTile(x, y);
 
@@ -26,7 +26,7 @@ public class Board_should
     [InlineData(-1, -3)]
     public void retrieve_no_tile(int x, int y)
     {
-        Board underTest = new();
+        BoardData underTest = new();
 
         underTest.TryGetTile(x, y, out Tile? _).ShouldBeFalse();
     }
@@ -36,7 +36,7 @@ public class Board_should
     [InlineData(-2, 3)]
     public void add_1x1_figure(int x, int y)
     {
-        Board underTest = new();
+        BoardData underTest = new();
         underTest.CreateEmptyTile(x, y);
         Figure toAdd = new(1, 1);
 
@@ -51,7 +51,7 @@ public class Board_should
     [InlineData(-2, 3)]
     public void not_allow_2_figures_in_same_position(int x, int y)
     {
-        Board underTest = new();
+        BoardData underTest = new();
         underTest.CreateEmptyTile(x, y);
         Figure added = new(1, 1);
         underTest.TryAddFigure(x, y, added);
@@ -68,7 +68,7 @@ public class Board_should
     [InlineData(0, -4, 2, 2)]
     public void add_large_figure(int x, int y, int w, int h)
     {
-        Board underTest = new();
+        BoardData underTest = new();
         Position[] positions = [.. new BoundingBox(new Position(x, y), w, h).Positions()];
         foreach (Position position in positions)
         {
@@ -89,7 +89,7 @@ public class Board_should
     [Fact]
     public void not_allow_add_figure_to_no_tile()
     {
-        Board underTest = new();
+        BoardData underTest = new();
         underTest.CanAddFigure(0, 0, new Figure()).ShouldBeFalse();
         underTest.TryAddFigure(0, 0, new Figure()).ShouldBeFalse();
     }
@@ -97,7 +97,7 @@ public class Board_should
     [Fact]
     public void not_allow_partial_add_figure()
     {
-        Board underTest = new();
+        BoardData underTest = new();
         underTest.CreateEmptyTile(0, 0);
         underTest.CreateEmptyTile(1, 0);
         underTest.CreateEmptyTile(0, 1);
@@ -109,7 +109,7 @@ public class Board_should
     [Fact]
     public void not_allow_overlapping_figures()
     {
-        Board underTest = new();
+        BoardData underTest = new();
         BoundingBox box = new(new Position(0, 0), 3, 3);
         underTest.CreateEmptyTiles(box.Positions());
         Figure first = new(2, 2);
@@ -125,7 +125,7 @@ public class Board_should
     [InlineData(5, 7)]
     public void not_have_figure_on_empty_tile(int x, int y)
     {
-        Board underTest = new();
+        BoardData underTest = new();
         Position[] positions = [.. new BoundingBox(new Position(0, 0), 10, 10).Positions()];
         underTest.CreateEmptyTiles(positions);
         underTest.TryAddFigure(0, 0, new Figure());
@@ -137,7 +137,7 @@ public class Board_should
     [Fact]
     public void have_position_to_tile_mapping()
     {
-        Board underTest = new();
+        BoardData underTest = new();
         Position[] positions = [
             new Position(0, 0),
             new Position(0, 1),
@@ -162,7 +162,7 @@ public class Board_should
     [InlineData(1, 2)]
     public void remove_tile_at_position(int x, int y)
     {
-        Board underTest = new();
+        BoardData underTest = new();
         underTest.CreateEmptyTiles(new BoundingBox(new Position(0, 0), 3, 3).Positions());
 
         underTest.RemoveTile(x, y);
@@ -176,7 +176,7 @@ public class Board_should
     [InlineData(1, 2)]
     public void remove_tile_and_figure(int x, int y)
     {
-        Board underTest = new()
+        BoardData underTest = new()
         {
             Tiles = [.. new BoundingBox(0, 0, 3, 3).Positions()],
             Figures = [new Positioned<Figure>(new Figure(), new Position(x, y))]
@@ -192,13 +192,13 @@ public class Board_should
     [Fact]
     public void be_equals()
     {
-        Board board0 = CreateBoard();
-        Board board1 = CreateBoard();
+        BoardData board0 = CreateBoard();
+        BoardData board1 = CreateBoard();
         board0.ShouldBe(board1);
 
-        static Board CreateBoard()
+        static BoardData CreateBoard()
         {
-            Board board = new();
+            BoardData board = new();
             board.CreateEmptyTiles(
                 new BoundingBox(new Position(0, 0), 7, 5).Positions()
             );
@@ -211,21 +211,21 @@ public class Board_should
     [Fact]
     public void not_equal_null()
     {
-        Board board0 = new();
+        BoardData board0 = new();
         board0.Equals(null).ShouldBeFalse();
     }
 
     [Fact]
     public void not_be_equals()
     {
-        Board board0 = new();
+        BoardData board0 = new();
         board0.CreateEmptyTiles(
             new BoundingBox(new Position(0, 0), 5, 7).Positions()
         );
         board0.TryAddFigure(0, 0, new Figure());
         board0.TryAddFigure(3, 3, new Figure(2, 2));
 
-        Board board1 = new();
+        BoardData board1 = new();
         board1.CreateEmptyTiles(
             new BoundingBox(new Position(0, 0), 7, 5).Positions()
         );
@@ -238,15 +238,15 @@ public class Board_should
     [Fact]
     public void be_jsonable()
     {
-        Board board0 = CreateBoard();
+        BoardData board0 = CreateBoard();
         string json = board0.ToJson();
-        bool wasSuccess = BoardExtensions.TryFromJson(json, out Board? deserialized);
+        bool wasSuccess = BoardExtensions.TryFromJson(json, out BoardData? deserialized);
         wasSuccess.ShouldBeTrue();
         board0.ShouldBe(deserialized);
 
-        static Board CreateBoard()
+        static BoardData CreateBoard()
         {
-            Board board = new();
+            BoardData board = new();
             board.CreateEmptyTiles(
                 new BoundingBox(new Position(0, 0), 7, 5).Positions()
             );
@@ -271,7 +271,7 @@ public class Board_should
     {
         Figure figure = new(3, 3);
         Figure other = new(2, 2);
-        Board underTest = new()
+        BoardData underTest = new()
         {
             Tiles = [.. new BoundingBox(0, 0, 10, 10).Positions()],
             Figures = [
@@ -294,7 +294,7 @@ public class Board_should
     public void not_remove_figure(int x, int y)
     {
         Figure other = new(2, 2);
-        Board underTest = new()
+        BoardData underTest = new()
         {
             Tiles = [.. new BoundingBox(0, 0, 10, 10).Positions()],
             Figures = [
@@ -313,7 +313,7 @@ public class Board_should
     [Fact]
     public void throw_out_of_range_exception()
     {
-        Board underTest = new();
+        BoardData underTest = new();
         Should.Throw<IndexOutOfRangeException>(() => underTest[0, 0]);
     }
 }

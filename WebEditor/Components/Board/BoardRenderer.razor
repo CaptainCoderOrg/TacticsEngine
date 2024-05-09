@@ -24,7 +24,7 @@
     public int Width { get; set; } = 20;
     public int Height { get; set; } = 20;
     [Parameter, EditorRequired, AllowNull]
-    public Board Board { get; set; }
+    public BoardData Board { get; set; }
     private Position _mousePosition = new(0, 0);
     public IEnumerable<Position> Positions
     {

@@ -6,7 +6,7 @@
     <div class="figure-selection">
         @foreach(Figure figure in _figures)
         {
-            <Draggable DragData="@figure" OnDragStart="@((args) => OnDragStart(args, figure))" OnDragEnd="@OnDragEnd">
+            <Draggable CreateDragData="@(args => CreateData(args, figure))">
                 <FigureRenderer Figure="@figure"/>   
             </Draggable>
         }
@@ -17,25 +17,21 @@
 @code
 {
     [CascadingParameter, EditorRequired]
-    public required Board CurrentBoard { get; set; }
+    public required BoardData CurrentBoard { get; set; }
     private List<Figure> _figures = [
-		new Figure(1, 1),
-        new Figure(2, 2),
-        new Figure(1, 2),
-        new Figure(2, 1),
-        new Figure(3, 2),
-        new Figure(3, 3),
+        new Figure(1, 1),
+    new Figure(2, 2),
+    new Figure(1, 2),
+    new Figure(2, 1),
+    new Figure(3, 2),
+    new Figure(3, 3),
     ];
 
 
-    private void OnDragStart(DragEventArgs args, Figure figure)
+    private IDragData CreateData(DragEventArgs args, Figure figure)
     {
-        DragFigureTool.Shared.StartDragFigure(CurrentBoard, figure);
+        int offX = (int)(-args.OffsetX / 25);
+        int offY = (int)(-args.OffsetY / 25);
+        return new FigureDragData(figure, new Position(offX, offY));
     }
-
-    private void OnDragEnd(DragEventArgs args)
-    {
-        DragFigureTool.Shared.ClearSelected();
-    }
-
 }

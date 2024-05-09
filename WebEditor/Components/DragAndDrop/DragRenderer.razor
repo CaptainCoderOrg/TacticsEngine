@@ -1,5 +1,6 @@
+@inject DragAndDropManager DragAndDropManager
 @implements IDisposable
-@if (DragFigureTool.Shared.DraggedFigure is Positioned<Figure> target)
+@if (DragAndDropManager.DraggedFigure is Positioned<Figure> target)
 {
     <ElementRenderer Position="@target.Position" IsDragging
         IsValid="@CurrentBoard.CanAddFigure(target.Position, target.Element)">
@@ -10,15 +11,15 @@
 @code
 {
     [CascadingParameter, AllowNull]
-    public required Board CurrentBoard { get; set; }
+    public required BoardData CurrentBoard { get; set; }
     protected override void OnInitialized()
     {
 
-        DragFigureTool.Shared.OnDraggedFigureChanged += CheckSelected;
+        DragAndDropManager.OnDraggedFigureChange += CheckSelected;
     }
     public void Dispose()
     {
-        DragFigureTool.Shared.OnDraggedFigureChanged -= CheckSelected;
+        DragAndDropManager.OnDraggedFigureChange -= CheckSelected;
     }
     private void CheckSelected(Positioned<Figure>? _)
     {

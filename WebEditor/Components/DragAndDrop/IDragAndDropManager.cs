@@ -2,22 +2,20 @@ using CaptainCoder.TacticsEngine.Board;
 
 namespace WebEditor.Components.DragAndDrop;
 
-public interface IDragAndDropManager
+internal class DragAndDropManager
 {
-    public Figure? DraggedData { get; set; }
-}
-
-internal class DragAndDropManager : IDragAndDropManager
-{
-    private Figure? _draggedData;
-
-    public static IDragAndDropManager Shared { get; } = new DragAndDropManager();
-    public Figure? DraggedData
+    private Positioned<Figure>? _draggedFigure;
+    public static DragAndDropManager Shared { get; } = new DragAndDropManager();
+    public IDragData? DraggedData { get; set; }
+    public Positioned<Figure>? DraggedFigure
     {
-        get => _draggedData;
+        get => _draggedFigure;
         set
         {
-            _draggedData = value;
+            if (_draggedFigure == value) { return; }
+            _draggedFigure = value;
+            OnDraggedFigureChange?.Invoke(_draggedFigure);
         }
     }
+    public event Action<Positioned<Figure>?>? OnDraggedFigureChange;
 }

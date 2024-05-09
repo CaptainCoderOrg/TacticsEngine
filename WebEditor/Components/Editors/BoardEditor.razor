@@ -29,7 +29,7 @@
 @code
 {
     [AllowNull]
-    private Board _board = new();
+    private BoardData _board = new();
     [AllowNull]
     private InputFile _inputFile;
     public async Task OnFileSelected(InputFileChangeEventArgs e)
@@ -38,7 +38,7 @@
         // TODO: This reads the entire string then parses it. probably a better way?
         string? reader = 
             await new StreamReader(e.File.OpenReadStream(MaxSize)).ReadToEndAsync();
-        if (!BoardExtensions.TryFromJson(reader, out Board? result))
+        if (!BoardExtensions.TryFromJson(reader, out BoardData? result))
         {
             // TODO: Error handling
             Console.WriteLine("Error");
