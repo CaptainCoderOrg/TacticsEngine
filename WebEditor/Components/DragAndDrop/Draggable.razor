@@ -2,7 +2,6 @@
 <div class="draggable-element"
      draggable="true"
      @ondragstart="@CheckDragStart"
-     @ondragend:preventDefault
      @ondragend="@CheckDragEnd">
     @ChildContent
 </div>
@@ -15,14 +14,18 @@
     [Parameter, EditorRequired]
     public required Func<DragEventArgs, IDragData> CreateDragData { get; set; }
 
-    private void CheckDragStart(DragEventArgs args)
+    private async void CheckDragStart(DragEventArgs args)
     {
+        // We need to wait for the JS event to finish firing before we trigger our own
+        await Task.Delay(1);
         DragAndDropManager.DraggedData = CreateDragData.Invoke(args);
         DragAndDropManager.DraggedData?.HandleDragStart();
     }
 
-    private void CheckDragEnd(DragEventArgs args)
+    private async void CheckDragEnd(DragEventArgs args)
     {
+        // We need to wait for the JS event to finish firing before we trigger our own
+        await Task.Delay(1);
         DragAndDropManager.DraggedData?.HandleDragEnd();
         DragAndDropManager.DraggedData = null;
     }

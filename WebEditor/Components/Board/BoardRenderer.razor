@@ -7,7 +7,7 @@
 
             @foreach (Position position in Positions)
             {
-                <TileRenderer @key="@position" Position="@position"/>
+                <TileRenderer Position="@position"/>
             }
 
             @foreach (Positioned<Figure> figure in Board.Figures)
@@ -15,7 +15,7 @@
                 <PositionedFigureRenderer Figure="@figure" />
             }
 
-            <DraggedFigure />
+            <BoardDragGrid/>
         </CascadingValue>
     </CascadingValue>
 </div>

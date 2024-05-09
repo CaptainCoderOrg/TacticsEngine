@@ -1,31 +1,13 @@
 @inject ToolManager ToolManager
-<DropZone OnEnter="@OnDragEnter" OnDrop="@OnDrop">
-    <div 
-        class="tile-info @TileType"
-        @onclick="@SelectTile"
-        @onclick:stopPropagation="true">    
-    </div>
-</DropZone>
+
+<div class="tile-info @TileType" @onclick="@SelectTile" @onclick:stopPropagation="true"></div>
 
 @code
 {
     [Parameter, EditorRequired]
-    public Position Position { get; set; }
-    [CascadingParameter]
+    public required Position Position { get; set; }
+    [CascadingParameter, EditorRequired]
     public required BoardData Board { get; set; }
-    [CascadingParameter]
-    public required BoardRenderer Parent { get; set; }
     private string TileType => Board.HasTile(Position.X, Position.Y) ? "tile" : "no-tile";
-    public void SelectTile() => ToolManager.SelectTile(Board, Position);
-
-    private void OnDragEnter(IDragData data)
-    {
-        data.HandleDragEnterTile(Board, Position);
-    }
-
-    private void OnDrop(IDragData data)
-    {
-        data.HandleDropTile(Board, Position);
-        Parent.Redraw();
-    }
+    private void SelectTile() => ToolManager.SelectTile(Board, Position);
 }
