@@ -9,7 +9,7 @@
             {
                 <TileRenderer Position="@position" />
             }
-
+            <TileEditorOverlay />
             @foreach (Positioned<Figure> figure in Board.Figures)
             {
                 <PositionedFigureRenderer Figure="@figure" />

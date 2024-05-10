@@ -1,6 +1,6 @@
 @inject ToolManager ToolManager
 
-<div class="tile-info @TileType" @onclick="@SelectTile" @onclick:stopPropagation="true"></div>
+<div class="tile-info @TileType"></div>
 
 @code
 {
@@ -9,5 +9,4 @@
     [CascadingParameter, EditorRequired]
     public required BoardData Board { get; set; }
     private string TileType => Board.HasTile(Position.X, Position.Y) ? "tile" : "no-tile";
-    private void SelectTile() => ToolManager.SelectTile(Board, Position);
 }

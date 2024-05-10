@@ -1,0 +1,24 @@
+﻿.board-overlay {
+    position: absolute;
+    width: calc(var(--board-width) * var(--cell-size));
+    height: calc(var(--board-height) * var(--cell-size));
+}
+
+.enabled {
+    z-index: var(--tile-layer);
+}
+
+.disabled {
+    z-index: var(--invisible-layer);
+}
+
+.preview {
+    position: absolute;
+    top: calc(var(--y) * var(--cell-size));
+    left: calc(var(--x) * var(--cell-size));
+    width: calc(var(--width) * var(--cell-size));
+    height: calc(var(--height) * var(--cell-size));
+    background-color: grey;
+    opacity: .5;
+    pointer-events: none;
+}
