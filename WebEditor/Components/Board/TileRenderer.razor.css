@@ -1,16 +1,14 @@
-.tile-info
-{
+.tile-info {
     aspect-ratio: 1/1;
     width: var(--cell-size);
+    border: 1px solid #222;
+}
+
+.tile {
+    background-color: grey;
     border: 1px solid black;
 }
 
-.tile
-{
-    background-color: grey;
-}
-
-.no-tile
-{
+.no-tile {
     background-color: black;
 }

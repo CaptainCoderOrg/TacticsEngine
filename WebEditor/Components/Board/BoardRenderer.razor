@@ -7,7 +7,7 @@
 
             @foreach (Position position in Positions)
             {
-                <TileRenderer Position="@position"/>
+                <TileRenderer Position="@position" />
             }
 
             @foreach (Positioned<Figure> figure in Board.Figures)
@@ -15,15 +15,19 @@
                 <PositionedFigureRenderer Figure="@figure" />
             }
 
-            <BoardDragGrid/>
+            <BoardDragGrid />
         </CascadingValue>
     </CascadingValue>
 </div>
 
 @code
 {
-    public int CellSize { get; set; } = 25;
+    [Parameter]
+    public double Zoom { get; set; } = 1;
+    public int CellSize => (int)(25 * Zoom);
+    [Parameter]
     public int Width { get; set; } = 20;
+    [Parameter]
     public int Height { get; set; } = 20;
     [Parameter, EditorRequired, AllowNull]
     public BoardData Board { get; set; }
