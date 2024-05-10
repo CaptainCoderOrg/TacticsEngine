@@ -5,9 +5,9 @@
 }
 
 .on-top {
-    z-index: 3;
+    z-index: var(--drag-layer);
 }
 
 .below {
-    z-index: -1;
+    z-index: var(--invisible-layer);
 }
