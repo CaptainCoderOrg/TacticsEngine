@@ -1,3 +1,11 @@
+::deep {
+    --invisible-layer: -1;
+    --tile-layer: 1;
+    --figure-layer: 2;
+    --error-layer: 3;
+    --drag-layer: 4;
+}
+
 .board-container {
     position: relative;
     display: grid;
