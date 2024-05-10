@@ -1,12 +1,12 @@
 ﻿@inject DragAndDropManager DragAndDropManager
 @implements IDisposable
-<div class="drag-grid-container @OnTop">
-    @foreach (Position position in Parent.Positions)
-    {
-        <DropZone OnDrop="@(data => Drop(position, data))" OnEnter="@(data => Enter(position, data))">
-            <div class="drag-grid-cell">&nbsp;</div>
-        </DropZone>
-    }
+<div class="drag-grid-container @OnTop"
+     @ondragenter:preventDefault="true"
+     @ondragenter="(_ => _lastPosition = null)"
+     @ondragover:preventDefault="true"
+     @ondragover="@CheckDragOver"
+     @ondrop:preventDefault="true"
+     @ondrop="@CheckDrop">
     <DraggedFigure />
 </div>
 
@@ -14,6 +14,7 @@
     [CascadingParameter, EditorRequired]
     public required BoardRenderer Parent { get; set; }
     private string OnTop => DragAndDropManager.DraggedData is null ? "below" : "on-top";
+    private Position? _lastPosition = null;
 
     private void Drop(Position position, IDragData data)
     {
@@ -23,7 +24,7 @@
 
     private void Enter(Position position, IDragData data)
     {
-        data.HandleDragEnterTile(Parent.Board, position);
+        data.HandleDragOverTile(Parent.Board, position);
     }
 
     protected override void OnInitialized()
@@ -39,5 +40,33 @@
     private void CheckDragData(IDragData? data)
     {
         StateHasChanged();
+    }
+
+    private Position ToPosition(DragEventArgs args)
+    {
+        int offX = (int)(args.OffsetX / Parent.CellSize);
+        int offY = (int)(args.OffsetY / Parent.CellSize);
+        return new Position(offX, offY);
+    }
+
+    private async Task CheckDrop(DragEventArgs args)
+    {
+        if (DragAndDropManager.DraggedData is IDragData data)
+        {
+            // We need to wait for the JS event to finish firing before we trigger our own
+            await Task.Delay(1);
+            data.HandleDropTile(Parent.Board, ToPosition(args), () => Parent.Redraw());
+        }
+    }
+
+    private void CheckDragOver(DragEventArgs args)
+    {
+        Position offset = ToPosition(args);
+        if (offset == _lastPosition) { return; }
+        _lastPosition = offset;
+        if (DragAndDropManager.DraggedData is IDragData data)
+        {
+            data.HandleDragOverTile(Parent.Board, offset);
+        }
     }
 }

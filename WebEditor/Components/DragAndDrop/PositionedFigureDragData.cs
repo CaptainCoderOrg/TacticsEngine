@@ -13,7 +13,7 @@ public sealed record PositionedFigureDragData(Positioned<Figure> Figure, Positio
         FigureTool.Shared.Selected = Figure;
     }
 
-    public void HandleDragEnterTile(BoardData board, Position position)
+    public void HandleDragOverTile(BoardData board, Position position)
     {
         DragAndDropManager.Shared.DraggedFigure = Figure with { Position = position + Offset };
     }
@@ -23,13 +23,12 @@ public sealed record PositionedFigureDragData(Positioned<Figure> Figure, Positio
         return board.CanMoveFigure(Figure.Position, position);
     }
 
-    public void HandleDropTile(BoardData board, Position position)
+    public void HandleDropTile(BoardData board, Position position, Action? onSuccess)
     {
         if (board.TryMoveFigure(Figure.Position, position + Offset))
         {
             FigureTool.Shared.Selected = Figure with { Position = position + Offset };
-            DragAndDropManager.Shared.DraggedFigure = null;
-            Parent.Redraw();
+            onSuccess?.Invoke();
         }
     }
 
