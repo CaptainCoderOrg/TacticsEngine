@@ -42,26 +42,19 @@
         StateHasChanged();
     }
 
-    private Position ToPosition(DragEventArgs args)
-    {
-        int offX = (int)(args.OffsetX / Parent.CellSize);
-        int offY = (int)(args.OffsetY / Parent.CellSize);
-        return new Position(offX, offY);
-    }
-
     private async Task CheckDrop(DragEventArgs args)
     {
         if (DragAndDropManager.DraggedData is IDragData data)
         {
             // We need to wait for the JS event to finish firing before we trigger our own
             await Task.Delay(1);
-            data.HandleDropTile(Parent.Board, ToPosition(args), () => Parent.Redraw());
+            data.HandleDropTile(Parent.Board, args.ToPosition(Parent.CellSize), () => Parent.Redraw());
         }
     }
 
     private void CheckDragOver(DragEventArgs args)
     {
-        Position offset = ToPosition(args);
+        Position offset = args.ToPosition(Parent.CellSize);
         if (offset == _lastPosition) { return; }
         _lastPosition = offset;
         if (DragAndDropManager.DraggedData is IDragData data)
