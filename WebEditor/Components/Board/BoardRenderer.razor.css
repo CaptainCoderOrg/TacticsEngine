@@ -4,5 +4,5 @@
     grid-gap: 0px;
     grid-template-columns: repeat(var(--board-width), var(--cell-size));
     grid-template-rows: repeat(var(--board-height), var(--cell-size));
-    border: 1px solid black;
+    margin: 0 .1em;
 }

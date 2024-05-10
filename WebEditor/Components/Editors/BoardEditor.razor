@@ -13,9 +13,25 @@
         <button @onclick="@(() => SaveBoard())">Save File</button>
         <button @onclick="@(() => ToolManager.Tool = EraseTool.Shared)">Erase</button>
         <button @onclick="@(() => ToolManager.Tool = TileTool.Shared)">Add Tiles</button>
+        <span>
+            W: <InputNumber @bind-Value="_width" /> H: <InputNumber @bind-Value="_height" />
+        </span>
+
+        <span>
+            Zoom:
+            <InputSelect @bind-Value="_zoom">
+                <option value="0.25">25%</option>
+                <option value="0.5">50%</option>
+                <option value="0.75">75%</option>
+                <option checked value="1">100%</option>
+                <option value="1.25">125%</option>
+                <option value="1.5">150%</option>
+                <option value="2">200%</option>
+            </InputSelect>
+        </span>
     </div>
-    <div class="editor-content">
-        <BoardRenderer Board="@_board" />
+    <div class="board-panel">
+        <BoardRenderer Board="@_board" Zoom="@_zoom" Width="@_width" Height="@_height" />
     </div>
     <div class="panels-content">
         <CascadingValue Value="@_board">
@@ -27,6 +43,9 @@
 
 @code
 {
+    private int _height = 20;
+    private int _width = 20;
+    private float _zoom = 1;
     [AllowNull]
     private BoardData _board = new();
     [AllowNull]
@@ -34,8 +53,8 @@
     public async Task OnFileSelected(InputFileChangeEventArgs e)
     {
         const int MaxSize = 100 * 1024 * 1024; // 100 MB
-        // TODO: This reads the entire string then parses it. probably a better way?
-        string? reader = 
+                                               // TODO: This reads the entire string then parses it. probably a better way?
+        string? reader =
             await new StreamReader(e.File.OpenReadStream(MaxSize)).ReadToEndAsync();
         if (!BoardExtensions.TryFromJson(reader, out BoardData? result))
         {
@@ -60,14 +79,14 @@
     protected override void OnInitialized()
     {
         _board = new()
-        {
-            Tiles = [.. new BoundingBox(new Position(2, 2), 10, 10).Positions()],
-            Figures = [
-                new (new Figure(), new Position(3, 3)),
-				new (new Figure(2, 1), new Position(5, 2)),
+            {
+                Tiles = [.. new BoundingBox(new Position(2, 2), 10, 10).Positions()],
+                Figures = [
+                    new (new Figure(), new Position(3, 3)),
+                new (new Figure(2, 1), new Position(5, 2)),
                 new (new Figure(1, 2), new Position(2, 5)),
                 new (new Figure(3, 2), new Position(7, 7)),
             ]
-        };
+            };
     }
 }
