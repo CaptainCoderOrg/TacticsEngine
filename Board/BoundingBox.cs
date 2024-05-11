@@ -18,6 +18,13 @@ public static class BoundingBoxExtensions
         }
     }
 
+    public static string ToDimensionString(this BoundingBox box) => box switch
+    {
+        BoundingBox(_, 1, int height) => height.ToString(),
+        BoundingBox(_, int width, 1) => width.ToString(),
+        BoundingBox(_, int width, int height) => $"{width} x {height}",
+    };
+
     public static BoundingBox CreateBoundingBox(this Position first, Position other)
     {
         int left = Math.Min(first.X, other.X);
