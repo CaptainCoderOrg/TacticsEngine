@@ -73,6 +73,14 @@ public static class BoardExtensions
 
     public static bool HasTiles(this BoardData board, BoundingBox box) => box.Positions().All(board.Tiles.Contains);
 
+    public static void RemoveTiles(this BoardData board, IEnumerable<Position> positions)
+    {
+        foreach (Position position in positions)
+        {
+            board.RemoveTile(position);
+        }
+    }
+
     public static void RemoveTile(this BoardData board, int x, int y) => board.RemoveTile(new Position(x, y));
     public static void RemoveTile(this BoardData board, Position position)
     {
