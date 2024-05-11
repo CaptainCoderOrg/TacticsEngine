@@ -22,14 +22,24 @@
     left: calc(var(--x) * var(--cell-size));
     width: calc(var(--width) * var(--cell-size));
     height: calc(var(--height) * var(--cell-size));
-    opacity: .5;
     pointer-events: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dimensions {
+    color: white;
+    text-shadow: 1px 1px black;
+    font-size: 1.25em;
+    text-align: center;
+    white-space: nowrap;
 }
 
 .add-tiles {
-    background-color: grey;
+    background-color: rgba(128, 128, 128, 0.5);
 }
 
 .remove-tiles {
-    background-color: red;
+    background-color: rgba(255, 0, 0, 0.5);
 }
