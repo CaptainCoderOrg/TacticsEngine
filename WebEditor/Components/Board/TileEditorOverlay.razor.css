@@ -18,7 +18,14 @@
     left: calc(var(--x) * var(--cell-size));
     width: calc(var(--width) * var(--cell-size));
     height: calc(var(--height) * var(--cell-size));
-    background-color: grey;
     opacity: .5;
     pointer-events: none;
+}
+
+.add-tiles {
+    background-color: grey;
+}
+
+.remove-tiles {
+    background-color: red;
 }

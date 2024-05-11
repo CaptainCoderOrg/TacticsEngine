@@ -9,7 +9,7 @@
      @ondrop:preventDefault="true"
      @ondrop="CheckDrop">
 
-    <div class="preview @PreviewEnabled" style="@PreviewStyle"></div>
+    <div class="preview @PreviewEnabled @AddOrRemoveTiles" style="@PreviewStyle"></div>
 
 </div>
 
@@ -18,8 +18,10 @@
 @code {
     [CascadingParameter, EditorRequired]
     public required BoardRenderer Parent { get; set; }
+    private bool _isErasing = false;
     private Position? _start = null;
     private BoundingBox? _preview = null;
+    private string AddOrRemoveTiles => _isErasing ? "remove-tiles" : "add-tiles";
     private string OverlayEnabled => _start is null ? "enabled" : "disabled";
     private string DropEnabled => _start is null ? "disabled" : "enabled";
     private string PreviewEnabled => _preview is null ? "disabled" : "enabled";
@@ -38,6 +40,7 @@
         // We delay to let the JS event finish before changing state
         await Task.Delay(1);
         _start = args.ToPosition(Parent.CellSize);
+        _isErasing = args.CtrlKey;
     }
 
     private void CheckDragEnd(DragEventArgs args)
@@ -50,7 +53,14 @@
     {
         if (_preview.HasValue)
         {
-            Parent.Board.CreateEmptyTiles(_preview.Value.Positions());
+            if (!_isErasing)
+            {
+                Parent.Board.CreateEmptyTiles(_preview.Value.Positions());
+            }
+            else
+            {
+                Parent.Board.RemoveTiles(_preview.Value.Positions());
+            }
             Parent.Redraw();
         }
     }
