@@ -13,8 +13,6 @@
 
 </div>
 
-
-
 @code {
     [CascadingParameter, EditorRequired]
     public required BoardRenderer Parent { get; set; }
@@ -23,7 +21,7 @@
     private BoundingBox? _preview = null;
     private string AddOrRemoveTiles => _isErasing ? "remove-tiles" : "add-tiles";
     private string OverlayEnabled => _start is null ? "enabled" : "disabled";
-    private string DropEnabled => _start is null ? "disabled" : "enabled";
+    private string DropEnabled => _start is null ? "disabled" : "drag-enabled";
     private string PreviewEnabled => _preview is null ? "disabled" : "enabled";
     private string? PreviewStyle => _preview is BoundingBox box ?
         $"--x: {box.TopLeft.X}; --y: {box.TopLeft.Y}; --width: {box.Width}; --height: {box.Height};" : null;
@@ -31,7 +29,14 @@
     private void CheckClick(MouseEventArgs args)
     {
         Position position = args.ToPosition(Parent.CellSize);
-        Parent.Board.CreateEmptyTile(position.X, position.Y);
+        if (args.CtrlKey)
+        {
+            Parent.Board.RemoveTile(position);
+        }
+        else
+        {
+            Parent.Board.CreateEmptyTile(position.X, position.Y);
+        }
         Parent.Redraw();
     }
 
