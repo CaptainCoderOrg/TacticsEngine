@@ -9,7 +9,9 @@
      @ondrop:preventDefault="true"
      @ondrop="CheckDrop">
 
-    <div class="preview @PreviewEnabled @AddOrRemoveTiles" style="@PreviewStyle"></div>
+    <div class="preview @PreviewEnabled @AddOrRemoveTiles" style="@PreviewStyle">
+        <div class="dimensions">@DimensionInfo</div>
+    </div>
 
 </div>
 
@@ -19,6 +21,7 @@
     private bool _isErasing = false;
     private Position? _start = null;
     private BoundingBox? _preview = null;
+    private string? DimensionInfo => _preview is BoundingBox box ? box.ToDimensionString() : null;
     private string AddOrRemoveTiles => _isErasing ? "remove-tiles" : "add-tiles";
     private string OverlayEnabled => _start is null ? "enabled" : "disabled";
     private string DropEnabled => _start is null ? "disabled" : "drag-enabled";
