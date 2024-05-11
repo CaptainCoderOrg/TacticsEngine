@@ -33,8 +33,10 @@
         Parent.Redraw();
     }
 
-    private void CheckDragStart(DragEventArgs args)
+    private async Task CheckDragStart(DragEventArgs args)
     {
+        // We delay to let the JS event finish before changing state
+        await Task.Delay(1);
         _start = args.ToPosition(Parent.CellSize);
     }
 
