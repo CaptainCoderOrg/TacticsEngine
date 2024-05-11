@@ -8,6 +8,10 @@
     z-index: var(--tile-layer);
 }
 
+.drag-enabled {
+    z-index: var(--drag-layer);
+}
+
 .disabled {
     z-index: var(--invisible-layer);
 }
