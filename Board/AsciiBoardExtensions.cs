@@ -10,6 +10,43 @@ namespace CaptainCoder.Tactics.Board;
 /// </summary>
 public static class AsciiBoardExtensions
 {
+
+    public static BoardData ToBoardData(this string asciiBoard)
+    {
+        Dictionary<char, Positioned<Figure>> figures = [];
+        HashSet<Position> tiles = new();
+        string[] rows = asciiBoard.ReplaceLineEndings().Split(Environment.NewLine);
+        for (int y = 0; y < rows.Length; y++)
+        {
+            for (int x = 0; x < rows[y].Length; x++)
+            {
+                char ch = rows[y][x];
+                if (ch == '#' || char.IsAsciiLetter(ch)) { tiles.Add(new Position(x, y)); }
+                if (char.IsAsciiLetter(ch))
+                {
+                    AddFigure(ch, new Position(x, y));
+                }
+            }
+        }
+
+        return new BoardData()
+        {
+            Tiles = tiles,
+            Figures = [.. figures.Values],
+        };
+
+        void AddFigure(char ch, Position position)
+        {
+            if (!figures.TryGetValue(ch, out Positioned<Figure>? positioned))
+            {
+                positioned = new Positioned<Figure>(new Figure(), position);
+            }
+            BoundingBox box = position.CreateBoundingBox(positioned.Position);
+            Figure newFigure = positioned.Element with { Width = box.Width, Height = box.Height };
+            figures[ch] = positioned with { Element = newFigure };
+        }
+    }
+
     public static string ToAscii(this BoardData board)
     {
         BoundingBox bbox = board.BoundingBox();

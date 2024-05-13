@@ -34,4 +34,50 @@ public class AsciiBoard_should
 
         actual.ShouldBe(expectedAscii);
     }
+
+    [Fact]
+    public void load_from_string()
+    {
+        /* 0123456789
+         * .......... 0
+         * .#####.... 1
+         * .##AA#..BB 2
+         * .#####..BB 3
+         * .CC###..BB 4
+         * .CC####DDD 5
+         * ......#DDD 6
+         * ......#DDD 7
+         */
+
+        string toParse = """
+            ..........
+            .#####....
+            .##AA#..BB
+            .#####..BB
+            .CC###..BB
+            .CC####DDD
+            ......#DDD
+            ......#DDD
+            ......####
+            """;
+
+        BoardData actual = toParse.ToBoardData();
+
+        BoardData expectedBoard = new()
+        {
+            Tiles = [
+                .. new BoundingBox(1, 1, 5, 5).Positions(),
+                .. new BoundingBox(8, 2, 2, 3).Positions(),
+                .. new BoundingBox(6, 5, 4, 4).Positions(),
+            ],
+            Figures = [
+                new Positioned<Figure>(new Figure(2, 1), new Position(3, 2)),
+                new Positioned<Figure>(new Figure(2, 3), new Position(8, 2)),
+                new Positioned<Figure>(new Figure(2, 2), new Position(1, 4)),
+                new Positioned<Figure>(new Figure(3, 3), new Position(7, 5)),
+            ]
+        };
+
+        actual.ShouldBe(expectedBoard, $"Expected: \n\n{expectedBoard.ToAscii()}\n\nActual:\n{actual.ToAscii()}");
+    }
 }
