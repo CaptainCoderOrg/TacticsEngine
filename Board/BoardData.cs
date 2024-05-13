@@ -112,6 +112,14 @@ public static class BoardExtensions
         return false;
 
     }
+
+    public static BoundingBox BoundingBox(this BoardData board)
+    {
+        (int rows, int columns) = board.Tiles.Aggregate(Max);
+        return new BoundingBox(0, 0, rows, columns);
+        static Position Max(Position a, Position b) => a with { X = Math.Max(a.X, b.X), Y = Math.Max(a.Y, b.Y) };
+    }
+
     private static JsonSerializerOptions Options { get; } = new()
     {
         Converters = { FigureMapConverter.Shared }
