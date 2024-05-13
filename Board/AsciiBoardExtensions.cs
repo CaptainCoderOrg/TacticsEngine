@@ -14,7 +14,7 @@ public static class AsciiBoardExtensions
     public static BoardData ToBoardData(this string asciiBoard)
     {
         Dictionary<char, Positioned<Figure>> figures = [];
-        HashSet<Position> tiles = new();
+        HashSet<Position> tiles = [];
         string[] rows = asciiBoard.ReplaceLineEndings().Split(Environment.NewLine);
         for (int y = 0; y < rows.Length; y++)
         {
@@ -37,13 +37,13 @@ public static class AsciiBoardExtensions
 
         void AddFigure(char ch, Position position)
         {
-            if (!figures.TryGetValue(ch, out Positioned<Figure>? positioned))
-            {
-                positioned = new Positioned<Figure>(new Figure(), position);
-            }
+            Positioned<Figure> positioned = figures.GetValueOrDefault(ch, new Positioned<Figure>(new Figure(0, 0), position));
             BoundingBox box = position.CreateBoundingBox(positioned.Position);
-            Figure newFigure = positioned.Element with { Width = box.Width, Height = box.Height };
-            figures[ch] = positioned with { Element = newFigure };
+            if (box.Width > positioned.Element.Width || box.Height > positioned.Element.Height)
+            {
+                Figure newFigure = positioned.Element with { Width = box.Width, Height = box.Height };
+                figures[ch] = positioned with { Element = newFigure };
+            }
         }
     }
 
