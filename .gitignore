@@ -368,3 +368,23 @@ FodyWeavers.xsd
 # Ignore Code Coverage Report Directory
 html-coverage-report/
 .env/
+
+#section Jetbrain IDES
+
+
+# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/contentModel.xml
+/modules.xml
+/.idea.TacticsEngine.iml
+/projectSettingsUpdater.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+
+#End section Jetbrain IDES
+

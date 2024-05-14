@@ -1,0 +1,40 @@
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+
+@if (ShowPopup)
+{
+    <div class="consent-popup">
+        <div class="popup-content">
+            <h3>Consent Required</h3>
+            <p>This webpage requires you to give allow the webpage to save to local storage.</p>
+            <div class="button-group">
+                <button class="btn btn-primary" @onclick="AgreeAndClose">Agree</button>
+                <button class="btn btn-secondary" @onclick="RedirectToGoogle">Disagree</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool ShowPopup { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var consentValue = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "consent");
+            ShowPopup = string.IsNullOrEmpty(consentValue);
+        }
+    }
+
+    private async Task AgreeAndClose()
+    {
+        await JSRuntime.InvokeVoidAsync("localStorage.setItem", "consent", "true");
+        ShowPopup = false;
+    }
+
+    private void RedirectToGoogle()
+    {
+        NavigationManager.NavigateTo("https://www.google.com");
+    }
+}
