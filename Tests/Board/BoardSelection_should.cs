@@ -28,7 +28,7 @@ public class BoardSelection_should
     [Fact]
     public void contain_empty_board()
     {
-        BoardData actualSelected = _underTest.SelectSection(new BoundingBox(7, 0, 3, 2));
+        BoardData actualSelected = _underTest.GetSelection(new BoundingBox(7, 0, 3, 2));
 
         BoardData expectedBoard = new();
         actualSelected.ShouldBe(expectedBoard, ErrorMessage(actualSelected, expectedBoard));
@@ -37,7 +37,7 @@ public class BoardSelection_should
     [Fact]
     public void contain_3x3_square()
     {
-        BoardData actualSelected = _underTest.SelectSection(new BoundingBox(3, 3, 3, 3));
+        BoardData actualSelected = _underTest.GetSelection(new BoundingBox(3, 3, 3, 3));
 
         BoardData expectedBoard = """
         ###
@@ -51,7 +51,7 @@ public class BoardSelection_should
     [Fact]
     public void contain_figure()
     {
-        BoardData actualSelected = _underTest.SelectSection(new BoundingBox(2, 2, 4, 2));
+        BoardData actualSelected = _underTest.GetSelection(new BoundingBox(2, 2, 4, 2));
 
         BoardData expectedBoard = """
         #AA#
@@ -64,7 +64,7 @@ public class BoardSelection_should
     [Fact]
     public void keep_tiles_with_partial_figures()
     {
-        BoardData actualSelected = _underTest.SelectSection(new BoundingBox(2, 1, 2, 4));
+        BoardData actualSelected = _underTest.GetSelection(new BoundingBox(2, 1, 2, 4));
 
         BoardData expectedBoard = """
          .##.

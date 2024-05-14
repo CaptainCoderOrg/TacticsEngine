@@ -6,7 +6,7 @@ namespace CaptainCoder.Tactics.Board;
 
 public static class BoardEditorExtensions
 {
-    public static BoardData SelectSection(this BoardData board, BoundingBox selection)
+    public static BoardData GetSelection(this BoardData board, BoundingBox selection)
     {
         HashSet<Position> tiles = [];
         HashSet<Positioned<Figure>> figures = [];
