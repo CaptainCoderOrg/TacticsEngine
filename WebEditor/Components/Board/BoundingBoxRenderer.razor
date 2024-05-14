@@ -1,0 +1,13 @@
+﻿<div class="bounding-box @ColorClass" style="@PreviewStyle">
+    <div class="bounding-box-text">@DimensionInfo</div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public required BoundingBox Rectangle { get; set; }
+    [Parameter]
+    public string ColorClass { get; set; } = "add-tiles";
+
+    private string PreviewStyle => $"--x: {Rectangle.TopLeft.X}; --y: {Rectangle.TopLeft.Y}; --width: {Rectangle.Width}; --height: {Rectangle.Height};";
+    private string? DimensionInfo => Rectangle.ToDimensionString();
+}

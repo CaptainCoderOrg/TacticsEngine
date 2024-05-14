@@ -1,0 +1,31 @@
+﻿.bounding-box {
+    position: absolute;
+    top: calc(var(--y) * var(--cell-size));
+    left: calc(var(--x) * var(--cell-size));
+    width: calc(var(--width) * var(--cell-size));
+    height: calc(var(--height) * var(--cell-size));
+    pointer-events: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bounding-box-text {
+    color: white;
+    text-shadow: 1px 1px black;
+    font-size: 1.25em;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.add-tiles {
+    background-color: rgba(128, 128, 128, 0.5);
+}
+
+.remove-tiles {
+    background-color: rgba(255, 0, 0, 0.5);
+}
+
+.select-tiles {
+    background-color: rgba(255, 255, 0, 0.5);
+}
