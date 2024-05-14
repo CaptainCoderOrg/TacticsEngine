@@ -36,6 +36,14 @@ public static class BoardEditorExtensions
         }
     }
 
+    public static void RemoveSelection(this BoardData board, BoundingBox selection)
+    {
+        foreach (Position position in selection.Positions())
+        {
+            board.RemoveTile(position);
+        }
+    }
+
     public static void AddAll(this BoardData board, BoardData toAdd, Position offset)
     {
         board.CreateEmptyTiles(toAdd.Tiles.Select(Translate));

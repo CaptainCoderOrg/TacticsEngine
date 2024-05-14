@@ -49,6 +49,26 @@ public class BoardSelection_should
     }
 
     [Fact]
+    public void remove_3x3_square()
+    {
+        _underTest.RemoveSelection(new BoundingBox(3, 3, 3, 3));
+
+        BoardData expectedBoard = """
+        .......... 0
+        .#####.... 1
+        .##AA#..## 2
+        .##.....## 3
+        .BB.....CC 4
+        .BB....... 5
+        ......#### 6
+        ......###D 7
+        0123456789
+        """.ToBoardData();
+
+        _underTest.ShouldBe(expectedBoard, ErrorMessage(_underTest, expectedBoard));
+    }
+
+    [Fact]
     public void contain_figure()
     {
         BoardData actualSelected = _underTest.GetSelection(new BoundingBox(2, 2, 4, 2));
@@ -59,6 +79,26 @@ public class BoardSelection_should
         """.ToBoardData();
 
         actualSelected.ShouldBe(expectedBoard, ErrorMessage(actualSelected, expectedBoard));
+    }
+
+    [Fact]
+    public void remove_selection_with_figure_square()
+    {
+        _underTest.RemoveSelection(new BoundingBox(2, 2, 4, 2));
+
+        BoardData expectedBoard = """
+        .......... 0
+        .#####.... 1
+        .#......## 2
+        .#......## 3
+        .BB###..CC 4
+        .BB###.... 5
+        ......#### 6
+        ......###D 7
+        0123456789
+        """.ToBoardData();
+
+        _underTest.ShouldBe(expectedBoard, ErrorMessage(_underTest, expectedBoard));
     }
 
     [Fact]
@@ -75,6 +115,26 @@ public class BoardSelection_should
          """.ToBoardData();
 
         actualSelected.ShouldBe(expectedBoard, ErrorMessage(actualSelected, expectedBoard));
+    }
+
+    [Fact]
+    public void remove_selection_with_partial_figure_square()
+    {
+        _underTest.RemoveSelection(new BoundingBox(2, 1, 2, 4));
+
+        BoardData expectedBoard = """
+        .......... 0
+        .#..##.... 1
+        .#..##..## 2
+        .#..##..## 3
+        .#..##..CC 4
+        .#####.... 5
+        ......#### 6
+        ......###D 7
+        0123456789
+        """.ToBoardData();
+
+        _underTest.ShouldBe(expectedBoard, ErrorMessage(_underTest, expectedBoard));
     }
 
     private string ErrorMessage(BoardData actual, BoardData expected)
