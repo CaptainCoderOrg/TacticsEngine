@@ -4,15 +4,12 @@
 @using System.Text
 @inject IJSRuntime JSRuntime
 @inject IBlazorDownloadFileService BlazorDownloadFileService
-@inject ToolManager ToolManager
 <div class="editor-content">
     <div class="editor-menu">
         <h1>Board Editor</h1>
         <button @onclick="@(() => LoadBoard())">Load File</button>
         <InputFile @ref="@_inputFile" OnChange="@OnFileSelected" hidden />
         <button @onclick="@(() => SaveBoard())">Save File</button>
-        <button @onclick="@(() => ToolManager.Tool = EraseTool.Shared)">Erase</button>
-        <button @onclick="@(() => ToolManager.Tool = TileTool.Shared)">Add Tiles</button>
         <span>
             W: <InputNumber @bind-Value="_width" /> H: <InputNumber @bind-Value="_height" />
         </span>
