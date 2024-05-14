@@ -1,7 +1,7 @@
 using CaptainCoder.TacticsEngine.Board;
 
 namespace WebEditor.Tools;
-public sealed class FigureTool : Tool
+public sealed class FigureTool
 {
     public static FigureTool Shared { get; } = new();
     private Positioned<Figure>? _selected;
