@@ -10,8 +10,6 @@
         <button @onclick="@(() => LoadBoard())">Load File</button>
         <InputFile @ref="@_inputFile" OnChange="@OnFileSelected" hidden />
         <button @onclick="@(() => SaveBoard())">Save File</button>
-        <button @onclick="@(() => {})">Erase</button>
-        <button @onclick="@(() => {})">Add Tiles</button>
         <span>
             W: <InputNumber @bind-Value="_width" /> H: <InputNumber @bind-Value="_height" />
         </span>
