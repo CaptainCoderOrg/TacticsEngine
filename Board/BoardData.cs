@@ -120,6 +120,9 @@ public static class BoardExtensions
         static Position Max(Position a, Position b) => a with { X = Math.Max(a.X, b.X), Y = Math.Max(a.Y, b.Y) };
     }
 
+    public static IEnumerable<Positioned<Tile>> TilesData(this BoardData board) =>
+        board.Tiles.Select(pos => new Positioned<Tile>(board[pos], pos));
+
     private static JsonSerializerOptions Options { get; } = new()
     {
         Converters = { FigureMapConverter.Shared }

@@ -1,4 +1,6 @@
-﻿using CaptainCoder.TacticsEngine.Board;
+﻿using System.Diagnostics;
+
+using CaptainCoder.TacticsEngine.Board;
 
 namespace CaptainCoder.Tactics.Board;
 
@@ -31,6 +33,29 @@ public static class BoardEditorExtensions
             figures.Add(figure);
             tiles.UnionWith(figure.BoundingBox()
                                   .Positions());
+        }
+    }
+
+    public static void AddAll(this BoardData board, BoardData toAdd, Position offset)
+    {
+        board.CreateEmptyTiles(toAdd.Tiles.Select(Translate));
+        IEnumerable<Positioned<Figure>> overlapping = toAdd.Figures.Select(f => f with { Position = Translate(f.Position) })
+                                                                   .Where(f => !board.TryAddFigure(f));
+        foreach (var figure in overlapping)
+        {
+            RemoveExistingFigures(figure.BoundingBox().Positions());
+            bool wasAdded = board.TryAddFigure(figure);
+            Debug.Assert(wasAdded, $"Could not add {figure} to board.");
+        }
+
+        Position Translate(Position position) => position + offset;
+
+        void RemoveExistingFigures(IEnumerable<Position> positions)
+        {
+            foreach (Position pos in positions)
+            {
+                _ = board.TryRemoveFigure(pos, out _);
+            }
         }
     }
 }
