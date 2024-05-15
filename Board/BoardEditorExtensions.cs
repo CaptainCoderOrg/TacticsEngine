@@ -12,9 +12,16 @@ public static class BoardEditorExtensions
         foreach (Position position in selection.Positions())
         {
             if (!board.HasTile(position)) { continue; }
-            tiles.Add(position);
-            AddFigure(board[position].Figure);
+            Tile tile = board[position];
+            if (tile.Figure is null) { tiles.Add(position); }
+            if (tile.Figure is Positioned<Figure> figure && selection.Contains(figure.BoundingBox()))
+            {
+                AddFigure(figure);
+            }
         }
+
+        figures = [.. figures.Where(f => f.BoundingBox().Positions().All(p => selection.Contains(p)))];
+        tiles.UnionWith(figures.SelectMany(f => f.BoundingBox().Positions()));
 
         Position topLeft = tiles.Aggregate(selection.TopLeft, (a, b) => a with { X = Math.Min(a.X, b.X), Y = Math.Min(a.Y, b.Y) });
 

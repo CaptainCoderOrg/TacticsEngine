@@ -102,16 +102,15 @@ public class BoardSelection_should
     }
 
     [Fact]
-    public void keep_tiles_with_partial_figures()
+    public void exclude_tiles_with_partial_figures()
     {
         BoardData actualSelected = _underTest.GetSelection(new BoundingBox(2, 1, 2, 4));
 
         BoardData expectedBoard = """
-         .##.
-         .#AA
-         .##.
-         BB#.
-         BB..
+         ##.
+         #..
+         ##.
+         .#.
          """.ToBoardData();
 
         actualSelected.ShouldBe(expectedBoard, ErrorMessage(actualSelected, expectedBoard));
