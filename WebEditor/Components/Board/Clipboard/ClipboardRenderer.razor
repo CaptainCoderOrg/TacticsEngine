@@ -1,35 +1,44 @@
-﻿@if (CurrentSelection is BoundingBox box)
+﻿@if (_boardData is not null)
 {
-    <BoundingBoxRenderer ColorClass="select-tiles" BoundingBox="@box" Outlined Filled="false">
-        <div class="drag-area" draggable="true">
-            <div class="disable-mouse">
-                <BoardRenderer Width="@box.Width" Height="@box.Height" Board="@_boardData" Zoom="@Parent.Zoom" />
-            </div>
+    <div class="drag-area" draggable="true" style="@X @Y @Width @Height">
+        
+        @foreach (Position position in _boardData.Tiles)
+        {
+            
+            bool top = !_boardData.Tiles.Contains(position + new Position(0, -1));
+            bool bottom = !_boardData.Tiles.Contains(position + new Position(0, 1));
+            bool left = !_boardData.Tiles.Contains(position + new Position(-1, 0));
+            bool right = !_boardData.Tiles.Contains(position + new Position(1, 0));
+            <div class="selected-cell" left="@left" right="@right" top="@top" bottom="@bottom" style="grid-column: @(position.X + 1); grid-row: @(position.Y + 1);" />
+        }
+        <div class="disable-mouse">
+            <BoardRenderer Width="@_width" Height="@_height" Board="@_boardData" Zoom="@Parent.Zoom" />
         </div>
-    </BoundingBoxRenderer>
+    </div>
 }
 
 @code {
     [CascadingParameter]
     public required BoardRenderer Parent { get; set; }
 
-    private BoardData _boardData = new();
-    private BoundingBox? _currentSelection; 
-    public BoundingBox? CurrentSelection
+    private string X => $"--x: {_topLeft.X};";
+    private string Y => $"--y: {_topLeft.Y};";
+    private string Width => $"--width: {_width};";
+    private string Height => $"--height: {_height};";
+
+    private Position _topLeft = new();
+    private int _width = 0;
+    private int _height = 0;
+    private BoardData? _boardData = null;
+
+    public void Clear() => _boardData = null;
+
+    public void AddSelection(BoundingBox toAdd)
     {
-        get => _currentSelection;
-        set
-        {
-            if (value is BoundingBox box)
-            {
-                _boardData = Parent.Board.GetSelection(box);
-                _currentSelection = _boardData.BoundingBox() with { TopLeft = value.Value.TopLeft };
-            }
-            else
-            {
-                _currentSelection = value;
-            }
-            StateHasChanged();
-        }
+        _boardData = Parent.Board.GetSelection(toAdd);
+        _topLeft = toAdd.TopLeft;
+        _width = toAdd.Width;
+        _height = toAdd.Height;
+        StateHasChanged();
     }
 }

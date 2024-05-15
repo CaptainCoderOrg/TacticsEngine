@@ -33,7 +33,8 @@
         {
             return new SelectTilesTool(args.ToPosition(Parent.CellSize), Parent, _clipboard);
         }
-        else if (args.CtrlKey)
+        _clipboard?.Clear();
+        if (args.CtrlKey)
         {
             return new RemoveTilesTool(args.ToPosition(Parent.CellSize), Parent);
         }
@@ -44,11 +45,7 @@
     }
     private void CheckClick(MouseEventArgs args)
     {
-        if (_clipboard is ClipboardRenderer renderer)
-        {
-            renderer.CurrentSelection = null;
-            return;
-        }
+        _clipboard?.Clear();
         ITool? tool = GetTool(args);
         tool?.OnClick(args.ToPosition(Parent.CellSize));
     }

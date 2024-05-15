@@ -13,6 +13,6 @@ public sealed record SelectTilesTool(Position Start, BoardRenderer Target, Clipb
 
     public override void OnDrop(Position position)
     {
-        Clipboard.CurrentSelection = Selection;
+        Clipboard.AddSelection(Selection);
     }
 }

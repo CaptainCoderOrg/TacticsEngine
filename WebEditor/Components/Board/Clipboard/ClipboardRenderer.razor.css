@@ -1,15 +1,51 @@
-﻿.drag-area
-{
+﻿.drag-area {
     position: absolute;
-    top: -1px;
-    left: -2px;
-    width: fit-content;
-    height: fit-content;
-    pointer-events: all;
+    top: calc(var(--y) * var(--cell-size));
+    left: calc(var(--x) * var(--cell-size));
+    width: calc(var(--width) * var(--cell-size));
+    height: calc(var(--height) * var(--cell-size));
+    pointer-events: none;
     z-index: var(--selection-layer);
-    opacity: .5;
+    display: grid;
+    grid-gap: 0px;
+    grid-template-columns: repeat(var(--width), var(--cell-size));
+    grid-template-rows: repeat(var(--height), var(--cell-size));
 }
 
 .disable-mouse {
     pointer-events: none;
+    position: absolute;
+    z-index: var(--inside-selection-layer);
+    opacity: .2;
 }
+
+.selected-cell {
+    --border-style: solid;
+    --border-width: 2px;
+    z-index: var(--selection-layer);
+    border-color: yellow;
+    border-width: var(--border-width);
+    border-style: hidden;
+    width: var(--cell-size);
+    height: var(--cell-size);
+    pointer-events: all;
+    background-color: rgba(255, 255, 0, .25);
+}
+
+    .selected-cell[left] {
+        border-left-style: var(--border-style);
+        width: calc(var(--cell-size) - var(--border-width));
+    }
+
+    .selected-cell[right] {
+        border-right-style: var(--border-style);
+    }
+
+    .selected-cell[top] {
+        border-top-style: var(--border-style);
+        height: calc(var(--cell-size) - var(--border-width));
+    }
+
+    .selected-cell[bottom] {
+        border-bottom-style: var(--border-style);
+    }
