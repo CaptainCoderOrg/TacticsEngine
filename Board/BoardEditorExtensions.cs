@@ -1,8 +1,6 @@
 ﻿using System.Diagnostics;
 
-using CaptainCoder.TacticsEngine.Board;
-
-namespace CaptainCoder.Tactics.Board;
+namespace CaptainCoder.TacticsEngine.Board;
 
 public static class BoardEditorExtensions
 {
