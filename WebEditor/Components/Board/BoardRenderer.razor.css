@@ -3,7 +3,8 @@
     --tile-layer: 1;
     --figure-layer: 2;
     --error-layer: 3;
-    --drag-layer: 4;
+    --selection-layer: 4;
+    --drag-layer: 5;
 }
 
 .board-container {

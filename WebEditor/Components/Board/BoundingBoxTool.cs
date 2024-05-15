@@ -10,7 +10,7 @@ public abstract record BoundingBoxTool(Position Start, BoardRenderer Target) : I
 
     public Dictionary<string, object> ComponentParameters => new()
     {
-        { nameof(BoundingBoxRenderer.Rectangle), Selection },
+        { nameof(BoundingBoxRenderer.BoundingBox), Selection },
         { nameof(BoundingBoxRenderer.ColorClass), ColorClass },
     };
 

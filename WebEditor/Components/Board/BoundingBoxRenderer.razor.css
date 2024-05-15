@@ -18,14 +18,34 @@
     white-space: nowrap;
 }
 
-.add-tiles {
+
+.add-tiles[filled] {
     background-color: rgba(128, 128, 128, 0.5);
 }
 
-.remove-tiles {
-    background-color: rgba(255, 0, 0, 0.5);
+.add-tiles[outlined] {
+    border: 1px solid rgba(128, 128, 128);
 }
 
-.select-tiles {
+.remove-tiles[filled] {
+    background-color: rgba(255, 0, 0, 0.5);
+}
+.remove-tiles[outlined] {
+    border: 1px solid rgba(255, 0, 0);
+}
+
+.select-tiles[filled] {
     background-color: rgba(255, 255, 0, 0.5);
+}
+.select-tiles[outlined] {
+    border: 1px solid rgba(255, 255, 0);
+}
+
+.child-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
 }
