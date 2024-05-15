@@ -1,0 +1,35 @@
+﻿@if (CurrentSelection is BoundingBox box)
+{
+    <BoundingBoxRenderer ColorClass="select-tiles" BoundingBox="@box" Outlined Filled="false">
+        <div class="drag-area" draggable="true">
+            <div class="disable-mouse">
+                <BoardRenderer Width="@box.Width" Height="@box.Height" Board="@_boardData" Zoom="@Parent.Zoom" />
+            </div>
+        </div>
+    </BoundingBoxRenderer>
+}
+
+@code {
+    [CascadingParameter]
+    public required BoardRenderer Parent { get; set; }
+
+    private BoardData _boardData = new();
+    private BoundingBox? _currentSelection; 
+    public BoundingBox? CurrentSelection
+    {
+        get => _currentSelection;
+        set
+        {
+            if (value is BoundingBox box)
+            {
+                _boardData = Parent.Board.GetSelection(box);
+                _currentSelection = _boardData.BoundingBox() with { TopLeft = value.Value.TopLeft };
+            }
+            else
+            {
+                _currentSelection = value;
+            }
+            StateHasChanged();
+        }
+    }
+}

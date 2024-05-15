@@ -15,9 +15,13 @@
     <DynamicComponent Type="@_tool.ComponentType" Parameters="@_tool.ComponentParameters" />
 }
 
+<ClipboardRenderer @ref="_clipboard" />
+
 @code {
     [CascadingParameter, EditorRequired]
     public required BoardRenderer Parent { get; set; }
+
+    private ClipboardRenderer? _clipboard { get; set; }
     private ITool? _tool = null;
 
     private string OverlayEnabled => _tool is null ? "enabled" : "disabled";
@@ -25,7 +29,11 @@
 
     private ITool? GetTool(MouseEventArgs args)
     {
-        if (args.CtrlKey)
+        if (args.ShiftKey && _clipboard is not null)
+        {
+            return new SelectTilesTool(args.ToPosition(Parent.CellSize), Parent, _clipboard);
+        }
+        else if (args.CtrlKey)
         {
             return new RemoveTilesTool(args.ToPosition(Parent.CellSize), Parent);
         }
@@ -36,6 +44,11 @@
     }
     private void CheckClick(MouseEventArgs args)
     {
+        if (_clipboard is ClipboardRenderer renderer)
+        {
+            renderer.CurrentSelection = null;
+            return;
+        }
         ITool? tool = GetTool(args);
         tool?.OnClick(args.ToPosition(Parent.CellSize));
     }
