@@ -55,9 +55,9 @@ public static class AsciiBoardExtensions
         Dictionary<Positioned<Figure>, char> charLookup = [];
 
         StringBuilder builder = new();
-        for (int row = 0; row <= bbox.Height; row++)
+        for (int row = 0; row < bbox.Height; row++)
         {
-            for (int col = 0; col <= bbox.Width; col++)
+            for (int col = 0; col < bbox.Width; col++)
             {
                 _ = board.TryGetTile(col, row, out Tile? tile);
                 _ = builder.Append(ToChar(tile));

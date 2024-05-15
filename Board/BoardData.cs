@@ -116,7 +116,7 @@ public static class BoardExtensions
     public static BoundingBox BoundingBox(this BoardData board)
     {
         (int rows, int columns) = board.Tiles.Aggregate(new Position(0, 0), Max);
-        return new BoundingBox(0, 0, rows, columns);
+        return new BoundingBox(0, 0, rows + 1, columns + 1);
         static Position Max(Position a, Position b) => a with { X = Math.Max(a.X, b.X), Y = Math.Max(a.Y, b.Y) };
     }
 
