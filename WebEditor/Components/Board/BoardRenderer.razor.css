@@ -16,3 +16,9 @@
     grid-template-rows: repeat(var(--board-height), var(--cell-size));
     margin: 0 .1em;
 }
+
+.board-container[show-grid] {
+    background: black;
+    background-image: repeating-linear-gradient(#333 0 1px, transparent 1px 100%), repeating-linear-gradient(90deg, #333 0 1px, transparent 1px 100%);
+    background-size: var(--cell-size) var(--cell-size);
+}

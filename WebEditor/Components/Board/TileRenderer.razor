@@ -1,4 +1,4 @@
-<div class="tile-info @TileType"></div>
+<div class="tile-info @TileType" style="@X @Y"></div>
 
 @code
 {
@@ -7,4 +7,6 @@
     [CascadingParameter, EditorRequired]
     public required BoardData Board { get; set; }
     private string TileType => Board.HasTile(Position.X, Position.Y) ? "tile" : "no-tile";
+    private string X => $"--x: {Position.X + 1};";
+    private string Y => $"--y: {Position.Y + 1};";
 }

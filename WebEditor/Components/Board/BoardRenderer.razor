@@ -1,10 +1,10 @@
-@using System.Diagnostics.CodeAnalysis;
 <div class="board-container"
-     style="--cell-size: @(CellSize)px; --board-width: @Width; --board-height: @Height;">
+     show-grid="@ShowGrid"
+     style="@CellSizeStyle @WidthStyle @HeightStyle">
     <CascadingValue Value="@Board">
         <CascadingValue Value="@this">
 
-            @foreach (Position position in Positions)
+            @foreach (Position position in Board.Tiles)
             {
                 <TileRenderer Position="@position" />
             }
@@ -22,15 +22,21 @@
 @code
 {
     [Parameter]
+    public bool ShowGrid { get; set; } = true;
+    [Parameter]
     public double Zoom { get; set; } = 1;
-    public int CellSize => (int)(25 * Zoom);
     [Parameter]
     public int Width { get; set; } = 20;
     [Parameter]
     public int Height { get; set; } = 20;
-    [Parameter, EditorRequired, AllowNull]
-    public BoardData Board { get; set; }
-    private Position _mousePosition = new(0, 0);
+    [Parameter, EditorRequired]
+    public required BoardData Board { get; set; }
+    public int CellSize => (int)(25 * Zoom);
+
+    private string? ShowGridClass => ShowGrid ? "show-grid" : null;
+    private string WidthStyle => $"--board-width: {Width};";
+    private string HeightStyle => $"--board-height: {Height};";
+    private string CellSizeStyle => $"--cell-size: {CellSize}px;";
 
     public IEnumerable<Position> Positions
     {

@@ -12,11 +12,10 @@
     grid-template-rows: repeat(var(--height), var(--cell-size));
 }
 
-.disable-mouse {
+.board-data {
     pointer-events: none;
     position: absolute;
     z-index: var(--inside-selection-layer);
-    opacity: .2;
 }
 
 .selected-cell {

@@ -11,8 +11,8 @@
             bool right = !_boardData.Tiles.Contains(position + new Position(1, 0));
             <div class="selected-cell" left="@left" right="@right" top="@top" bottom="@bottom" style="grid-column: @(position.X + 1); grid-row: @(position.Y + 1);" />
         }
-        <div class="disable-mouse">
-            <BoardRenderer Width="@_width" Height="@_height" Board="@_boardData" Zoom="@Parent.Zoom" />
+        <div class="board-data">
+            <BoardRenderer Width="@_width" Height="@_height" Board="@_boardData" Zoom="@Parent.Zoom" ShowGrid="@false" />
         </div>
     </div>
 }
