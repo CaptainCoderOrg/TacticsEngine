@@ -39,4 +39,18 @@ public static class BoundingBoxExtensions
         position.X < box.TopLeft.X + box.Width &&
         position.Y >= box.TopLeft.Y &&
         position.Y < box.TopLeft.Y + box.Height;
+
+    public static int Left(this BoundingBox box) => box.TopLeft.X;
+
+    public static int Right(this BoundingBox box) => box.TopLeft.X + box.Width - 1;
+
+    public static int Top(this BoundingBox box) => box.TopLeft.Y;
+
+    public static int Bottom(this BoundingBox box) => box.TopLeft.Y + box.Height - 1;
+
+    public static bool Contains(this BoundingBox box, BoundingBox toCheck) =>
+        toCheck.Left() >= box.Left() &&
+        toCheck.Right() <= box.Right() &&
+        toCheck.Top() >= box.Top() &&
+        toCheck.Bottom() <= box.Bottom();
 }
