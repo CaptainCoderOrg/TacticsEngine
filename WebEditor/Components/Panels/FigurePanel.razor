@@ -1,5 +1,8 @@
 @using System.Diagnostics.CodeAnalysis;
 @using CaptainCoder.TacticsEngine.Board
+@using CaptainCoder.TacticsEngine.Board
+@using WebEditor.Components.Board
+@using WebEditor.Components.DragAndDrop
 <div class="figure-panel">
     <h2>Figures</h2>
     <div class="figure-selection">
@@ -12,18 +15,37 @@
     </div>
 </div>
 
-
+<div class="figure-creator">
+    <p>Enter sizes to create a new figure</p>
+    <p>Width:</p>
+    <TelerikTextBox @bind-Value="@NewWidth" />
+    <p>Height:</p>
+    <TelerikTextBox @bind-Value="@NewHeight" />
+    <button @onclick="@(() => AddNewFigure())">Add!</button>
+</div>
+<DxPopup
+    HeaderText="Unable to create Figure"
+    @bind-Visible="@PopupVisible"
+    BodyText="The data entered must be positive intergers only"
+>
+</DxPopup>
 @code
 {
-    [CascadingParameter, EditorRequired]
-    public required BoardData CurrentBoard { get; set; }
-    private List<Figure> _figures = [
+    static bool PopupVisible { get; set; } = false;
+    static string NewHeight { get; set; } = "";
+    static string NewWidth { get; set; } = "";
+
+
+    [CascadingParameter, EditorRequired] public required BoardData CurrentBoard { get; set; }
+
+    private List<Figure> _figures =
+    [
         new Figure(1, 1),
-    new Figure(2, 2),
-    new Figure(1, 2),
-    new Figure(2, 1),
-    new Figure(3, 2),
-    new Figure(3, 3),
+        new Figure(2, 2),
+        new Figure(1, 2),
+        new Figure(2, 1),
+        new Figure(3, 2),
+        new Figure(3, 3),
     ];
 
 
@@ -32,5 +54,28 @@
         int offX = (int)(-args.OffsetX / 25);
         int offY = (int)(-args.OffsetY / 25);
         return new FigureDragData(figure, new Position(offX, offY));
+    }
+
+    private int _NewWidth;
+    private int _NewHeight;
+
+    private void AddNewFigure()
+    {
+        try
+        {
+            _NewWidth = int.Parse(NewWidth);
+            _NewHeight = int.Parse(NewHeight);
+        }
+        catch
+        {
+            PopupVisible = true;
+        }
+
+        if (_NewWidth == 0 || _NewHeight == 0)
+        {
+            PopupVisible = true;
+        }
+
+        _figures.Add(new Figure(_NewWidth, _NewHeight));
     }
 }

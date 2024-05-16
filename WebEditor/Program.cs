@@ -1,3 +1,5 @@
+using Blazored.Modal;
+
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -11,5 +13,6 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddSingleton(DragAndDropManager.Shared);
 
 builder.Services.AddBlazorDownloadFile();
+builder.Services.AddBlazoredModal();   
 
 await builder.Build().RunAsync();
