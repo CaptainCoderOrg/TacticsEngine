@@ -23,15 +23,13 @@ public static class BoardEditorExtensions
         figures = [.. figures.Where(f => f.BoundingBox().Positions().All(p => selection.Contains(p)))];
         tiles.UnionWith(figures.SelectMany(f => f.BoundingBox().Positions()));
 
-        Position topLeft = tiles.Aggregate(selection.TopLeft, (a, b) => a with { X = Math.Min(a.X, b.X), Y = Math.Min(a.Y, b.Y) });
-
         return new BoardData()
         {
             Tiles = [.. tiles.Select(Normalize)],
             Figures = [.. figures.Select(f => f with { Position = Normalize(f.Position) })]
         };
 
-        Position Normalize(Position position) => position - topLeft;
+        Position Normalize(Position position) => position - selection.TopLeft;
         void AddFigure(Positioned<Figure>? figure)
         {
             if (figure is null) { return; }
