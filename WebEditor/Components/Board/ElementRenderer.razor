@@ -1,9 +1,11 @@
-<div class="@PositionedElement @DraggedElement @SelectedElement" style="@PositionedStyle" @onclick="@((_) => OnClick.InvokeAsync(Position))">
-	@if (IsDragging && !IsValid) {
+<div class="@PositionedElement @DraggedElement @SelectedElement" style="@PositionedStyle @DimensionsStyle" @onclick="@((_) => OnClick.InvokeAsync(Position))">
+    @if (IsDragging && !IsValid)
+    {
         <div class="invalid-position"></div>
-	}
-	@ChildContent
+    }
+    @ChildContent
 </div>
+
 @code
 {
     [Parameter, EditorRequired]
@@ -11,17 +13,22 @@
     [Parameter, EditorRequired]
     public required Position Position { get; set; }
     [Parameter]
+    public int Width { get; set; } = 1;
+    [Parameter]
+    public int Height { get; set; } = 1;
+    [Parameter]
     public EventCallback<Position> OnClick { get; set; }
     [Parameter]
     public bool IsSelected { get; set; } = false;
-	[Parameter]
-	public bool IsValid { get; set; } = false;
-	[Parameter]
-	public bool IsDragging { get; set; } = false;
-	[Parameter]
-	public bool IsPositioned { get; set; } = true;
-	private string? DraggedElement => IsDragging ? "dragged-element" : null;
-	private string? PositionedElement => IsPositioned ? "positioned-element" : null;
+    [Parameter]
+    public bool IsValid { get; set; } = false;
+    [Parameter]
+    public bool IsDragging { get; set; } = false;
+    [Parameter]
+    public bool IsPositioned { get; set; } = true;
+    private string? DraggedElement => IsDragging ? "dragged-element" : null;
+    private string? PositionedElement => IsPositioned ? "positioned-element" : null;
     private string? SelectedElement => IsSelected ? "selected-element" : null;
-	private string? PositionedStyle => IsPositioned ? $"--pos-x:{Position.X}; --pos-y:{Position.Y};" : null;
+    private string? PositionedStyle => IsPositioned ? $"--pos-x:{Position.X + 1}; --pos-y:{Position.Y + 1};" : null;
+    private string DimensionsStyle => $"--element-width:{Width}; --element-height: {Height};";
 }

@@ -2,7 +2,10 @@
 @implements IDisposable
 @if (DragAndDropManager.DraggedData is not null && DragAndDropManager.DraggedFigure is Positioned<Figure> target)
 {
-    <ElementRenderer Position="@target.Position" IsDragging
+    <ElementRenderer Position="@target.Position"
+                     Width="@target.Element.Width"
+                     Height="@target.Element.Height"
+                     IsDragging
                      IsValid="@DragAndDropManager.DraggedData.CanDrop(CurrentBoard, target.Position)">
         <FigureRenderer Figure="@target.Element" />
     </ElementRenderer>
