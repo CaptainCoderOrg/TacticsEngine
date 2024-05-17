@@ -18,19 +18,19 @@
 
 <div class="figure-creator">
     <h2>Enter sizes to create a new figure</h2>
-    <div style="color: red" hidden="@Error">
+    <div style="color: red" hidden="@_Error">
         <h4>Unable to create Figure, Only Positive integers may be inputted</h4>
     </div>
     <p>Width:</p>
-    <input type="text" placeholder="Width" @bind="@NewWidth" />
+    <input type="number" placeholder="Width" @bind="@NewWidth" />
     <p>Height:</p>
-    <input type="text" placeholder="Width" @bind="@NewHeight" />
+    <input type="number" placeholder="Width" @bind="@NewHeight" />
     <button @onclick="@(AddNewFigure)">Add!</button>
 </div>
 @code
 {
-    static string NewHeight { get; set; } = "";
-    static string NewWidth { get; set; } = "";
+    static int NewHeight { get; set; } = 0;
+    static int NewWidth { get; set; } = 0;
 
 
     [CascadingParameter, EditorRequired] public required BoardData CurrentBoard { get; set; }
@@ -53,31 +53,19 @@
         return new FigureDragData(figure, new Position(offX, offY));
     }
     
-
-    private int _NewWidth;
-    private int _NewHeight;
-    private bool Error { get; set; } = true;
+    private bool _Error { get; set; } = true;
     
     private void AddNewFigure()
     {
-        try
-        {
-            _NewWidth = int.Parse(NewWidth);
-            _NewHeight = int.Parse(NewHeight);
-        }
-        catch
-        {
-            Error = false;
-        }
 
-        if (_NewWidth == 0 || _NewHeight == 0)
+        if (NewWidth < 1 || NewHeight < 1)
         {
-            Error = false;
+            _Error = false;
         }
         else
         {
-            _figures.Add(new Figure(_NewWidth, _NewHeight));
-            Error = true;
+            _figures.Add(new Figure(NewWidth, NewHeight));
+            _Error = true;
         }
 
         
