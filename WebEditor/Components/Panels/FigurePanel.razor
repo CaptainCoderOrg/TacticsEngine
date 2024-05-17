@@ -6,31 +6,27 @@
 <div class="figure-panel">
     <h2>Figures</h2>
     <div class="figure-selection">
-        @foreach(Figure figure in _figures)
+        
+        @foreach (Figure figure in _figures)
         {
+            
             <Draggable CreateDragData="@(args => CreateData(args, figure))">
-                <FigureRenderer Figure="@figure"/>   
+                <FigureRenderer Figure="@figure"/>
             </Draggable>
         }
-    </div>
 </div>
 
 <div class="figure-creator">
-    <p>Enter sizes to create a new figure</p>
+    <h2>Enter sizes to create a new figure</h2>
     <p>Width:</p>
-    <TelerikTextBox @bind-Value="@NewWidth" />
+    <input type="text" placeholder="Width" @bind="@NewWidth" />
     <p>Height:</p>
-    <TelerikTextBox @bind-Value="@NewHeight" />
-    <button @onclick="@(() => AddNewFigure())">Add!</button>
+    <input type="text" placeholder="Width" @bind="@NewHeight" />
+    <button @onclick="@(AddNewFigure)">Add!</button>
 </div>
-<DxPopup
-    HeaderText="Unable to create Figure"
-    @bind-Visible="@PopupVisible"
-    BodyText="The data entered must be positive intergers only"
->
-</DxPopup>
 @code
 {
+
     static bool PopupVisible { get; set; } = false;
     static string NewHeight { get; set; } = "";
     static string NewWidth { get; set; } = "";
@@ -55,10 +51,14 @@
         int offY = (int)(-args.OffsetY / 25);
         return new FigureDragData(figure, new Position(offX, offY));
     }
+    [CascadingParameter] public IModalService Modal { get; set; } = default!;
+    
 
-    private int _NewWidth;
+private int _NewWidth;
     private int _NewHeight;
-
+    private ModalParameters parameters = new ModalParameters()
+        .Add(nameof(IComponent), "Only Positive integers may be inputed");
+    
     private void AddNewFigure()
     {
         try
@@ -68,14 +68,16 @@
         }
         catch
         {
-            PopupVisible = true;
+            Modal.Show<IComponent>(title: "Unable to create Figure", parameters: parameters);
         }
 
         if (_NewWidth == 0 || _NewHeight == 0)
         {
-            PopupVisible = true;
+            Modal.Show<IComponent>(title: "Unable to create Figure", parameters: parameters);
         }
 
         _figures.Add(new Figure(_NewWidth, _NewHeight));
     }
 }
+
+</div>
