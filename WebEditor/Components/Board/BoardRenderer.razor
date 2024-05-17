@@ -29,6 +29,8 @@
     public int Width { get; set; } = 20;
     [Parameter]
     public int Height { get; set; } = 20;
+    [Parameter]
+    public Position Offset { get; set; } = new Position(0, 0);
     [Parameter, EditorRequired]
     public required BoardData Board { get; set; }
     public int CellSize => (int)(25 * Zoom);
