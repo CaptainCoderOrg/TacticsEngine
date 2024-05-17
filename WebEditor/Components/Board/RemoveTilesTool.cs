@@ -1,6 +1,4 @@
-﻿
-using CaptainCoder.Tactics.Board;
-using CaptainCoder.TacticsEngine.Board;
+﻿using CaptainCoder.TacticsEngine.Board;
 
 namespace WebEditor.Components.Board;
 
