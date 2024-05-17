@@ -18,6 +18,9 @@
 
 <div class="figure-creator">
     <h2>Enter sizes to create a new figure</h2>
+    <div style="color: red" hidden="@Error">
+        <h4>Unable to create Figure, Only Positive integers may be inputted</h4>
+    </div>
     <p>Width:</p>
     <input type="text" placeholder="Width" @bind="@NewWidth" />
     <p>Height:</p>
@@ -26,8 +29,6 @@
 </div>
 @code
 {
-
-    static bool PopupVisible { get; set; } = false;
     static string NewHeight { get; set; } = "";
     static string NewWidth { get; set; } = "";
 
@@ -51,13 +52,11 @@
         int offY = (int)(-args.OffsetY / 25);
         return new FigureDragData(figure, new Position(offX, offY));
     }
-    [CascadingParameter] public IModalService Modal { get; set; } = default!;
     
 
-private int _NewWidth;
+    private int _NewWidth;
     private int _NewHeight;
-    private ModalParameters parameters = new ModalParameters()
-        .Add(nameof(IComponent), "Only Positive integers may be inputed");
+    private bool Error { get; set; } = true;
     
     private void AddNewFigure()
     {
@@ -68,15 +67,20 @@ private int _NewWidth;
         }
         catch
         {
-            Modal.Show<IComponent>(title: "Unable to create Figure", parameters: parameters);
+            Error = false;
         }
 
         if (_NewWidth == 0 || _NewHeight == 0)
         {
-            Modal.Show<IComponent>(title: "Unable to create Figure", parameters: parameters);
+            Error = false;
+        }
+        else
+        {
+            _figures.Add(new Figure(_NewWidth, _NewHeight));
+            Error = true;
         }
 
-        _figures.Add(new Figure(_NewWidth, _NewHeight));
+        
     }
 }
 
