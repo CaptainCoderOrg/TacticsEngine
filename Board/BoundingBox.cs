@@ -53,4 +53,24 @@ public static class BoundingBoxExtensions
         toCheck.Right() <= box.Right() &&
         toCheck.Top() >= box.Top() &&
         toCheck.Bottom() <= box.Bottom();
+
+    /// <summary>
+    /// Returns a <see cref="BoundingBox"/> that contains both of the specified <see cref="BoundingBox"/>.
+    /// </summary>
+    /// <param name="a"></param>
+    /// <param name="b"></param>
+    /// <returns></returns>
+    public static BoundingBox Fit(this BoundingBox a, BoundingBox b)
+    {
+        int left = Math.Min(a.TopLeft.X, b.TopLeft.X);
+        int top = Math.Min(a.TopLeft.Y, b.TopLeft.Y);
+        int right = Math.Max(a.Right(), b.Right());
+        int bottom = Math.Max(a.Bottom(), b.Bottom());
+        return new()
+        {
+            TopLeft = new Position(left, top),
+            Width = right - left + 1,
+            Height = bottom - top + 1,
+        };
+    }
 }
