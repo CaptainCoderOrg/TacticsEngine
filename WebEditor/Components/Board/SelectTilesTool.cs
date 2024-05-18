@@ -9,7 +9,10 @@ public sealed record SelectTilesTool(Position Start, BoardRenderer Target, Clipb
 {
     public override string ColorClass => "select-tiles";
 
-    public override void OnClick(Position position) { }
+    public override void OnClick(Position position)
+    {
+        Clipboard.AddSelection(new BoundingBox(position, 1, 1));
+    }
 
     public override void OnDrop(Position position)
     {

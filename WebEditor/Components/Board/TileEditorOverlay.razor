@@ -45,7 +45,6 @@
     }
     private void CheckClick(MouseEventArgs args)
     {
-        _clipboard?.Clear();
         ITool? tool = GetTool(args);
         tool?.OnClick(args.ToPosition(Parent.CellSize));
     }

@@ -1,19 +1,18 @@
-﻿@if (_boardData is not null)
+﻿@if (_boardData is BoardData board)
 {
     <div class="drag-area" draggable="true" style="@X @Y @Width @Height">
 
-        @foreach (Position position in _boardData.Tiles)
+        @foreach (Position position in board.Tiles)
         {
-
-            bool top = !_boardData.Tiles.Contains(position + new Position(0, -1));
-            bool bottom = !_boardData.Tiles.Contains(position + new Position(0, 1));
-            bool left = !_boardData.Tiles.Contains(position + new Position(-1, 0));
-            bool right = !_boardData.Tiles.Contains(position + new Position(1, 0));
+            bool top = !board.Tiles.Contains(position + new Position(0, -1));
+            bool bottom = !board.Tiles.Contains(position + new Position(0, 1));
+            bool left = !board.Tiles.Contains(position + new Position(-1, 0));
+            bool right = !board.Tiles.Contains(position + new Position(1, 0));
             Position tranlated = position - _boardOffset + new Position(1, 1);
-            <div class="selected-cell" left="@left" right="@right" top="@top" bottom="@bottom" style="grid-column: @(tranlated.X); grid-row: @(tranlated.Y);" />
+            <div class="selected-cell" left="@left" right="@right" top="@top" bottom="@bottom" style="grid-column: @(tranlated.X); grid-row: @(tranlated.Y);" @onclick="(args => UnselectTile(args, position))" />
         }
         <div class="board-data">
-            <BoardRenderer Width="@_boundingBox.Width" Height="@_boundingBox.Height" Board="@_boardData" Zoom="@Parent.Zoom" ShowGrid="@false" Offset="@_boardOffset" />
+            <BoardRenderer Width="@_boundingBox.Width" Height="@_boundingBox.Height" Board="@board" Zoom="@Parent.Zoom" ShowGrid="@false" Offset="@_boardOffset" />
         </div>
     </div>
 }
@@ -48,7 +47,20 @@
                 };
             _boundingBox = _boundingBox.Fit(toAdd);
         }
+        StateHasChanged();
+    }
 
+    private void UnselectTile(MouseEventArgs args, Position position)
+    {
+        if (!args.ShiftKey) { return; }
+        if (_boardData[position].Figure is Positioned<Figure> figure)
+        {
+            _boardData.RemoveTiles(figure.BoundingBox().Positions());
+        }
+        else
+        {
+            _boardData.RemoveTile(position);
+        }
         StateHasChanged();
     }
 
