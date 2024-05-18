@@ -2,10 +2,12 @@ h2 {
     margin: 0;
 }
 .figure-panel {
-    
     border: 1px solid black;
     max-width: 300px;
     padding: .25em;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
 }
 
 .figure-selection {
@@ -13,4 +15,23 @@ h2 {
     display: flex;
     flex-wrap: wrap;
     gap: .25em;
+}
+
+.figure-creator {
+    display: flex;
+    flex-direction: row;
+    gap: .5em;
+}
+
+.label {
+    flex-shrink: 1;
+    display: flex;
+    flex-direction: row;
+    gap: .25em;
+    justify-content: center;
+    align-items: center;
+}
+
+.label input {
+    width: 2em;
 }
