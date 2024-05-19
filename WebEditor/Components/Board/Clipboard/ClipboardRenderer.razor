@@ -1,6 +1,6 @@
 ﻿@if (_boardData is BoardData board)
 {
-    <div class="drag-area" draggable="true" style="@X @Y @Width @Height">
+    <div class="drag-area" draggable="true" style="@X @Y @Width @Height" @ondragstart="StartDrag" @ondragend="EndDrag">
 
         @foreach (Position position in board.Tiles)
         {
@@ -11,15 +11,13 @@
             Position tranlated = position - _boardOffset + new Position(1, 1);
             <div class="selected-cell" left="@left" right="@right" top="@top" bottom="@bottom" style="grid-column: @(tranlated.X); grid-row: @(tranlated.Y);" @onclick="(args => UnselectTile(args, position))" />
         }
-        <div class="board-data">
-            <BoardRenderer Width="@_boundingBox.Width" Height="@_boundingBox.Height" Board="@board" Zoom="@Parent.Zoom" ShowGrid="@false" Offset="@_boardOffset" />
-        </div>
     </div>
 }
-
 @code {
     [CascadingParameter]
     public required BoardRenderer Parent { get; set; }
+    [CascadingParameter]
+    public required TileEditorOverlay Overlay { get; set; }
 
     private string X => $"--x: {_boundingBox.TopLeft.X};";
     private string Y => $"--y: {_boundingBox.TopLeft.Y};";
@@ -52,8 +50,8 @@
 
     private void UnselectTile(MouseEventArgs args, Position position)
     {
-        if (!args.ShiftKey) { return; }
-        if (_boardData[position].Figure is Positioned<Figure> figure)
+        if (!args.ShiftKey || _boardData is null) { return; }
+        if (_boardData.GetTile(position).Figure is Positioned<Figure> figure)
         {
             _boardData.RemoveTiles(figure.BoundingBox().Positions());
         }
@@ -69,5 +67,26 @@
         _boardOffset = new Position(0, 0);
         _boardData = Parent.Board.GetSelection(toAdd);
         _boundingBox = toAdd;
+    }
+
+    private async Task StartDrag(MouseEventArgs args)
+    {
+        if (_boardData is null) { return; }
+        // We delay to let the JS event finish before changing state
+        await Task.Delay(1);
+        Position offsetPosition = args.ToPosition(Parent.CellSize);
+        MoveSelectionTool tool = new(offsetPosition)
+            {
+                Selection = _boardData,
+                SelectionOffset = _boardOffset,
+                Parent = Parent,
+                MouseOffset = offsetPosition,
+            };
+        Overlay.SetTool(tool);
+    }
+
+    private void EndDrag()
+    {
+        Overlay.ClearTool();
     }
 }

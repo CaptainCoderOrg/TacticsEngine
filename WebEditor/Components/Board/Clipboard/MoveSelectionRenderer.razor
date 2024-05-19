@@ -1,0 +1,12 @@
+﻿<BoardRenderer 
+    Board="@Tool.Selection" 
+    Width="@Tool.Parent.Width" 
+    Height="@Tool.Parent.Height" 
+    Zoom="@Tool.Parent.Zoom" 
+    Offset="@(Tool.SelectionOffset - Tool.MousePosition)"
+    ShowGrid="@false" />
+
+@code {
+    [Parameter, EditorRequired]
+    public required MoveSelectionTool Tool { get; set; }
+}
