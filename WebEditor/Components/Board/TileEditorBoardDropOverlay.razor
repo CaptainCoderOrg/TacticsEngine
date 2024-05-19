@@ -1,0 +1,23 @@
+﻿<div class="board-overlay @DropEnabled"
+     @ondragover:preventDefault="true"
+     @ondragover="CheckDragOver"
+     @ondrop:preventDefault="true"
+     @ondrop="CheckDrop">
+</div>
+
+@code {
+    [CascadingParameter, EditorRequired]
+    public required TileEditorOverlay Overlay { get; set;  }
+
+    private void CheckDrop(DragEventArgs args) => Overlay.Tool?.OnDrop(args.ToPosition(Overlay.Parent.CellSize));
+    private string DropEnabled => Overlay.Tool is null ? "disabled" : "drag-enabled";
+    private Position? _position = null;
+    private void CheckDragOver(DragEventArgs args)
+    {
+        Position position = args.ToPosition(Overlay.Parent.CellSize);
+        if (position == _position) { return; }
+        _position = position;
+        Overlay.Tool?.OnDragOver(position);
+        Overlay.Redraw();
+    }
+}
