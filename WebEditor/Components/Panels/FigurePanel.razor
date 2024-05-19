@@ -1,23 +1,49 @@
 @using System.Diagnostics.CodeAnalysis;
 @using CaptainCoder.TacticsEngine.Board
+@using CaptainCoder.TacticsEngine.Board
+@using WebEditor.Components.Board
+@using WebEditor.Components.DragAndDrop
 <div class="figure-panel">
     <h2>Figures</h2>
     <div class="figure-selection">
-        @foreach(Figure figure in _figures)
+        @foreach (Figure figure in _figures)
         {
             <Draggable CreateDragData="@(args => CreateData(args, figure))">
-                <FigureRenderer Figure="@figure"/>   
+                <FigureRenderer Figure="@figure" />
             </Draggable>
         }
     </div>
-</div>
 
+    <div class="figure-creator">
+        <span class="label">
+            <label>W:</label>
+            <input type="number" @bind="NewWidth" />
+        </span>
+        <span class="label">
+            <label>H:</label>
+            <input type="number" @bind="NewHeight" />
+        </span>
+        <button @onclick="@(AddNewFigure)">Create New Figure</button>
+    </div>
+    @code
+    {
+        private int _height = 1;
+        private int NewHeight
+        {
+            get => _height;
+            set => _height = Math.Clamp(value, 1, 9);
+        }
+        private int _width = 1;
+        private int NewWidth
+        {
+            get => _width;
+            set => _width = Math.Clamp(value, 1, 9);
+        }
 
-@code
-{
-    [CascadingParameter, EditorRequired]
-    public required BoardData CurrentBoard { get; set; }
-    private List<Figure> _figures = [
+        [CascadingParameter, EditorRequired] public required BoardData CurrentBoard { get; set; }
+
+        private List<Figure> _figures =
+        [
         new Figure(1, 1),
     new Figure(2, 2),
     new Figure(1, 2),
@@ -27,10 +53,15 @@
     ];
 
 
-    private IDragData CreateData(DragEventArgs args, Figure figure)
-    {
-        int offX = (int)(-args.OffsetX / 25);
-        int offY = (int)(-args.OffsetY / 25);
-        return new FigureDragData(figure, new Position(offX, offY));
+        private IDragData CreateData(DragEventArgs args, Figure figure)
+        {
+            int offX = (int)(-args.OffsetX / 25);
+            int offY = (int)(-args.OffsetY / 25);
+            return new FigureDragData(figure, new Position(offX, offY));
+        }
+
+        private bool _Error { get; set; } = true;
+
+        private void AddNewFigure() => _figures.Add(new Figure(NewWidth, NewHeight));
     }
-}
+</div>
