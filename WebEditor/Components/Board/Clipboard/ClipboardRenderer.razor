@@ -82,6 +82,7 @@
                 Parent = Parent,
                 MouseOffset = offsetPosition,
                 Origin = _boundingBox.TopLeft,
+                OnSuccess = (Position topLeft) => _boundingBox = _boundingBox with { TopLeft = topLeft },
             };
         Overlay.SetTool(tool);
     }

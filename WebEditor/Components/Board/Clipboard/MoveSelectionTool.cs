@@ -25,6 +25,7 @@ public sealed class MoveSelectionTool(Position mousePosition) : ITool
     public required Position SelectionOffset { get; init; }
     public required Position MouseOffset { get; init; }
     public required Position Origin { get; init; }
+    public required Action<Position> OnSuccess { get; init; }
     public Position MousePosition => _mousePosition - MouseOffset;
     private Position _mousePosition = mousePosition;
 
@@ -39,7 +40,9 @@ public sealed class MoveSelectionTool(Position mousePosition) : ITool
     {
         var removing = Selection.Tiles.Select(pos => pos + Origin - SelectionOffset);
         Parent.Board.RemoveTiles(removing);
-        Parent.Board.AddAll(Selection, MousePosition - SelectionOffset);
+        Position topLeft = MousePosition - SelectionOffset;
+        Parent.Board.AddAll(Selection, topLeft);
+        OnSuccess.Invoke(MousePosition);
         Parent.Redraw();
     }
 }
