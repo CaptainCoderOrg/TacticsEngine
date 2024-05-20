@@ -1,10 +1,12 @@
-<div class="tile-info @TileType"></div>
+<div class="tile-info @TileType" style="@X @Y"></div>
 
 @code
 {
     [Parameter, EditorRequired]
     public required Position Position { get; set; }
     [CascadingParameter, EditorRequired]
-    public required BoardData Board { get; set; }
-    private string TileType => Board.HasTile(Position.X, Position.Y) ? "tile" : "no-tile";
+    public required BoardRenderer Parent { get; set; }
+    private string TileType => Parent.Board.HasTile(Position.X, Position.Y) ? "tile" : "no-tile";
+    private string X => $"--x: {Position.X + 1 - Parent.Offset.X};";
+    private string Y => $"--y: {Position.Y + 1 - Parent.Offset.Y};";
 }

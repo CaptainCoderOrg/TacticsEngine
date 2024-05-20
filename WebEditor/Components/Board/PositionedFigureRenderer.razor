@@ -3,7 +3,7 @@
 
 @if (Parent.Board.Figures.Contains(Figure))
 {
-    <ElementRenderer Position="@Figure.Position" IsSelected="@IsSelected" OnClick="(_ => FigureTool.Shared.Selected = Figure)">
+    <ElementRenderer Position="@(Figure.Position - Parent.Offset)" Width="@Figure.Element.Width" Height="@Figure.Element.Height" IsSelected="@IsSelected" OnClick="(_ => FigureTool.Shared.Selected = Figure)">
         <Draggable CreateDragData="@CreateData">
             <FigureRenderer Figure="@Figure.Element" />
         </Draggable>

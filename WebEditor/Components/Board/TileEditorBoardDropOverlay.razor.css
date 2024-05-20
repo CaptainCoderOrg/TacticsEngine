@@ -4,8 +4,8 @@
     height: calc(var(--board-height) * var(--cell-size));
 }
 
-.enabled {
-    z-index: var(--tile-layer);
+.drag-enabled {
+    z-index: var(--drag-layer);
 }
 
 .disabled {

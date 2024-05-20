@@ -1,9 +1,11 @@
 .positioned-element {
-    position: absolute;
-    --figure-margin: 2px;
-    left: calc(var(--pos-x) * var(--cell-size) + var(--figure-margin));
-    top: calc(var(--pos-y) * var(--cell-size) + var(--figure-margin));
+    grid-column: var(--pos-x) / span var(--element-width);
+    grid-row: var(--pos-y) / span var(--element-height);
     z-index: var(--figure-layer);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .selected-element {
@@ -19,8 +21,8 @@
 
 .invalid-position {
     position: absolute;
-    width: 100%;
-    height: 100%;
+    width: calc(var(--cell-size) * var(--element-width));
+    height: calc(var(--cell-size) * var(--element-height));
     z-index: var(--error-layer);
     background-color: darkred;
     border: 2px solid red;

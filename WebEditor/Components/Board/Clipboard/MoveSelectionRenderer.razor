@@ -1,0 +1,14 @@
+﻿<div style="position: absolute; width: fit-content; height: fit-content;">
+    <BoardRenderer 
+        Board="@Tool.Selection" 
+        Width="@Tool.Parent.Width" 
+        Height="@Tool.Parent.Height" 
+        Zoom="@Tool.Parent.Zoom" 
+        Offset="@(Tool.SelectionOffset - Tool.MousePosition)"
+        ShowGrid="@false" />
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public required MoveSelectionTool Tool { get; set; }
+}

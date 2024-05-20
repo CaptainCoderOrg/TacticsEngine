@@ -2,6 +2,10 @@
     position: absolute;
     width: calc(var(--board-width) * var(--cell-size));
     height: calc(var(--board-height) * var(--cell-size));
+    display: grid;
+    grid-gap: 0px;
+    grid-template-columns: repeat(var(--board-width), var(--cell-size));
+    grid-template-rows: repeat(var(--board-height), var(--cell-size));
 }
 
 .on-top {

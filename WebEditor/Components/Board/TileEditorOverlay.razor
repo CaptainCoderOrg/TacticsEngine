@@ -1,84 +1,71 @@
-﻿<div class="board-overlay tile-editor @OverlayEnabled" draggable="true"
+﻿<div class="board-overlay @OverlayEnabled" draggable="true"
      @onclick="CheckClick"
      @ondragend="CheckDragEnd"
      @ondragstart="CheckDragStart"></div>
 
-<div class="board-overlay tile-editor-drop-zone @DropEnabled"
-     @ondragover:preventDefault="true"
-     @ondragover="CheckDragOver"
-     @ondrop:preventDefault="true"
-     @ondrop="CheckDrop">
+<CascadingValue Value="this">
+    <TileEditorBoardDropOverlay />
 
-    <div class="preview @PreviewEnabled @AddOrRemoveTiles" style="@PreviewStyle">
-        <div class="dimensions">@DimensionInfo</div>
-    </div>
-
-</div>
+    @if (Tool is not null)
+    {
+        <DynamicComponent Type="@Tool.ComponentType" Parameters="@Tool.ComponentParameters" />
+    }
+    <ClipboardRenderer @ref="_clipboard" />
+</CascadingValue>
 
 @code {
     [CascadingParameter, EditorRequired]
     public required BoardRenderer Parent { get; set; }
-    private bool _isErasing = false;
-    private Position? _start = null;
-    private BoundingBox? _preview = null;
-    private string? DimensionInfo => _preview is BoundingBox box ? box.ToDimensionString() : null;
-    private string AddOrRemoveTiles => _isErasing ? "remove-tiles" : "add-tiles";
-    private string OverlayEnabled => _start is null ? "enabled" : "disabled";
-    private string DropEnabled => _start is null ? "disabled" : "drag-enabled";
-    private string PreviewEnabled => _preview is null ? "disabled" : "enabled";
-    private string? PreviewStyle => _preview is BoundingBox box ?
-        $"--x: {box.TopLeft.X}; --y: {box.TopLeft.Y}; --width: {box.Width}; --height: {box.Height};" : null;
 
-    private void CheckClick(MouseEventArgs args)
+    private ClipboardRenderer? _clipboard { get; set; }
+    public ITool? Tool { get; private set; }
+
+    private string OverlayEnabled => Tool is null ? "enabled" : "disabled";
+
+
+    private ITool? GetTool(MouseEventArgs args)
     {
-        Position position = args.ToPosition(Parent.CellSize);
+        if (args.ShiftKey && _clipboard is not null)
+        {
+            return new SelectTilesTool(args.ToPosition(Parent.CellSize), Parent, _clipboard);
+        }
+        _clipboard?.Clear();
         if (args.CtrlKey)
         {
-            Parent.Board.RemoveTile(position);
+            return new RemoveTilesTool(args.ToPosition(Parent.CellSize), Parent);
         }
         else
         {
-            Parent.Board.CreateEmptyTile(position.X, position.Y);
+            return new CreateTilesTool(args.ToPosition(Parent.CellSize), Parent);
         }
-        Parent.Redraw();
+    }
+
+    private void CheckClick(MouseEventArgs args)
+    {
+        ITool? tool = GetTool(args);
+        tool?.OnClick(args.ToPosition(Parent.CellSize));
     }
 
     private async Task CheckDragStart(DragEventArgs args)
     {
         // We delay to let the JS event finish before changing state
         await Task.Delay(1);
-        _start = args.ToPosition(Parent.CellSize);
-        _isErasing = args.CtrlKey;
+        Tool = GetTool(args);
     }
 
-    private void CheckDragEnd(DragEventArgs args)
+    private void CheckDragEnd(DragEventArgs args) => ClearTool();
+
+    public void Redraw() => StateHasChanged();
+
+    public void SetTool(ITool tool)
     {
-        _start = null;
-        _preview = null;
+        Tool = tool;
+        StateHasChanged();
     }
 
-    private void CheckDrop(DragEventArgs args)
+    public void ClearTool()
     {
-        if (_preview.HasValue)
-        {
-            if (!_isErasing)
-            {
-                Parent.Board.CreateEmptyTiles(_preview.Value.Positions());
-            }
-            else
-            {
-                Parent.Board.RemoveTiles(_preview.Value.Positions());
-            }
-            Parent.Redraw();
-        }
-    }
-
-    private void CheckDragOver(DragEventArgs args)
-    {
-        if (_start.HasValue)
-        {
-            Position end = args.ToPosition(Parent.CellSize);
-            _preview = _start.Value.CreateBoundingBox(end);
-        }
+        Tool = null;
+        StateHasChanged();
     }
 }

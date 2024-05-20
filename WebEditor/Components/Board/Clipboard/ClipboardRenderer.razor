@@ -1,0 +1,94 @@
+﻿@if (_boardData is BoardData board)
+{
+    <div class="drag-area" draggable="true" style="@X @Y @Width @Height" @ondragstart="StartDrag" @ondragend="EndDrag">
+
+        @foreach (Position position in board.Tiles)
+        {
+            bool top = !board.Tiles.Contains(position + new Position(0, -1));
+            bool bottom = !board.Tiles.Contains(position + new Position(0, 1));
+            bool left = !board.Tiles.Contains(position + new Position(-1, 0));
+            bool right = !board.Tiles.Contains(position + new Position(1, 0));
+            Position tranlated = position - _boardOffset + new Position(1, 1);
+            <div class="selected-cell" left="@left" right="@right" top="@top" bottom="@bottom" style="grid-column: @(tranlated.X); grid-row: @(tranlated.Y);" @onclick="(args => UnselectTile(args, position))" />
+        }
+    </div>
+}
+@code {
+    [CascadingParameter]
+    public required BoardRenderer Parent { get; set; }
+    [CascadingParameter]
+    public required TileEditorOverlay Overlay { get; set; }
+
+    private string X => $"--x: {_boundingBox.TopLeft.X};";
+    private string Y => $"--y: {_boundingBox.TopLeft.Y};";
+    private string Width => $"--width: {_boundingBox.Width};";
+    private string Height => $"--height: {_boundingBox.Height};";
+
+    private BoundingBox _boundingBox = new();
+    private Position _boardOffset = new();
+    private BoardData? _boardData = null;
+
+    public void Clear() => _boardData = null;
+
+    public void AddSelection(BoundingBox toAdd)
+    {
+        if (_boardData is null) { InitializeSelection(toAdd); }
+        else
+        {
+            Position offset = toAdd.TopLeft - _boundingBox.TopLeft + _boardOffset;
+            BoardData selected = Parent.Board.GetSelection(toAdd);
+            _boardData.AddAll(selected, offset);
+            _boardOffset = new Position()
+                {
+                    X = Math.Min(_boardOffset.X, offset.X),
+                    Y = Math.Min(_boardOffset.Y, offset.Y),
+                };
+            _boundingBox = _boundingBox.Fit(toAdd);
+        }
+        StateHasChanged();
+    }
+
+    private void UnselectTile(MouseEventArgs args, Position position)
+    {
+        if (!args.ShiftKey || _boardData is null) { return; }
+        if (_boardData.GetTile(position).Figure is Positioned<Figure> figure)
+        {
+            _boardData.RemoveTiles(figure.BoundingBox().Positions());
+        }
+        else
+        {
+            _boardData.RemoveTile(position);
+        }
+        StateHasChanged();
+    }
+
+    private void InitializeSelection(BoundingBox toAdd)
+    {
+        _boardOffset = new Position(0, 0);
+        _boardData = Parent.Board.GetSelection(toAdd);
+        _boundingBox = toAdd;
+    }
+
+    private async Task StartDrag(MouseEventArgs args)
+    {
+        if (_boardData is null) { return; }
+        // We delay to let the JS event finish before changing state
+        await Task.Delay(1);
+        Position offsetPosition = args.ToPosition(Parent.CellSize);
+        MoveSelectionTool tool = new(offsetPosition)
+            {
+                Selection = _boardData,
+                SelectionOffset = _boardOffset,
+                Parent = Parent,
+                MouseOffset = offsetPosition,
+                Origin = _boundingBox.TopLeft,
+                OnSuccess = (Position topLeft) => _boundingBox = _boundingBox with { TopLeft = topLeft },
+            };
+        Overlay.SetTool(tool);
+    }
+
+    private void EndDrag()
+    {
+        Overlay.ClearTool();
+    }
+}
