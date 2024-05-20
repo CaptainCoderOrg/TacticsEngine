@@ -1,7 +1,9 @@
 ﻿
 using CaptainCoder.TacticsEngine.Board;
 
+#pragma warning disable IDE0005 // This import is required but dotnet format removes it
 using WebEditor.Components.Board.Clipboard;
+#pragma warning restore IDE0005 // This import is required but dotnet format removes it
 
 namespace WebEditor.Components.Board;
 
