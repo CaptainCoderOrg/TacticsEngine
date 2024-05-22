@@ -95,7 +95,27 @@ public class BoardEditor_should
         underTest.ShouldBe(expected, ErrorMessage(underTest, expected));
     }
 
-    private string ErrorMessage(BoardData actual, BoardData expected)
+    [Fact]
+    public void copy_board()
+    {
+        BoardData toCopy = """
+            .......0
+            .A###..1
+            .A##BB#2
+            ....BB#3
+            ....###4
+            0123456
+            """.ToBoardData();
+
+        BoardData copy = toCopy.Copy();
+        copy.ShouldBe(toCopy);
+        object.ReferenceEquals(copy, toCopy).ShouldBeFalse();
+
+        copy.CreateEmptyTile(0, 0);
+        copy.ShouldNotBe(toCopy);
+    }
+
+    public string ErrorMessage(BoardData actual, BoardData expected)
     {
         return $"""
          Expected:
