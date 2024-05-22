@@ -35,7 +35,7 @@
         _clipboard?.Clear();
         if (args.CtrlKey)
         {
-            return new RemoveTilesTool(args.ToPosition(Parent.CellSize), Parent);
+            return new RemoveTilesTool(args.ToPosition(Parent.CellSize), Parent, Editor);
         }
         else
         {
