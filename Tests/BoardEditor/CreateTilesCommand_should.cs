@@ -52,4 +52,23 @@ public class CreateTilesCommand_should
         BoardData actual = underTest.Undo();
         actual.ShouldBe(originalState, ErrorMessages.BoardCompareError(originalState, actual));
     }
+
+    [Fact]
+    public void handle_undo_redo()
+    {
+        BoardData emptyBoard = new();
+        CreateTilesCommand first = new(emptyBoard, new BoundingBox(0, 0, 2, 2));
+        BoardData afterFirst = first.Do();
+        CreateTilesCommand second = new(afterFirst, new BoundingBox(2, 2, 2, 2));
+        BoardData afterSecond = second.Do();
+        BoardData afterFirstUndo = second.Undo();
+        BoardData afterSecondUndo = first.Undo();
+        BoardData firstRedo = first.Do();
+        BoardData secondRedo = second.Do();
+
+        afterFirstUndo.ShouldBe(afterFirst);
+        afterSecondUndo.ShouldBe(new BoardData());
+        firstRedo.ShouldBe(afterFirst);
+        secondRedo.ShouldBe(afterSecond);
+    }
 }

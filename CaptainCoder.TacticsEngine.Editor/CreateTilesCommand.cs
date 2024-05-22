@@ -7,8 +7,9 @@ public record CreateTilesCommand(BoardData Board, BoundingBox Selection) : IBoar
     private readonly BoardData _originalBoard = Board.Copy();
     public BoardData Do()
     {
-        Board.CreateEmptyTiles(Selection.Positions());
-        return Board;
+        BoardData newBoard = _originalBoard.Copy();
+        newBoard.CreateEmptyTiles(Selection.Positions());
+        return newBoard;
     }
 
     public BoardData Undo() => _originalBoard;
