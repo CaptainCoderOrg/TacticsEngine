@@ -4,12 +4,14 @@
 @using System.Text
 @inject IJSRuntime JSRuntime
 @inject IBlazorDownloadFileService BlazorDownloadFileService
-<div class="editor-content">
+<div @ref="_editorContent" tabindex="0" class="editor-content" @onkeypress="HandleKeyboard">
     <div class="editor-menu">
         <h1>Board Editor</h1>
         <button @onclick="@(() => LoadBoard())">Load File</button>
         <InputFile @ref="@_inputFile" OnChange="@OnFileSelected" hidden />
         <button @onclick="@(() => SaveBoard())">Save File</button>
+        <button @onclick="@(() => Undo())">Undo</button>
+        <button @onclick="@(() => Redo())">Redo</button>
         <span>
             W: <InputNumber @bind-Value="_width" /> H: <InputNumber @bind-Value="_height" />
         </span>
@@ -28,10 +30,12 @@
         </span>
     </div>
     <div class="board-panel">
-        <BoardRenderer Board="@_board" Zoom="@_zoom" Width="@_width" Height="@_height" />
+        <CascadingValue Value="this">
+            <BoardRenderer Board="@Board" Zoom="@_zoom" Width="@_width" Height="@_height" />
+        </CascadingValue>
     </div>
     <div class="panels-content">
-        <CascadingValue Value="@_board">
+        <CascadingValue Value="@Board">
             <InspectorPanel />
             <FigurePanel />
         </CascadingValue>
@@ -40,11 +44,14 @@
 
 @code
 {
+    private ElementReference _editorContent;
+    private readonly Stack<IBoardEditCommand> _undoStack = new();
+    private readonly Stack<IBoardEditCommand> _redoStack = new();
     private int _height = 20;
     private int _width = 20;
     private float _zoom = 1;
     [AllowNull]
-    private BoardData _board = new();
+    public BoardData Board { get; private set; } = new();
     [AllowNull]
     private InputFile _inputFile;
     public async Task OnFileSelected(InputFileChangeEventArgs e)
@@ -59,7 +66,7 @@
             Console.WriteLine("Error");
             return;
         }
-        _board = result;
+        Board = result;
     }
 
     private async Task LoadBoard()
@@ -69,12 +76,58 @@
 
     private async Task SaveBoard()
     {
-        var bytes = Encoding.UTF8.GetBytes(_board.ToJson());
+        var bytes = Encoding.UTF8.GetBytes(Board.ToJson());
         await BlazorDownloadFileService.DownloadFileAsync("Board.json", bytes, "application/json");
     }
 
     protected override void OnInitialized()
     {
-        _board = new();
+        Board = new();
+    }
+
+    public void Apply(IBoardEditCommand command)
+    {
+        _undoStack.Push(command);
+        _redoStack.Clear();
+        Board = command.Do();
+        StateHasChanged();
+    }
+
+    public void Undo()
+    {
+        if (_undoStack.TryPop(out IBoardEditCommand? command))
+        {
+            Board = command.Undo();
+            _redoStack.Push(command);
+        }
+    }
+
+    public void Redo()
+    {
+        if (_redoStack.TryPop(out IBoardEditCommand? command))
+        {
+            Board = command.Do();
+            _undoStack.Push(command);
+        }
+    }
+
+    public void HandleKeyboard(KeyboardEventArgs args)
+    {  
+        if (args.CtrlKey && args.ShiftKey && args.ToKeyCode() is KeyCode.KeyZ)
+        {
+            Redo();
+        }
+        else if (args.CtrlKey && args.ToKeyCode() is KeyCode.KeyZ)
+        {
+            Undo();
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await _editorContent.FocusAsync();
+        }
     }
 }

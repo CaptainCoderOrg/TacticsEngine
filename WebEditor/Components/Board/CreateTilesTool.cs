@@ -1,21 +1,22 @@
 ﻿
 using CaptainCoder.TacticsEngine.Board;
+using CaptainCoder.TacticsEngine.Editor;
 
 namespace WebEditor.Components.Board;
 
-public sealed record class CreateTilesTool(Position Start, BoardRenderer Target) : BoundingBoxTool(Start, Target)
+public sealed record class CreateTilesTool(Position Start, BoardRenderer Target, BoardEditor Editor) : BoundingBoxTool(Start, Target)
 {
     public override string ColorClass => "add-tiles";
 
     public override void OnClick(Position position)
     {
-        Target.Board.CreateEmptyTile(position.X, position.Y);
-        Target.Redraw();
+        CreateTilesCommand command = new(Editor.Board, new BoundingBox(position, 1, 1));
+        Editor.Apply(command);
     }
 
     public override void OnDrop(Position position)
     {
-        Target.Board.CreateEmptyTiles(Selection.Positions());
-        Target.Redraw();
+        CreateTilesCommand command = new(Editor.Board, Selection);
+        Editor.Apply(command);
     }
 }

@@ -15,6 +15,9 @@
 
 @code {
     [CascadingParameter, EditorRequired]
+    public required BoardEditor Editor { get; set; }
+
+    [CascadingParameter, EditorRequired]
     public required BoardRenderer Parent { get; set; }
 
     private ClipboardRenderer? _clipboard { get; set; }
@@ -36,7 +39,7 @@
         }
         else
         {
-            return new CreateTilesTool(args.ToPosition(Parent.CellSize), Parent);
+            return new CreateTilesTool(args.ToPosition(Parent.CellSize), Parent, Editor);
         }
     }
 
