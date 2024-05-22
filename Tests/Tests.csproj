@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Board\CaptainCoder.Tactics.Board.csproj" />
+    <ProjectReference Include="..\CaptainCoder.TacticsEngine.Editor\CaptainCoder.TacticsEngine.Editor.csproj" />
   </ItemGroup>
 
 </Project>
