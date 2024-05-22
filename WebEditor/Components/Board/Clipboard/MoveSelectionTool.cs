@@ -1,8 +1,9 @@
 ﻿using CaptainCoder.TacticsEngine.Board;
+using CaptainCoder.TacticsEngine.Editor;
 
 namespace WebEditor.Components.Board.Clipboard;
 
-public sealed class MoveSelectionTool(Position mousePosition) : ITool
+public sealed class MoveSelectionTool(Position mousePosition, BoardEditor editor, Action onUndo) : ITool
 {
     public Type ComponentType { get; } = typeof(MoveSelectionRenderer);
 
@@ -39,10 +40,9 @@ public sealed class MoveSelectionTool(Position mousePosition) : ITool
     public void OnDrop(Position position)
     {
         var removing = Selection.Tiles.Select(pos => pos + Origin - SelectionOffset);
-        Parent.Board.RemoveTiles(removing);
         Position topLeft = MousePosition - SelectionOffset;
-        Parent.Board.AddAll(Selection, topLeft);
+        MoveSelectionCommand command = new(editor.Board, topLeft, Selection, removing, onUndo);
         OnSuccess.Invoke(MousePosition);
-        Parent.Redraw();
+        editor.Apply(command);
     }
 }

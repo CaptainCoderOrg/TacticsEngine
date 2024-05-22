@@ -4,6 +4,15 @@ namespace CaptainCoder.TacticsEngine.Board;
 
 public static class BoardEditorExtensions
 {
+    public static BoardData Copy(this BoardData data)
+    {
+        return new BoardData()
+        {
+            Tiles = [.. data.Tiles],
+            Figures = [.. data.Figures],
+        };
+    }
+
     public static BoardData GetSelection(this BoardData board, BoundingBox selection)
     {
         HashSet<Position> tiles = [];

@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebEditor", "WebEditor\WebE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{6EBC3C46-868E-490F-97F2-FDD910BFB098}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaptainCoder.TacticsEngine.Editor", "CaptainCoder.TacticsEngine.Editor\CaptainCoder.TacticsEngine.Editor.csproj", "{DE418BB1-E895-44FB-A473-3DB61BCD9BF6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{6EBC3C46-868E-490F-97F2-FDD910BFB098}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EBC3C46-868E-490F-97F2-FDD910BFB098}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EBC3C46-868E-490F-97F2-FDD910BFB098}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE418BB1-E895-44FB-A473-3DB61BCD9BF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE418BB1-E895-44FB-A473-3DB61BCD9BF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE418BB1-E895-44FB-A473-3DB61BCD9BF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE418BB1-E895-44FB-A473-3DB61BCD9BF6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
